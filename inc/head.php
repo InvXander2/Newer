@@ -28,7 +28,6 @@
 
 <?php
 
-require_once("admin/includes/conn.php");
 
 $conn = $pdo->open();
 
