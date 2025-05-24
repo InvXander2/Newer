@@ -1,5 +1,5 @@
 <?php
-    include('inc/config.php');
+    include('init.php');
 
     include 'admin/session.php';
 

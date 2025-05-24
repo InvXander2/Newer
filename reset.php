@@ -1,5 +1,5 @@
 <?php
-    include('inc/config.php');
+    include('init.php');
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 

@@ -1,5 +1,5 @@
 <?php
-    include('inc/config.php');
+    include('init.php');
     $id = $_REQUEST['id'];
 
     $page_name = 'Post';

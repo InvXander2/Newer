@@ -1,5 +1,5 @@
 <?php
-    include('inc/config.php');
+    include('init.php');
 
     $page_name = 'Terms and Conditions';
     $page_parent = '';
