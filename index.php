@@ -1,6 +1,6 @@
 <?php
     include('inc/config.php');
-    include('inc/conn.php');
+    require_once('inc/conn.php');
     $conn = $pdo->open();
     include('admin/includes/format.php');
 
