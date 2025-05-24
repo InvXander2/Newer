@@ -83,7 +83,7 @@
                     <input type="text" class="form-control" placeholder="Enter your full name" name="full_name" required>
                   </div>
                   <div class="form-group">
-                    <label>Userame</label>
+                    <label>Username</label>
                     <input type="text" class="form-control" placeholder="Enter your Username" name="username" required>
                   </div>
                   <div class="form-group">
