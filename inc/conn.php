@@ -16,7 +16,9 @@ class Database {
  			$this->conn = new PDO($this->server, $this->username, $this->password, $this->options);
  			return $this->conn;
  		} catch (PDOException $e) {
- 			echo "There is some problem in connection: " . $e->getMessage();
+ 			// Log error to a file
+ 			error_log("Database connection error: " . $e->getMessage() . "\n", 3, __DIR__ . "/error_log.txt");
+ 			die("Database connection failed.");
  		}
     }
  
@@ -26,4 +28,5 @@ class Database {
 }
 
 $pdo = new Database();
+
 ?>
