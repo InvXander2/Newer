@@ -1,5 +1,5 @@
 <?php
-	include 'includes/conn.php';
+	include "../inc/conn.php";
 	session_start();
 
 	if(isset($_SESSION['admin'])){
