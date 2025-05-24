@@ -37,7 +37,7 @@
 	//main website configuration settings
 		$settings = (object) array(
 			'active' => 'active',
-			'siteTitle' => 'Prime Assets',
+			'siteTitle' => 'Nexus Insights',
 			'siteTitleCap' => 'PRIME ASSETS',
 			'siteTagline' => 'A Cryptocurrency Investment Company',
 			'phoneNumber' => '+1 (516) 2001 615',

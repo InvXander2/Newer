@@ -18,7 +18,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-6 text-md-left text-center">
-          <p>© <?= $year; ?> <a href="<?= $baseurl; ?>" class="base--color">Prime Assets</a>. All rights reserved</p>
+          <p>© <?= $year; ?> <a href="<?= $baseurl; ?>" class="base--color">Nexus Insights</a>. All rights reserved</p>
         </div>
         <div class="col-md-6">
           <ul class="social-link-list d-flex flex-wrap justify-content-md-end justify-content-center">

@@ -89,7 +89,7 @@
 					                                                                                    </p>
 					                                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
 					                                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
-					                                                                                        <span style='color: #000000;'> Do note that Prime Assets will not give you any other wallet address apart from the one shown on the website. </span>
+					                                                                                        <span style='color: #000000;'> Do note that Nexus Insights will not give you any other wallet address apart from the one shown on the website. </span>
 					                                                                                        <br />
 					                                                                                        <br />
 					                                                                                        <span style='color: #000000;'>
@@ -129,7 +129,7 @@
 					                                                    <table style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; height: 63px; width: 69.7305%;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
 					                                                        <tbody>
 					                                                            <tr style='height: 43px;'>
-					                                                                <td lang='en' style='padding: 0px; height: 43px;' align='center'>&copy; 2021 Prime Assets Limited.</td>
+					                                                                <td lang='en' style='padding: 0px; height: 43px;' align='center'>&copy; 2021 Nexus Insights Limited.</td>
 					                                                            </tr>
 					                                                            <tr style='height: 10px;'>
 					                                                                <td class='m_4873022159957722792j-6' style='padding: 15px 0px 25px; height: 10px;' align='center'>

@@ -39,7 +39,7 @@
           <div class="col-xl-5 col-lg-8">
             <div class="hero__content">
               <h2 class="hero__title"><span class="text-white font-weight-normal">Invest for the Future on our Stable Platform</span> <b class="base--color">and Make Fast Money</b></h2>
-              <p class="text-white f-size-18 mt-3">Invest with Prime Assets Limited, a Professional and Reliable Company. We provide you with the most necessary features that will make your experience better. Not only do we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
+              <p class="text-white f-size-18 mt-3">Invest with Nexus Insights Limited, a Professional and Reliable Company. We provide you with the most necessary features that will make your experience better. Not only do we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
               <a href="register" class="cmn-btn text-uppercase font-weight-600 mt-4">Sign Up</a>
             </div>
           </div>
@@ -106,7 +106,7 @@
           <div class="col-lg-6 offset-lg-6">
             <div class="about-content">
               <h2 class="section-title mb-3"><span class="font-weight-normal">About</span> <b class="base--color">Us</b></h2>
-              <p>Prime Assets is an international financial company engaged in investment activities, which are related to trading on financial markets and cryptocurrency exchanges performed by qualified professional traders.</p>
+              <p>Nexus Insights is an international financial company engaged in investment activities, which are related to trading on financial markets and cryptocurrency exchanges performed by qualified professional traders.</p>
               <p class="mt-4">Our goal is to provide our investors with a reliable source of high income, while minimizing any possible risks and offering a high-quality service, allowing us to automate and simplify the relations between the investors and the trustees. We work towards increasing your profit margin by profitable investment.</p>
               <a href="about" class="cmn-btn mt-4">MORE INFO</a>
             </div><!-- about-content end -->
@@ -199,7 +199,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-6 text-center">
             <div class="section-header">
-              <h2 class="section-title"><span class="font-weight-normal">Why Choose</span> <b class="base--color">Prime Assets</b></h2>
+              <h2 class="section-title"><span class="font-weight-normal">Why Choose</span> <b class="base--color">Nexus Insights</b></h2>
               <p>Our goal is to provide our investors with a reliable source of high income, while minimizing any possible risks and offering a high-quality service.</p>
             </div>
           </div>
@@ -367,7 +367,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-6 text-center">
             <div class="section-header">
-              <h2 class="section-title"><span class="font-weight-normal">How</span> <b class="base--color">Prime Assets</b> <span class="font-weight-normal">Works</span></h2>
+              <h2 class="section-title"><span class="font-weight-normal">How</span> <b class="base--color">Nexus Insights</b> <span class="font-weight-normal">Works</span></h2>
               
             </div>
           </div>

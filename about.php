@@ -53,7 +53,7 @@
         <div class="row justify-content-center">
           <div class="col-lg-6 text-center">
             <div class="section-header">
-              <h2 class="section-title"><span class="font-weight-normal">How</span> <b class="base--color">Prime Assets</b> <span class="font-weight-normal">Works</span></h2>
+              <h2 class="section-title"><span class="font-weight-normal">How</span> <b class="base--color">Nexus Insights</b> <span class="font-weight-normal">Works</span></h2>
               <p>Get involved in our tremendous platform and Invest. Get profit in your wallet automatically.</p>
             </div>
           </div>
@@ -105,7 +105,7 @@
           <div class="col-lg-6 offset-lg-6">
             <div class="about-content">
               <h2 class="section-title mb-3"><span class="font-weight-normal">About</span> <b class="base--color">Us</b></h2>
-              Prime Assets is an international financial company engaged in investment activities, which are related to trading on financial markets and cryptocurrency exchanges performed by qualified professional traders.</p>
+              Nexus Insights is an international financial company engaged in investment activities, which are related to trading on financial markets and cryptocurrency exchanges performed by qualified professional traders.</p>
               <p class="mt-4">Our goal is to provide our investors with a reliable source of high income, while minimizing any possible risks and offering a high-quality service, allowing us to automate and simplify the relations between the investors and the trustees. We work towards increasing your profit margin by profitable investment.</p>
               <p class="mt-4">We are a lifetime partner committed to helping our investors enhance the market exchange and increase the value of their capital. A wellspring of trustworthy information, our breadth of experience has fueled our reputation as a financial trading firm.</p>
             </div><!-- about-content end -->
