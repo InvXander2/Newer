@@ -1,5 +1,7 @@
 <?php
     include('inc/config.php');
+    include('inc/conn.php');
+    $conn = $pdo->open();
     include('admin/includes/format.php');
 
     $page_name = 'Home';
