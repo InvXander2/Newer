@@ -1,5 +1,5 @@
 <!-- Delete Payment Method Modal -->
-<div class="modal fade" id="deletePaymentMethod">
+<div class="modal fade" id="delete">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -29,7 +29,7 @@
 </div>
 
 <!-- Edit / Add Payment Method Modal -->
-<div class="modal fade" id="editPaymentMethod">
+<div class="modal fade" id="edit">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
