@@ -115,7 +115,7 @@ $pdo->close();
     </section>
   </div>
 
-  <?php include 'includes/payment_method_edit.php'; ?>
+  <?php include 'payment_method_edit.php'; ?>
   <?php include 'includes/footer.php'; ?>
 </div>
 
