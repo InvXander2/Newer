@@ -2,7 +2,7 @@
 include('../inc/config.php');
 include 'includes/session.php';
 
-if(isset($_POST['delete'])) {
+if (isset($_POST['delete'])) {
     if (empty($_POST['id'])) {
         $_SESSION['error'] = 'No ID specified for deletion.';
         header('location: payment_methods.php');
@@ -19,17 +19,17 @@ if(isset($_POST['delete'])) {
         $stmt->execute(['id' => $id]);
 
         if ($stmt->rowCount() > 0) {
-            $_SESSION['success'] = 'Payment method deleted successfully';
+            $_SESSION['success'] = 'Payment method deleted successfully.';
         } else {
-            $_SESSION['error'] = 'Payment method not found or already deleted';
+            $_SESSION['error'] = 'Payment method not found or already deleted.';
         }
+
+        $pdo->close();
     } catch (PDOException $e) {
         $_SESSION['error'] = 'Database error: ' . $e->getMessage();
     }
-
-    $pdo->close();
 } else {
-    $_SESSION['error'] = 'Invalid request';
+    $_SESSION['error'] = 'Invalid request.';
 }
 
 header('location: payment_methods.php');
