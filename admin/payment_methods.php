@@ -4,7 +4,7 @@ include 'includes/session.php';
 
 $conn = $pdo->open();
 
-// Fetch methods
+// Fetch payment methods
 try {
   $stmt = $conn->prepare("SELECT * FROM payment_mode ORDER BY id DESC");
   $stmt->execute();
@@ -62,7 +62,7 @@ $pdo->close();
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header with-border">
-              <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
+              <a href="#edit" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
                 <i class="fa fa-plus"></i> New
               </a>
             </div>
@@ -101,7 +101,6 @@ $pdo->close();
   </div>
 
   <?php include 'includes/payment_methods_modal.php'; ?>
-  <?php include 'includes/payment_methods_modal2.php'; ?>
   <?php include 'includes/footer.php'; ?>
 
 </div>
@@ -130,14 +129,4 @@ $(function(){
       data: {id:id},
       dataType: 'json',
       success: function(response){
-        $('.methodid').val(response.id);
-        $('#edit_name').val(response.name);
-        $('#edit_wallet').val(response.wallet_address);
-        $('.name').html(response.name);
-      }
-    });
-  }
-});
-</script>
-</body>
-</html>
+        // Fill hidden input
