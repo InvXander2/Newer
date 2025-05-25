@@ -7,8 +7,8 @@ if (isset($_POST['add'])) {
 
     $conn = $pdo->open();
 
-    // Check if payment method with the same name already exists
-    $stmt = $conn->prepare("SELECT COUNT(*) AS numrows FROM payment_methods WHERE name = :name");
+    // Check if payment method already exists
+    $stmt = $conn->prepare("SELECT COUNT(*) AS numrows FROM payment_mode WHERE name=:name");
     $stmt->execute(['name' => $name]);
     $row = $stmt->fetch();
 
@@ -16,7 +16,8 @@ if (isset($_POST['add'])) {
         $_SESSION['error'] = 'Payment method already exists';
     } else {
         try {
-            $stmt = $conn->prepare("INSERT INTO payment_methods (name, wallet_address) VALUES (:name, :wallet)");
+            // Insert new payment method with empty details and photo by default
+            $stmt = $conn->prepare("INSERT INTO payment_mode (name, wallet_address, details, photo) VALUES (:name, :wallet, '', '')");
             $stmt->execute(['name' => $name, 'wallet' => $wallet]);
             $_SESSION['success'] = 'Payment method added successfully';
         } catch (PDOException $e) {
