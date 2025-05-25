@@ -2,21 +2,35 @@
 include('../inc/config.php');
 include 'includes/session.php';
 
-if(isset($_POST['delete'])){
-  $id = $_POST['id'];
+if(isset($_POST['delete'])) {
+    if (empty($_POST['id'])) {
+        $_SESSION['error'] = 'No ID specified for deletion.';
+        header('location: payment_methods.php');
+        exit();
+    }
 
-  try {
-    $conn = $pdo->open();
+    $id = $_POST['id'];
 
-    $stmt = $conn->prepare("DELETE FROM payment_mode WHERE id=:id");
-    $stmt->execute(['id'=>$id]);
+    try {
+        $conn = $pdo->open();
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $_SESSION['success'] = 'Payment method deleted successfully';
-  } catch (PDOException $e){
-    $_SESSION['error'] = $e->getMessage();
-  }
+        $stmt = $conn->prepare("DELETE FROM payment_mode WHERE id = :id");
+        $stmt->execute(['id' => $id]);
 
-  $pdo->close();
+        if ($stmt->rowCount() > 0) {
+            $_SESSION['success'] = 'Payment method deleted successfully';
+        } else {
+            $_SESSION['error'] = 'Payment method not found or already deleted';
+        }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+    }
+
+    $pdo->close();
+} else {
+    $_SESSION['error'] = 'Invalid request';
 }
 
 header('location: payment_methods.php');
+exit();
