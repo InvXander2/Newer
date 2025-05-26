@@ -29,7 +29,7 @@
        $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
     }
 
-    $payment_completeQuery = $conn->query("SELECT * FROM payment_mode order by 1 asc Limit 1");
+    $payment_completeQuery = $conn->query("SELECT * FROM payment_methods order by 1 asc Limit 1");
     if ($payment_completeQuery->rowCount()) {
        $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
     }
