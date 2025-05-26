@@ -300,7 +300,7 @@
                                             </div><!--end modal-body-->
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                                                <button type="submit" name="invest" class="btn btn-dark btn-sm">Invest</button>
+                                                
                                               </form> 
                                             </div><!--end modal-footer-->
                                         </div><!--end modal-content-->
@@ -327,7 +327,25 @@
 
       
       
-  </body>
+  
+    <style>
+        .floating-invest-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 16px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+    </style>
+    <button class="floating-invest-btn" onclick="location.href='invest.php'">Invest</button>
+    
+</body>
 
 
 <!-- Mirrored from mannatthemes.com/dastone/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Dec 2020 21:59:40 GMT -->
