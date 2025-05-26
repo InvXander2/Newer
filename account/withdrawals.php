@@ -24,7 +24,7 @@
        $withdrawal_made = $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ);
     }
 
-    $payment_methodQuery = $conn->query("SELECT * FROM payment_mode");
+    $payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
     if ($payment_methodQuery->rowCount()) {
        $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
     }
