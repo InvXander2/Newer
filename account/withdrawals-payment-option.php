@@ -5,149 +5,107 @@
     $page_name = 'Withdrawals';
     $page_parent = '';
     $page_title = 'Welcome to the Official Website of '.$settings->siteTitle;
-    $page_description = $settings->siteTitle.' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
+    $page_description = $settings->siteTitle.' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining.';
 
     include('inc/head.php');
 
+    if (!isset($_SESSION['user'])) {
+        header('location: ../login.php');
+        exit();
+    }
+
     $id = $_SESSION['user'];
 
-    if(!isset($_SESSION['user'])){
-        header('location: ../login.php');
+    if (!isset($_POST['removeFund']) || !isset($_POST['withdrawal_amount'])) {
+        $_SESSION['error'] = 'Invalid withdrawal attempt.';
+        header('location: withdrawals.php');
+        exit();
     }
 
-    if (isset($_POST['removeFund'])) {
-        $withdrawal_amount = $_POST['withdrawal_amount'];
-    } else {
-        header("location: withdrawals.php");
-    }
+    $withdrawal_amount = $_POST['withdrawal_amount'];
 
     $conn = $pdo->open();
 
-    $withdrawal_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id && type=2 order by 1 desc ");
-    if ($withdrawal_madeQuery->rowCount()) {
-        $withdrawal_made = $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ);
-    }
-
     $payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
-    if ($payment_methodQuery->rowCount()) {
-        $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    $payment_completeQuery = $conn->query("SELECT * FROM payment_methods order by 1 asc Limit 1");
-    if ($payment_completeQuery->rowCount()) {
-        $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    $withdrawalHistory = "SELECT * FROM transaction WHERE user_id = $id && type = 2";
+    $payment_method = $payment_methodQuery->rowCount() ? $payment_methodQuery->fetchAll(PDO::FETCH_OBJ) : [];
 ?>
 
 <body class="dark-topbar">
-    <?php include('inc/sidebar.php'); ?>
+<?php include('inc/sidebar.php'); ?>
 
-    <div class="page-wrapper">
-        <?php include('inc/header.php'); ?>
+<div class="page-wrapper">
+    <?php include('inc/header.php'); ?>
 
-        <div class="page-content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="page-title-box">
-                            <div class="row">
-                                <div class="col">
-                                    <h4 class="page-title">Withdrawals</h4>
-                                </div>
-                                <div class="col-auto align-self-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
-                                        <span class="" id="Select_date">Jan 11</span>
-                                        <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
-                                    </a>
-                                </div>
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="page-title-box">
+                        <div class="row">
+                            <div class="col">
+                                <h4 class="page-title">Withdrawals</h4>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <?php
-                    if(isset($_SESSION['error'])){
-                        echo "
-                            <div class='alert alert-danger border-0' role='alert'>
-                                <i class='la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3'></i>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                                    <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
-                                </button>
-                                <strong>Oh snap!</strong> ".$_SESSION['error']."
-                            </div>
-                        ";
-                        unset($_SESSION['error']);
-                    }
-                    if(isset($_SESSION['success'])){
-                        echo "
-                            <div class='alert alert-success border-0' role='alert'>
-                                <i class='mdi mdi-check-all alert-icon'></i>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                                    <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
-                                </button>
-                                <strong>Well done!</strong> ".$_SESSION['success']."
-                            </div>
-                        ";
-                        unset($_SESSION['success']);
-                    }
-                ?>
+            <?php
+            if (isset($_SESSION['error'])) {
+                echo "<div class='alert alert-danger'>".$_SESSION['error']."</div>";
+                unset($_SESSION['error']);
+            }
+            if (isset($_SESSION['success'])) {
+                echo "<div class='alert alert-success'>".$_SESSION['success']."</div>";
+                unset($_SESSION['success']);
+            }
+            ?>
 
-                <div class="row">
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Choose Payment Option</h4>
-                                <p class="text-muted mb-0">Desired Payment Option</p>
-                            </div>
+            <div class="row">
+                <div class="col-lg-3"></div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Choose Payment Option</h4>
+                            <p class="text-muted mb-0">Enter your payment information and select a payment method.</p>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-horizontal auth-form" method="post" action="withdraw-action.php">
+                                <input type="hidden" name="withdrawal_amount" value="<?= htmlspecialchars($withdrawal_amount) ?>">
 
-                            <div class="card-body">
-                                <div class="card">
-                                    <div class="card-body"> 
-                                        <form class="form-horizontal auth-form" method="post" action="withdraw-action.php">
-                                            <input type="number" name="withdrawal_amount" value="<?php echo $withdrawal_amount; ?>" hidden>
-
-                                            <div class="form-group mb-2">
-                                                <label>Choose your desired payment option.</label>
-                                            </div>
-
-                                            <div class="form-group mb-2">
-                                                <div class="col-md-12">
-                                                    <select name="payment_mode" class="form-control" required>
-                                                        <option selected disabled>Choose Mode of Payment</option>
-                                                        <?php foreach ($payment_method as $payment): ?>
-                                                            <option value="<?= $payment->name; ?>"><?= $payment->name; ?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group mb-2">
-                                                <label>Enter your payment information (e.g., wallet address, bank details)</label>
-                                                <textarea class="form-control" name="payment_info" rows="3" placeholder="Enter payment info..." required></textarea>
-                                            </div>
-
-                                            <div class="form-group mb-0 row">
-                                                <div class="col-12">
-                                                    <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" name="withdrawNow">Withdraw Now <i class="fas fa-money-bill ml-1"></i></button>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="payment_mode">Payment Method</label>
+                                    <select name="payment_mode" class="form-control" required>
+                                        <option selected disabled>Choose Mode of Payment</option>
+                                        <?php foreach ($payment_method as $payment): ?>
+                                            <option value="<?= htmlspecialchars($payment->name) ?>"><?= htmlspecialchars($payment->name) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
-                            </div> <!-- end card-body -->
-                        </div> <!-- end card -->
+
+                                <div class="form-group">
+                                    <label for="payment_info">Payment Info (e.g., Wallet Address or Bank Details)</label>
+                                    <textarea name="payment_info" class="form-control" rows="3" required></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" type="submit" name="withdrawNow">
+                                        Proceed with Withdrawal
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div> <!-- container -->
+            </div>
 
-            <?php include('inc/footer.php'); ?>
         </div>
-    </div>
 
-    <?php include('inc/scripts.php'); ?>
+        <?php include('inc/footer.php'); ?>
+    </div>
+</div>
+
+<?php include('inc/scripts.php'); ?>
 </body>
 </html>
