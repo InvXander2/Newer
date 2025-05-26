@@ -1,20 +1,23 @@
 <?php
+// Includes
+include('../inc/config.php');   // defines $conne
+include('inc/session.php');     // already starts session and sets $_SESSION['user']
 
-    include('../inc/config.php');
-    include('inc/session.php');
+// Use the session user ID
+$id = $_SESSION['user'] ?? null;
 
+if ($id) {
+    // Update last active time
+    $stmt = $conne->prepare("UPDATE users SET date_view = NOW() WHERE id = ?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+}
 
-    $id = $_SESSION['user'];
-    //set login time
-    
-    $stmt = "UPDATE users set date_view=NOW() WHERE id='".$id."'";
-    mysqli_query($conn, $stmt);
-    $_SESSION['user'] = $id;
+// Destroy session
+session_unset();
+session_destroy();
 
-    session_destroy();
-
-
-
-    header('location: ../login.php');
-
+// Redirect to login
+header('Location: ../login.php');
+exit;
 ?>
