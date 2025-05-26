@@ -1,5 +1,5 @@
 <?php
-    include_once 'inc/conn.php';
+    include_once '../inc/conn.php';
     $pdo = new Database();
 
     session_start();
