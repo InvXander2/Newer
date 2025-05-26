@@ -1,53 +1,60 @@
-<!-- Edit Payment Method Modal -->
-<div class="modal fade" id="edit">
+<!-- Delete -->
+<div class="modal fade" id="delete">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="POST" action="payment_methods_edit.php">
-        <div class="modal-header">
-          <h4 class="modal-title">Edit Payment Method</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" class="pmid" name="id">
-          <div class="form-group">
-            <label>Name</label>
-            <input type="text" class="form-control" id="edit_name" name="name" required>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><b>Deleting...</b></h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" action="payment_methods_delete.php">
+          <input type="hidden" class="methodid" name="id">
+          <div class="text-center">
+            <p>DELETE Payment Method</p>
+            <h2 class="bold name"></h2>
           </div>
-          <div class="form-group">
-            <label>Wallet Address</label>
-            <input type="text" class="form-control" id="edit_wallet" name="wallet_address" required>
-          </div>
-          <div class="form-group">
-            <label>Status</label>
-            <select class="form-control" id="edit_status" name="status" required>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-success" name="edit">Update</button>
-        </div>
-      </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        <button type="submit" class="btn btn-danger btn-flat" name="delete"><i class="fa fa-trash"></i> Delete</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Delete Payment Method Modal -->
-<div class="modal fade" id="delete">
+<!-- Edit -->
+<div class="modal fade" id="edit">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form method="POST" action="payment_methods_delete.php">
-        <div class="modal-header">
-          <h4 class="modal-title">Delete Payment Method</h4>
-        </div>
-        <div class="modal-body">
-          <input type="hidden" class="pmid" name="id">
-          <p>Are you sure you want to delete <strong class="name"></strong>?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-danger" name="delete">Delete</button>
-        </div>
-      </form>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title"><b>Edit Payment Method</b></h4>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" action="payment_methods_edit.php">
+          <input type="hidden" class="methodid" name="id">
+          <div class="form-group">
+            <label for="edit_name" class="col-sm-3 control-label">Method Name</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="edit_name" name="name" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="edit_wallet" class="col-sm-3 control-label">Wallet Address</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="edit_wallet" name="wallet" required>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+        <button type="submit" class="btn btn-success btn-flat" name="edit"><i class="fa fa-check-square-o"></i> Update</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
