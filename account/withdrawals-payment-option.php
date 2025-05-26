@@ -107,7 +107,7 @@
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body"> 
-                                        <form class="form-horizontal auth-form" method="post" action="withdraw_action.php">
+                                        <form class="form-horizontal auth-form" method="post" action="withdraw-action.php">
                                             <input type="number" name="withdrawal_amount" value="<?php echo $withdrawal_amount; ?>" hidden>
 
                                             <div class="form-group mb-2">
