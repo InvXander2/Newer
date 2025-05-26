@@ -248,7 +248,7 @@
                                                    <h6 class="amount pt-3 pb-2" style="font-size: 16px; color: #563d07; font-weight: 500">Duration: <?= $investment_plan->duration; ?> days</h6>
                                                     <h6 class="amount pt-3 pb-2" style="font-size: 16px">From &#36;<?= number_format($investment_plan->min_invest, 0); ?> to <?= $max_invest; ?></h6>
                                                         
-                                                    <a data-toggle="modal" data-target="#modal" class="btn btn-dark py-2 px-5 font-16"><span>Invest</span></a>
+                                                    
                                                 </div><!--end pricingTable-->
                                             </div><!--end card-body-->
                                         </div> <!--end card-->                                   
@@ -300,7 +300,7 @@
                                             </div><!--end modal-body-->
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                                                
+                                                <button type="submit" name="invest" class="btn btn-dark btn-sm">Invest</button>
                                               </form> 
                                             </div><!--end modal-footer-->
                                         </div><!--end modal-content-->
@@ -333,17 +333,19 @@
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background-color: #007bff;
+            background-color: #343a40;
             color: white;
-            border: none;
             border-radius: 50px;
             padding: 15px 25px;
             font-size: 16px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             z-index: 999;
+            text-decoration: none;
         }
     </style>
-    <button class="floating-invest-btn" onclick="location.href='invest.php'">Invest</button>
+    <a data-toggle="modal" data-target="#modal" class="floating-invest-btn">
+        <span>Invest</span>
+    </a>
     
 </body>
 
