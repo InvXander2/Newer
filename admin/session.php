@@ -1,5 +1,4 @@
 <?php
-echo getcwd(); // shows current directory
 	include "../inc/conn.php";
 	session_start();
 
