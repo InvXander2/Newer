@@ -54,7 +54,7 @@
           <div class="col-xl-5 col-lg-7">
             <div class="account-card">
               <div class="account-card__header bg_img overlay--one" data-background="assets/images/bg/bg-6.jpg">
-                <h2 class="section-title">Welcome to <span class="base--color">PRIME ASSETS</span></h2>
+                <h2 class="section-title">Welcome to <span class="base--color">NEXUS INSIGHTS</span></h2>
                 <p>Fill in your details and you'll be on your way.</p>
                 <?php
                     if(isset($_SESSION['error'])){
