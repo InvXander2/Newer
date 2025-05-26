@@ -1,5 +1,5 @@
 <?php
-include('../inc/conn.php'); // This defines $pdo as a Database instance
+require_once('../inc/conn.php'); // This defines $pdo as a Database instance
 include('inc/session.php'); // Starts session and sets $_SESSION['user']
 
 $conn = $pdo->open(); // Get PDO connection
