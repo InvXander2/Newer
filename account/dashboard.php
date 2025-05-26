@@ -479,20 +479,6 @@ if ($newQuery && $newQuery->rowCount()) {
 }
 $index = 1;
 foreach ($news as $new) :
-
-    if ($index == 1) {
-        $tag1 = "Crypto News";
-        $tag2 = "Apps";
-    } elseif ($index == 2) {
-        $tag1 = "Cryptocurrency";
-        $tag2 = "Tech";
-    } elseif ($index == 3) {
-        $tag1 = "Bitcoin";
-        $tag2 = "Tech";
-    } else {
-        $tag1 = "Finance";
-        $tag2 = "Updates";
-    }
 ?> 
 
                                             if ($index == 1) {
@@ -513,8 +499,7 @@ foreach ($news as $new) :
                                                 <img src="../admin/images/<?= $new->photo; ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
                                                 <div class="media-body align-self-center"> 
                                                     <h6 class="m-0"><?= substrwords($new->short_title, 30); ?></h6>
-                                                    <p class="mb-0 text-muted"><?= $tag1; ?>, <?= $tag2; ?></p>                                                                                           
-                                                </div><!--end media body-->
+                                                    </div><!--end media body-->
                                             </div>
                                             <div class="align-self-center">
                                                 <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= $new->slug; ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>  
