@@ -130,7 +130,7 @@
                                         <div class="form-group mb-2">
                                             <label>Enter Payment Method Info</label>
                                             <div class="form-input-group">
-                                                <input type="text" class="form-control" placeholder="This could be a wallet address, bank account info...." />
+                                                <input type="text" name="payment_info" class="form-control" placeholder="This could be a wallet address, bank account info..." required />
                                             </div>
                                                                       
                                         </div><!--end form-group--> 
