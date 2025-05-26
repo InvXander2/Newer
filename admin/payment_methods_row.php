@@ -1,14 +1,17 @@
-<?php
-include('../inc/config.php');
+<?php 
+	include 'includes/session.php';
 
-$conn = $pdo->open();
+	if(isset($_POST['id'])){
+		$id = $_POST['id'];
+		
+		$conn = $pdo->open();
 
-$id = $_POST['id'];
+		$stmt = $conn->prepare("SELECT *, payment_methods.id AS pmid, payment_methods.name AS pmname FROM payment_methods WHERE payment_methods.id=:id");
+		$stmt->execute(['id'=>$id]);
+		$row = $stmt->fetch();
+		
+		$pdo->close();
 
-$stmt = $conn->prepare("SELECT * FROM payment_mode WHERE id=:id");
-$stmt->execute(['id'=>$id]);
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-$pdo->close();
-
-echo json_encode($row);
+		echo json_encode($row);
+	}
+?>
