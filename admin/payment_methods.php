@@ -150,12 +150,11 @@ function getRow(id){
     data: {id:id},
     dataType: 'json',
     success: function(response){
-      $('.name').html(response.name);
-      $('.id').val(response.id);
+      $('.pmid').val(response.id);
       $('#edit_name').val(response.name);
       $('#edit_wallet_address').val(response.wallet_address);
       $('#edit_details').val(response.details);
-      $('#edit_photo').attr("src", response.photo);
+      $('.name').html(response.name); // for delete modal
     }
   });
 }
