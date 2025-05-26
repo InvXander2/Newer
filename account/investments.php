@@ -300,7 +300,7 @@
                                             </div><!--end modal-body-->
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
-                                                <button type="submit" name="invest" class="btn btn-dark btn-sm">Invest</button>
+                                                <button type="submit" name="invest" class="btn btn-dark btn-sm" data-id="<button type="submit" name="invest" class="btn btn-dark btn-sm"" class="btn btn-dark btn-sm invest-btn">Invest</button>
                                               </form> 
                                             </div><!--end modal-footer-->
                                         </div><!--end modal-content-->
@@ -327,7 +327,19 @@
 
       
       
-  </body>
+  
+<script>
+$(document).ready(function(){
+  $('.invest-btn').click(function(e){
+    e.preventDefault();
+    var planId = $(this).data('id');
+    $('#investmentModal').modal('show');
+    $('#planSelect').val(planId);
+  });
+});
+</script>
+
+</body>
 
 
 <!-- Mirrored from mannatthemes.com/dastone/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Dec 2020 21:59:40 GMT -->
