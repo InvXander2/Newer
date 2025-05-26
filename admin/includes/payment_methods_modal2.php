@@ -9,7 +9,7 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" action="payment_methods_delete.php">
-          <input type="hidden" class="ipid" name="id">
+          <input type="hidden" class="pmid" name="id">
           <div class="text-center">
             <p>DELETE Payment Method</p>
             <h2 class="bold name"></h2>
@@ -36,7 +36,7 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" action="payment_methods_edit.php" enctype="multipart/form-data">
-          <input type="hidden" class="ipid" name="id">
+          <input type="hidden" class="pmid" name="id">
           
           <div class="form-group">
             <label for="edit_name" class="col-sm-2 control-label">Name</label>
