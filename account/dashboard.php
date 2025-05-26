@@ -288,7 +288,10 @@
                                                                    <?= $inv->name." ** "; ?> 
                                                             <?php
                                                               endforeach;
-                                                            ?>                                                 
+if (empty($news)) {
+    echo '<li class="list-group-item text-muted">No news available.</li>';
+}
+?>                                                 
                                                         </h5>
 
                                                         </div>
@@ -469,12 +472,28 @@
                                 <div class="card-body">
                                     <ul class="list-group custom-list-group mb-n3">
                                         <?php
-                                        $newQuery = $conn->query("SELECT * from news order by 1 desc limit 7");
-                                        if ($newQuery->rowCount()) {
-                                           $news = $newQuery->fetchAll(PDO::FETCH_OBJ);
-                                        }
-                                        $index = 1;
-                                        foreach ($news as $new) : 
+$news = []; // Ensure $news is always defined
+$newQuery = $conn->query("SELECT * from news ORDER BY 1 DESC LIMIT 7");
+if ($newQuery && $newQuery->rowCount()) {
+    $news = $newQuery->fetchAll(PDO::FETCH_OBJ);
+}
+$index = 1;
+foreach ($news as $new) :
+
+    if ($index == 1) {
+        $tag1 = "Crypto News";
+        $tag2 = "Apps";
+    } elseif ($index == 2) {
+        $tag1 = "Cryptocurrency";
+        $tag2 = "Tech";
+    } elseif ($index == 3) {
+        $tag1 = "Bitcoin";
+        $tag2 = "Tech";
+    } else {
+        $tag1 = "Finance";
+        $tag2 = "Updates";
+    }
+?> 
 
                                             if ($index == 1) {
                                                 $tag1 = "Crypto News";
@@ -507,7 +526,11 @@
 
                                     <?php
                                         $index++;
-                                        endforeach; ?>
+                                        endforeach;
+if (empty($news)) {
+    echo '<li class="list-group-item text-muted">No news available.</li>';
+}
+?>
 
                                         
 
