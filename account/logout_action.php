@@ -1,23 +1,23 @@
 <?php
-// Includes
-include('../inc/config.php');   // defines $conne
-include('inc/session.php');     // already starts session and sets $_SESSION['user']
+include('../inc/conn.php'); // This defines $pdo as a Database instance
+include('inc/session.php'); // Starts session and sets $_SESSION['user']
 
-// Use the session user ID
+$conn = $pdo->open(); // Get PDO connection
+
 $id = $_SESSION['user'] ?? null;
 
 if ($id) {
-    // Update last active time
-    $stmt = $conne->prepare("UPDATE users SET date_view = NOW() WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
+    try {
+        $stmt = $conn->prepare("UPDATE users SET date_view = NOW() WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+    } catch (PDOException $e) {
+        error_log("Logout update error: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+    }
 }
 
-// Destroy session
+$pdo->close(); // Close the connection
 session_unset();
 session_destroy();
-
-// Redirect to login
 header('Location: ../login.php');
 exit;
 ?>
