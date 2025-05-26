@@ -1,22 +1,4 @@
-<?php
-include('../inc/config.php');
-include 'includes/session.php';
-
-$conn = $pdo->open();
-
-// Fetch methods
-try {
-  $stmt = $conn->prepare("SELECT * FROM payment_mode ORDER BY id DESC");
-  $stmt->execute();
-  $methods = $stmt->fetchAll(PDO::FETCH_OBJ);
-} catch (PDOException $e) {
-  $_SESSION['error'] = "Error fetching payment methods: " . $e->getMessage();
-  $methods = [];
-}
-
-$pdo->close();
-?>
-
+<?php include 'includes/session.php'; ?>
 <?php include 'includes/header.php'; ?>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -24,73 +6,88 @@ $pdo->close();
   <?php include 'includes/navbar.php'; ?>
   <?php include 'includes/menubar.php'; ?>
 
+  <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>Payment Methods</h1>
+      <h1>
+        Payment Methods
+      </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li>Payment Methods</li>
         <li class="active">Payment Methods</li>
       </ol>
     </section>
 
+    <!-- Main content -->
     <section class="content">
       <?php
-      if (isset($_SESSION['error'])) {
-        echo "
-          <div class='alert alert-danger alert-dismissible'>
-            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            <h4><i class='icon fa fa-warning'></i> Error!</h4>
-            " . $_SESSION['error'] . "
-          </div>
-        ";
-        unset($_SESSION['error']);
-      }
-
-      if (isset($_SESSION['success'])) {
-        echo "
-          <div class='alert alert-success alert-dismissible'>
-            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            <h4><i class='icon fa fa-check'></i> Success!</h4>
-            " . $_SESSION['success'] . "
-          </div>
-        ";
-        unset($_SESSION['success']);
-      }
+        if(isset($_SESSION['error'])){
+          echo "
+            <div class='alert alert-danger alert-dismissible'>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <h4><i class='icon fa fa-warning'></i> Error!</h4>
+              ".$_SESSION['error']."
+            </div>
+          ";
+          unset($_SESSION['error']);
+        }
+        if(isset($_SESSION['success'])){
+          echo "
+            <div class='alert alert-success alert-dismissible'>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <h4><i class='icon fa fa-check'></i> Success!</h4>
+              ".$_SESSION['success']."
+            </div>
+          ";
+          unset($_SESSION['success']);
+        }
       ?>
-
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header with-border">
-              <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat">
-                <i class="fa fa-plus"></i> New
-              </a>
+              <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i class="fa fa-plus"></i> New</a>
             </div>
 
             <div class="box-body">
               <table id="example1" class="table table-bordered">
                 <thead>
-                  <th>#</th>
-                  <th>Payment Method</th>
+                  <th>Name</th>
                   <th>Wallet Address</th>
+                  <th>Details</th>
+                  <th>Photo</th>
                   <th>Action</th>
                 </thead>
                 <tbody>
-                  <?php if (!empty($methods)): ?>
-                    <?php foreach ($methods as $index => $method): ?>
-                      <tr>
-                        <td><?= $index + 1; ?></td>
-                        <td><?= htmlspecialchars($method->name); ?></td>
-                        <td><?= htmlspecialchars($method->wallet_address); ?></td>
-                        <td>
-                          <button class="btn btn-success btn-sm edit btn-flat" data-id="<?= $method->id; ?>"><i class="fa fa-edit"></i> Edit</button>
-                          <button class="btn btn-danger btn-sm delete btn-flat" data-id="<?= $method->id; ?>"><i class="fa fa-trash"></i> Delete</button>
-                        </td>
-                      </tr>
-                    <?php endforeach; ?>
-                  <?php else: ?>
-                    <tr><td colspan="4">No payment methods found.</td></tr>
-                  <?php endif; ?>
+                  <?php
+                    $conn = $pdo->open();
+
+                    try{
+                      $stmt = $conn->prepare("SELECT * FROM payment_methods ORDER BY id ASC");
+                      $stmt->execute();
+                      foreach($stmt as $row){
+                        echo "
+                          <tr>
+                            <td>".$row['name']."</td>
+                            <td>".$row['wallet_address']."</td>
+                            <td>".$row['details']."</td>
+                            <td><img src='".$row['photo']."' height='30'></td>
+                            <td>
+                              <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
+                              <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
+                            </td>
+                          </tr>
+                        ";
+                      }
+                    }
+                    catch(PDOException $e){
+                      echo $e->getMessage();
+                    }
+
+                    $pdo->close();
+                  ?>
                 </tbody>
               </table>
             </div>
@@ -98,13 +95,14 @@ $pdo->close();
         </div>
       </div>
     </section>
+     
   </div>
-
-  <?php include 'includes/payment_methods_modal.php'; ?>
-  <?php include 'includes/payment_methods_modal2.php'; ?>
-  <?php include 'includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
+    <?php include 'includes/payment_methods_modal.php'; ?>
+    <?php include 'includes/payment_methods_modal2.php'; ?>
 
 </div>
+<!-- ./wrapper -->
 
 <?php include 'includes/scripts.php'; ?>
 <script>
@@ -123,21 +121,44 @@ $(function(){
     getRow(id);
   });
 
-  function getRow(id){
-    $.ajax({
-      type: 'POST',
-      url: 'payment_methods_row.php',
-      data: {id:id},
-      dataType: 'json',
-      success: function(response){
-        $('.methodid').val(response.id);
-        $('#edit_name').val(response.name);
-        $('#edit_wallet').val(response.wallet_address);
-        $('.name').html(response.name);
-      }
-    });
-  }
+  $(document).on('click', '.photo', function(e){
+    e.preventDefault();
+    var id = $(this).data('id');
+    getRow(id);
+  });
+
+  $(document).on('click', '.desc', function(e){
+    e.preventDefault();
+    var id = $(this).data('id');
+    getRow(id);
+  });
+
+  $("#addnew").on("hidden.bs.modal", function () {
+      $('.append_items').remove();
+  });
+
+  $("#edit").on("hidden.bs.modal", function () {
+      $('.append_items').remove();
+  });
+
 });
+
+function getRow(id){
+  $.ajax({
+    type: 'POST',
+    url: 'payment_methods_row.php',
+    data: {id:id},
+    dataType: 'json',
+    success: function(response){
+      $('.name').html(response.name);
+      $('.id').val(response.id);
+      $('#edit_name').val(response.name);
+      $('#edit_wallet_address').val(response.wallet_address);
+      $('#edit_details').val(response.details);
+      $('#edit_photo').attr("src", response.photo);
+    }
+  });
+}
 </script>
 </body>
 </html>
