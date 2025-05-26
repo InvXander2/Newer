@@ -5,7 +5,7 @@
 
 	$conn = $pdo->open();
 
-	$stmt = $conn->prepare("SELECT * FROM payment_mode");
+	$stmt = $conn->prepare("SELECT * FROM payment_methods");
 	$stmt->execute();
 	foreach($stmt as $row){
 		$output .= "
@@ -15,5 +15,4 @@
 
 	$pdo->close();
 	echo json_encode($output);
-
 ?>
