@@ -160,9 +160,10 @@ CREATE TABLE `news` (
 -- Table structure for table `payment_mode`
 --
 
-CREATE TABLE `payment_mode` (
-  `mode_id` int(11) NOT NULL,
+CREATE TABLE `payment_methods` (
+  `id` int(11) NOT NULL,
   `name` text NOT NULL,
+  `wallet_address` text NOT NULL,
   `details` text NOT NULL,
   `photo` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
