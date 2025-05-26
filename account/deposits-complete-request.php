@@ -136,7 +136,7 @@
                                               </div>
 
                                               <div class="form-group">
-                                                <label><?= $complete->details; ?></label>
+                                                <label><?= $complete->wallet_address; ?></label>
                                               </div>
 
                                             <?php
