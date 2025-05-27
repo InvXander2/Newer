@@ -8,8 +8,6 @@
     $page_title = 'Welcome to the Official Website of '.$settings->siteTitle;
     $page_description = $settings->siteTitle.' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining.';
 
-    include('inc/head.php');
-
     if(!isset($_SESSION['user'])){
         header('location: ../login.php');
     }
@@ -18,6 +16,8 @@
     $sql0 = "SELECT * FROM users WHERE id=".$id;
     $result0 = $conne->query($sql0);
     $row0 = $result0->fetch_assoc();
+
+    include('inc/head.php');
 ?>
 
 <body class="dark-topbar">
@@ -71,14 +71,14 @@
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Full Name</label>
                                     <div class="col-lg-9 col-xl-8">
-                                        <input class="form-control" type="text" name="full_name" value="<?= $row0['full_name'] ?>" required>
+                                        <input class="form-control" type="text" name="full_name" value="<?= htmlspecialchars($row0['full_name']) ?>" required>
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Username</label>
                                     <div class="col-lg-9 col-xl-8">
-                                        <input class="form-control" type="text" name="uname" value="<?= $row0['uname'] ?>" required>
+                                        <input class="form-control" type="text" name="uname" value="<?= htmlspecialchars($row0['uname']) ?>" required>
                                     </div>
                                 </div>
 
@@ -86,6 +86,17 @@
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Password</label>
                                     <div class="col-lg-9 col-xl-8">
                                         <input class="form-control" type="password" name="password" placeholder="Enter new password (leave blank to keep current)">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-xl-3 col-lg-3 text-right align-self-center">Gender</label>
+                                    <div class="col-lg-9 col-xl-8">
+                                        <select name="gender" class="form-control" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="Male" <?= $row0['gender'] == 'Male' ? 'selected' : '' ?>>Male</option>
+                                            <option value="Female" <?= $row0['gender'] == 'Female' ? 'selected' : '' ?>>Female</option>
+                                        </select>
                                     </div>
                                 </div>
 
@@ -100,7 +111,11 @@
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Nationality</label>
                                     <div class="col-lg-9 col-xl-8">
                                         <select name="nationality" class="form-control">
-                                            <?php include('../inc/countries.php'); ?>
+                                            <option value="">Select Nationality</option>
+                                            <?php
+                                                include('../inc/countries.php');
+                                                echo getCountryOptions($row0['nationality']); // Helper to mark selected
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -108,14 +123,14 @@
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Address</label>
                                     <div class="col-lg-9 col-xl-8">
-                                        <input class="form-control" type="text" name="address" value="<?= $row0['address'] ?>">
+                                        <input class="form-control" type="text" name="address" value="<?= htmlspecialchars($row0['address']) ?>">
                                     </div>
                                 </div>
 
                                 <div class="form-group row">
                                     <label class="col-xl-3 col-lg-3 text-right align-self-center">Phone Number</label>
                                     <div class="col-lg-9 col-xl-8">
-                                        <input type="text" name="phone_no" class="form-control" value="<?= $row0['phone_no'] ?>" required>
+                                        <input type="text" name="phone_no" class="form-control" value="<?= htmlspecialchars($row0['phone_no']) ?>" required>
                                     </div>
                                 </div>
 
