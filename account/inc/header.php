@@ -1,7 +1,7 @@
 <?php
 
     $sql0 = "SELECT * FROM users WHERE id=$id";
-    $result0 = $conne->query($sql0);
+    $result0 = $conn->query($sql0);
     $row0 = $result0->fetch_assoc();
 
     $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM direct_message WHERE user_id=0 || (user_id=$id && status=0)");
