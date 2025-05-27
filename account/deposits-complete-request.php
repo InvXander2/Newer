@@ -104,6 +104,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <h4 class="card-title">Complete Your Request</h4>
+                                <p class="text-muted mt-2">
+                                    Log Request and send <strong>$<?php echo number_format($deposit_amount); ?></strong> worth of <strong><?php echo htmlspecialchars($payment_mode); ?></strong> to the displayed Wallet Address. Your account will be credited once payment is confirmed.
+                                </p>
                             </div>
                             <div class="card-body">
                                 <div class="card">
