@@ -176,7 +176,7 @@
                     <li>Total <?= $total_rate; ?>% + <span class="badge base--bg text-dark">Capital</span></li>
                   </ul>
                   <div class="package-card__range mt-5 base--color">&#36;<?= number_format($investment_plan->min_invest, 0); ?> - <?= $max_invest; ?></div>
-                  <a href="investment" class="cmn-btn btn-md mt-4">Invest Now</a>
+                  <a href="account/investments" class="cmn-btn btn-md mt-4">Invest Now</a>
                 </div><!-- package-card end -->
               </div>
 
@@ -186,7 +186,7 @@
         </div><!-- row end -->
         <div class="row mt-50">
           <div class="col-lg-12 text-center">
-            <a href="account/investments" class="cmn-btn">View All Packages</a>
+            <a href="investment" class="cmn-btn">View All Packages</a>
           </div>
         </div>
       </div>
