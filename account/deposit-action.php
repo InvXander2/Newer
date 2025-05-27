@@ -26,14 +26,15 @@ if (isset($_POST['complete']) && !empty($_POST['deposit_amount']) && !empty($_PO
 
     try {
         // Insert deposit request
-        $stmt = $conn->prepare("INSERT INTO request (user_id, trans_date, type, amount, status) 
-                                VALUES (:user_id, :trans_date, :type, :amount, :status)");
+        $stmt = $conn->prepare("INSERT INTO request (user_id, trans_date, type, amount, status, payment_mode) 
+                                VALUES (:user_id, :trans_date, :type, :deposit_amount, :status, :payment_mode)");
         $stmt->execute([
             'user_id' => $user_id,
             'trans_date' => $trans_date,
             'type' => 1,
             'amount' => $deposit_amount,
-            'status' => $status
+            'status' => $status,
+            'payment_mode' => $payment_mode
         ]);
 
         // Log user activity
