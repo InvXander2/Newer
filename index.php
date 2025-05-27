@@ -186,7 +186,7 @@
         </div><!-- row end -->
         <div class="row mt-50">
           <div class="col-lg-12 text-center">
-            <a href="investment" class="cmn-btn">View All Packages</a>
+            <a href="account/investments" class="cmn-btn">View All Packages</a>
           </div>
         </div>
       </div>
