@@ -13,11 +13,12 @@
 
     
 
-    $id = $_SESSION['user'];
-
     if(!isset($_SESSION['user'])){
-        header('location: ../login.php');
-    }
+    header('location: ../login.php');
+    exit();
+}
+
+$id = $_SESSION['user'];
 
     if (isset($_POST['addFund'])) {
         $deposit_amount = $_POST['deposit_amount'];
