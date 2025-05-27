@@ -38,7 +38,7 @@
         <div class="row">
           <div class="col-xl-5 col-lg-8">
             <div class="hero__content">
-              <h2 class="hero__title"><span class="text-white font-weight-normal">Invest for the Future on our Stable Platform</span> <b class="base--color">and Make Fast Money</b></h2>
+              <h2 class="hero__title"><span class="text-white font-weight-normal">Invest for the Future on our Stable Platform</span> <b class="base--color">and Make Consistent Returns</b></h2>
               <p class="text-white f-size-18 mt-3">Invest with Nexus Insights Limited, a Professional and Reliable Company. We provide you with the most necessary features that will make your experience better. Not only do we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
               <a href="register" class="cmn-btn text-uppercase font-weight-600 mt-4">Sign Up</a>
             </div>
