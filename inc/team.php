@@ -15,8 +15,8 @@
                 <img src="assets/images/investor/1.jpg" alt="image">
               </div>
               <div class="team-card__content">
-                <h4 class="name mb-1">Fahad Bin Faiz</h4>
-                <span class="designation">CEO</span>
+                <h4 class="name mb-1">Roberto Bani</h4>
+                <span class="designation">Founder</span>
               </div>
             </div><!-- team-card end -->
           </div>
