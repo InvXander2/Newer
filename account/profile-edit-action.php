@@ -7,6 +7,7 @@
 	if (isset($_POST['update'])) {
 		$full_name = $_POST['full_name'];
 		$uname = $_POST['uname'];
+		$gender = $_POST['gender'];
 		$dob = $_POST['dob'];
 		$nationality = $_POST['nationality'];
 		$phone_no = $_POST['phone_no'];
@@ -17,7 +18,7 @@
 		$conn = $pdo->open();
 		$act_time = date('Y-m-d h:i A');
 
-		// Fetch existing user data to get the current photo if no new one is uploaded
+		// Fetch existing photo
 		try {
 			$stmt = $conn->prepare("SELECT photo FROM users WHERE id=:id");
 			$stmt->execute(['id' => $user_id]);
@@ -28,18 +29,17 @@
 			exit();
 		}
 
-		// Handle photo upload
+		// Photo upload
+		$filename = !empty($photo) ? $photo : $user['photo'];
 		if (!empty($photo)) {
 			move_uploaded_file($_FILES['photo']['tmp_name'], '../admin/images/' . $photo);
-			$filename = $photo;
-		} else {
-			$filename = $user['photo'];
 		}
 
-		// Handle password (only update if provided)
+		// Prepare fields
 		$fields = [
 			'full_name' => $full_name,
 			'uname' => $uname,
+			'gender' => $gender,
 			'dob' => $dob,
 			'nationality' => $nationality,
 			'phone_no' => $phone_no,
@@ -48,8 +48,17 @@
 			'id' => $user_id
 		];
 
-		$sql = "UPDATE users SET full_name=:full_name, uname=:uname, dob=:dob, nationality=:nationality, phone_no=:phone_no, address=:address, photo=:photo";
+		$sql = "UPDATE users SET 
+			full_name=:full_name, 
+			uname=:uname, 
+			gender=:gender, 
+			dob=:dob, 
+			nationality=:nationality, 
+			phone_no=:phone_no, 
+			address=:address, 
+			photo=:photo";
 
+		// Update password if provided
 		if (!empty($password)) {
 			$hashed_password = password_hash($password, PASSWORD_DEFAULT);
 			$sql .= ", password=:password";
@@ -62,7 +71,7 @@
 			$stmt = $conn->prepare($sql);
 			$stmt->execute($fields);
 
-			// Log activity
+			// Activity log
 			$activity = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) VALUES (:user_id, :message, :category, :date_sent)");
 			$activity->execute([
 				'user_id' => $user_id,
