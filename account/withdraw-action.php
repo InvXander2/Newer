@@ -15,7 +15,12 @@
 	$investor_email = $row['email'];
 	$investor_name = $row['full_name'];
 
-	if(isset($_POST['complete'])){
+	if (
+		isset($_POST['withdrawNow']) &&
+		!empty($_POST['withdrawal_amount']) &&
+		!empty($_POST['payment_mode']) &&
+		!empty($_POST['payment_info'])
+	) {
 		$withdrawal_amount = $_POST['withdrawal_amount'];
 		$payment_mode = $_POST['payment_mode'];
 		$payment_info = $_POST['payment_info'];
@@ -25,7 +30,7 @@
 		$trans_date = date('Y-m-d');
 		$act_time = date('Y-m-d h:i A');
 
-		try{
+		try {
 			// Insert withdrawal request
 			$stmt = $conn->prepare("INSERT INTO request (user_id, trans_date, type, amount, payment_mode, payment_info, status) VALUES (:user_id, :trans_date, :type, :amount, :payment_mode, :payment_info, :status)");
 			$stmt->execute([
@@ -49,13 +54,18 @@
 
 			// Email message to user
 			$message = "<div id='_rc_sig'>
-			... (unchanged HTML email content from your original code)
+				<!-- Replace this with your original email content -->
+				<h2>Withdrawal Request Submitted</h2>
+				<p>Dear $investor_name,</p>
+				<p>Your withdrawal request of <strong>$$withdrawal_amount</strong> has been submitted and is currently being reviewed.</p>
+				<p>You will be contacted shortly regarding the next steps.</p>
+				<p>Thank you for choosing ".$settings->siteTitle."!</p>
 			</div>";
 
 			// Notify Admin
-			$msg = $investor_name." just requested a withdrawal , Login Admin";
-			$msg = wordwrap($msg,70);
-			mail($settings->email,"New Withdrawal Request",$msg);
+			$msg = $investor_name." just requested a withdrawal, Login Admin";
+			$msg = wordwrap($msg, 70);
+			mail($settings->email, "New Withdrawal Request", $msg);
 
 			// Send email to user
 			require '../vendor/autoload.php';
@@ -78,16 +88,10 @@
 
 				$mail->send();
 
-				unset($_SESSION['full_name']);
-				unset($_SESSION['username']);
-				unset($_SESSION['email']);
-
 				$_SESSION['success'] = 'Your request has been sent and you will be contacted on how to proceed shortly';
-
 			} catch (Exception $e) {
 				$_SESSION['success'] = 'Your request has been sent. Please proceed to pay and invest';
 			}
-
 		} catch(PDOException $e){
 			$_SESSION['error'] = $e->getMessage();
 		}
