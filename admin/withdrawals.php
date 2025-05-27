@@ -10,9 +10,7 @@
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-      <h1>
-        Withdrawal Request
-      </h1>
+      <h1>Withdrawal Request</h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Withdrawal</li>
@@ -52,6 +50,8 @@
                   <th>Username</th>
                   <th>Date</th>
                   <th>Amount</th>
+                  <th>Payment Method</th>
+                  <th>Payment Info</th>
                   <th>Status</th>
                   <th>Change Status</th>
                 </thead>
@@ -59,17 +59,18 @@
                   <?php
                     $conn = $pdo->open();
 
-                    try{
+                    try {
                       $stmt = $conn->prepare("SELECT *, users.uname AS username, request.status AS request_status, request.request_id AS id, users.id AS user_id FROM request LEFT JOIN users ON users.id=request.user_id WHERE request.type=2 ORDER BY request_id DESC");
                       $stmt->execute();
                       foreach($stmt as $row){
-                        
                         echo "
                           <tr>
                             <td class='hidden'></td>
                             <td>".$row['username']."</td>
                             <td>".$row['trans_date']."</td>
                             <td>&#36; ".number_format($row['amount'], 2)."</td>
+                            <td>".$row['payment_mode']."</td>
+                            <td>".$row['payment_info']."</td>
                             <td>".$row['request_status']."</td>
                             <td>
                               <button class='btn btn-info btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Change Status</button>
@@ -90,10 +91,10 @@
         </div>
       </div>
     </section>
-     
   </div>
-    <?php include 'includes/footer.php'; ?>
-    <?php include 'includes/request_modal.php'; ?>
+
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/request_modal.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -101,7 +102,6 @@
 <?php include 'includes/scripts.php'; ?>
 <script>
 $(function(){
-
   $(document).on('click', '.edit', function(e){
     e.preventDefault();
     $('#edit').modal('show');
