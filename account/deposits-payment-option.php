@@ -123,7 +123,7 @@
                               
                               <div class="card">
                                 <div class="card-body"> 
-                                    <form class="form-horizontal auth-form" method="post" action="deposits-complete-request">
+                                    <form class="form-horizontal auth-form" method="post" action="deposits-complete-request.php">
                                         <input type="number" name="deposit_amount" value="<?php echo $deposit_amount; ?>" hidden>
                 
                                         <div class="form-group mb-2">
