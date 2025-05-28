@@ -39,8 +39,6 @@ try {
                             AND i.user_id = ?");
     $stmt->execute(array($current_date, $user_id));
 
-    foreach██
-
     foreach ($stmt as $investment) {
         $returns = $investment['returns'];
         $plan_name = $investment['name'];
