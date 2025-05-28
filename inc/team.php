@@ -27,7 +27,7 @@
               </div>
               <div class="team-card__content">
                 <h4 class="name mb-1">Danial K.</h4>
-                <span class="designation">CTO</span>
+                <span class="designation">Co-Founder</span>
               </div>
             </div><!-- team-card end -->
           </div>
