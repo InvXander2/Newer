@@ -1,13 +1,10 @@
 <?php
     include('init.php');
-	include('inc/header.php'); ?>    
-    <!-- header-section end  -->
-
     include 'admin/session.php';
 
     if(isset($_SESSION['user'])){
       header('location: account/dashboard.php');
-   }
+    }
 
     $page_name = 'Register';
     $page_parent = 'Account';
@@ -25,17 +22,15 @@
 
       if ($num_of_referrals >= 2) {
         $ref_sentence = 'Already referred '.$num_of_referrals.' other Users';
-      }elseif ($num_of_referrals == 1) {
+      } elseif ($num_of_referrals == 1) {
         $ref_sentence = 'Referred '.$num_of_referrals.' other User';
-      }else{
+      } else {
         $ref_sentence = 'You are the first to be referred by this User';
       }
-      
     }
-
 ?>
-  <body>
-    <!--========== Preloader ==========-->
+<body>
+  <!--========== Preloader ==========-->
   <?php include('inc/pre-loader.php'); ?>
   <!--========== Preloader ==========-->
 
@@ -48,6 +43,9 @@
   <!-- / STAR ANIMATION -->
 
   <div class="page-wrapper">
+    <!-- header-section start -->
+    <?php include('inc/header.php'); ?>    
+    <!-- header-section end -->
 
     <!-- account section start -->
     <div class="account-section bg_img" data-background="assets/images/bg/bg-5.jpg">
@@ -78,7 +76,7 @@
                 ?>
               </div>
               <div class="account-card__body">
-                <h3 class="text-center">Create an Account</h2>
+                <h3 class="text-center">Create an Account</h3>
                 <form class="mt-4" method="post" action="register_helper.php">
                   <div class="form-group">
                     <label>Full Name</label>
@@ -128,12 +126,11 @@
     </div>
     <!-- account section end -->
 
-  </div> <!-- page-wrapper end -->
-<?php include('inc/footer.php') ?>
+    <!-- footer section start -->
+    <?php include('inc/footer.php'); ?>
     <!-- footer section end -->
-  </div> <!-- page-wrapper end -->
-  <?php include('inc/scripts.php') ?>
-  </body>
 
-<!-- Mirrored from template.viserlab.com/hyiplab/demo/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 16 Oct 2021 16:37:40 GMT -->
+  </div> <!-- page-wrapper end -->
+  <?php include('inc/scripts.php'); ?>
+</body>
 </html>
