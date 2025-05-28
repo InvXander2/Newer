@@ -22,7 +22,7 @@
 
 
             <li>
-                <a href="investments"><i data-feather="bar-chart" class="align-self-center menu-icon"></i><span>Plans</span></a>
+                <a href="investments"><i data-feather="bar-chart" class="align-self-center menu-icon"></i><span>Investment Plans</span></a>
             </li>
 
 
