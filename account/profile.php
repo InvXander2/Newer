@@ -1,7 +1,6 @@
 <?php
     include('../inc/config.php');
     include('../admin/includes/format.php');
-
     include '../admin/session.php';
 
     $page_name = 'Profile';
@@ -30,8 +29,7 @@
     if ($row1["type"] == 1) {
         $transaction = $row1["amount"];
         $type = "credit";
-    }
-    else {
+    } else {
         $transaction = $row1["amount"];
         $type = "debit";
     }
@@ -39,25 +37,19 @@
     $time = strtotime($row1["trans_date"]);
     $sanitized_time = date("Y-m-d, g:i A", $time);
 
-    
-
     $sql2 = "SELECT *, COUNT(*) AS numrows FROM users WHERE referral_code='$referrals' ";
     $result2 = $conne->query($sql2);
     $row2 = $result2->fetch_assoc();
     $no_of_referrals = $row2['numrows'];
-
 ?>
 
-     <body class="dark-topbar">
+<body class="dark-topbar">
     <!-- Left Sidenav -->
     <?php include('inc/sidebar.php'); ?>
-    <!-- end left-sidenav-->
-    
 
     <div class="page-wrapper">
         <!-- Top Bar Start -->
         <?php include('inc/header.php'); ?>
-        <!-- Top Bar End -->
 
         <!-- Page Content-->
         <div class="page-content">
@@ -69,62 +61,53 @@
                             <div class="row">
                                 <div class="col">
                                     <h4 class="page-title">Profile</h4>
-                                </div><!--end col-->
+                                </div>
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                                         <span class="day-name" id="Day_Name">Today:</span>&nbsp;
                                         <span class="" id="Select_date">Jan 11</span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
-                                </div><!--end col-->  
-                            </div><!--end row-->                                                              
-                        </div><!--end page-title-box-->
+                                </div>
+                            </div>
+                        </div>
+
                         <?php
                             if (empty($row0['nationality'])) {
-                                echo '  
-                                        <div class="alert custom-alert custom-alert-primary icon-custom-alert alert-secondary-shadow fade show" role="alert">                                            
-                                            <i class="mdi mdi-alert-outline alert-icon text-primary align-self-center font-30 mr-3"></i>
-                                            <div class="alert-text my-1">
-                                                <span><a href="profile-edit" class="btn mb-1 btn-primary">Click Here</a> to Complete Your Profile Setup</span>
-                                            </div>                                        
-                                            <div class="alert-close">
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true"><i class="mdi mdi-close font-16"></i></span>
-                                                </button>
-                                            </div>
+                                echo '<div class="alert custom-alert custom-alert-primary icon-custom-alert alert-secondary-shadow fade show" role="alert">
+                                        <i class="mdi mdi-alert-outline alert-icon text-primary align-self-center font-30 mr-3"></i>
+                                        <div class="alert-text my-1">
+                                            <span><a href="profile-edit" class="btn mb-1 btn-primary">Click Here</a> to Complete Your Profile Setup</span>
                                         </div>
-                                    ';
-                            }else{echo '';}
-
+                                        <div class="alert-close">
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true"><i class="mdi mdi-close font-16"></i></span>
+                                            </button>
+                                        </div>
+                                    </div>';
+                            }
                         ?>
-                    </div><!--end col-->
-                </div><!--end row-->
-                <!-- end page title end breadcrumb -->
+                    </div>
+                </div>
 
                 <?php
                     if(isset($_SESSION['error'])){
-                      echo "
-                        <div class='alert alert-danger border-0' role='alert'>
+                        echo "<div class='alert alert-danger border-0' role='alert'>
                             <i class='la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3'></i>
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Oh snap!</strong> ".$_SESSION['error']."
-                        </div>
-                      ";
-                      unset($_SESSION['error']);
+                            <strong>Oh snap!</strong> ".$_SESSION['error']."</div>";
+                        unset($_SESSION['error']);
                     }
                     if(isset($_SESSION['success'])){
-                      echo "
-                        <div class='alert alert-success border-0' role='alert'>
+                        echo "<div class='alert alert-success border-0' role='alert'>
                             <i class='mdi mdi-check-all alert-icon'></i>
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Well done!</strong> ".$_SESSION['success']."
-                        </div>
-                      ";
-                      unset($_SESSION['success']);
+                            <strong>Well done!</strong> ".$_SESSION['success']."</div>";
+                        unset($_SESSION['success']);
                     }
                 ?>
 
@@ -147,28 +130,22 @@
                                                     <p class="mb-0 dastone-user-name-post"><b> Username :</b> <?php echo $row0["uname"]; ?></p>                          
                                                 </div>
                                             </div>                                                
-                                        </div><!--end col-->
+                                        </div>
                                         
                                         <div class="col-lg-6 ml-auto align-self-center">
                                             <ul class="list-unstyled personal-detail mb-0">
-                                                <li class=""><i class="las la-phone mr-2 text-secondary font-22 align-middle"></i> <b> phone </b> : <?php if (empty($row0["phone_no"])) {
-                                                    echo 'xxx-xxx-xxx-xxxx';
-                                                }else{ echo $row0["phone_no"]; } ?></li>
+                                                <li><i class="las la-phone mr-2 text-secondary font-22 align-middle"></i> <b> Phone </b> : <?php echo empty($row0["phone_no"]) ? 'xxx-xxx-xxx-xxxx' : $row0["phone_no"]; ?></li>
                                                 <li class="mt-2"><i class="las la-envelope text-secondary font-22 align-middle mr-2"></i> <b> Email </b> : <?php echo $row0["email"]; ?></li>
-                                                <li class="mt-2"><i class="las la-globe text-secondary font-22 align-middle mr-2"></i> <b> Nationality </b> : 
-                                                    <?php if (empty($row0["nationality"])) {
-                                                    echo 'xxxxxxxxxxxxx';
-                                                }else{ echo $row0["nationality"]; } ?>
-                                                </li>                                                   
+                                                <li class="mt-2"><i class="las la-globe text-secondary font-22 align-middle mr-2"></i> <b> Nationality </b> : <?php echo empty($row0["nationality"]) ? 'xxxxxxxxxxxxx' : $row0["nationality"]; ?></li>
+                                                <li class="mt-2"><i class="las la-map-marker text-secondary font-22 align-middle mr-2"></i> <b> Address </b> : <?php echo empty($row0["address"]) ? 'No address provided' : $row0["address"]; ?></li>
                                             </ul>
-                                           
-                                        </div><!--end col-->
-                                    </div><!--end row-->
-                                </div><!--end f_profile-->                                                                                
-                            </div><!--end card-body-->          
-                        </div> <!--end card-->    
-                    </div><!--end col-->
-                </div><!--end row-->
+                                        </div>
+                                    </div>
+                                </div>                                                                                
+                            </div>         
+                        </div>     
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-12">
@@ -176,39 +153,29 @@
                             <div class="card-body">
                                 <div class="dastone-profile">
                                     <div class="row">
+                                        <div class="col-lg-4 ml-auto align-self-center">
+                                            <ul class="list-unstyled personal-detail mb-0">
+                                                <li><i class="las la-genderless mr-2 text-secondary font-22 align-middle"></i> <b> Gender </b> : <?php echo empty($row0["gender"]) ? 'xx-xxxx' : $row0["gender"]; ?></li>               
+                                            </ul>
+                                        </div>
                                         
                                         <div class="col-lg-4 ml-auto align-self-center">
                                             <ul class="list-unstyled personal-detail mb-0">
-                                                <li class=""><i class="las la-genderless mr-2 text-secondary font-22 align-middle"></i> <b> Gender </b> : <?php if (empty($row0["gender"])) {
-                                                    echo 'xx-xxxx';
-                                                }else{ echo $row0["gender"]; } ?></li>               
+                                                <li class="mt-2"><i class="las la-calendar text-secondary font-22 align-middle mr-2"></i> <b> Date Of Birth </b> : <?php echo empty($row0["dob"]) ? 'DD-MM-YYYY' : $row0["dob"]; ?></li>                 
                                             </ul>
-                                           
-                                        </div><!--end col-->
+                                        </div>
                                         
                                         <div class="col-lg-4 ml-auto align-self-center">
                                             <ul class="list-unstyled personal-detail mb-0">
-                                                <li class="mt-2"><i class="las la-calendar text-secondary font-22 align-middle mr-2"></i> <b> Date Of Birth </b> : <?php if (empty($row0["dob"])) {
-                                                    echo 'DD-MM-YYYY';
-                                                }else{ echo $row0["dob"]; } ?></li>                 
+                                                <li class="mt-2"><i class="las la-calendar-check text-secondary font-22 align-middle mr-2"></i> <b> Date Joined </b> : <?php echo $row0["created_on"]; ?></li>                                                   
                                             </ul>
-                                           
-                                        </div><!--end col-->
-                                        
-                                        <div class="col-lg-4 ml-auto align-self-center">
-                                            <ul class="list-unstyled personal-detail mb-0">
-                                                <li class="mt-2"><i class="las la-calendar-check text-secondary font-22 align-middle mr-2"></i> <b> Date Joined </b> : 
-                                                    <?php echo $row0["created_on"]; ?>
-                                                </li>                                                   
-                                            </ul>
-                                           
-                                        </div><!--end col-->
-                                    </div><!--end row-->
-                                </div><!--end f_profile-->                                                                                
-                            </div><!--end card-body-->          
-                        </div> <!--end card-->    
-                    </div><!--end col-->
-                </div><!--end row-->
+                                        </div>
+                                    </div>                                                                                
+                                </div>         
+                            </div>     
+                        </div>     
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-12">
@@ -220,7 +187,6 @@
                                             <div class="col">
                                                 <p class="text-dark mb-1 font-weight-semibold">Wallet Balance</p>
                                                 <h3 class="my-2 font-24 font-weight-bold">&#36; <?php echo number_format_short($row1["balance"], 2); ?></h3>
-                                                
                                             </div>
                                             <div class="col-auto align-self-center">
                                                 <div class="report-main-icon bg-light-alt">
@@ -228,9 +194,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><!--end card-body-->          
-                                </div> <!--end card-->    
-                            </div><!--end col-->
+                                    </div>          
+                                </div>     
+                            </div>
                             <div class="col-lg-6">
                                 <div class="card">                                                        
                                     <div class="card-body  report-card">
@@ -245,29 +211,18 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div><!--end card-body-->          
-                                </div> <!--end card-->    
-                            </div><!--end col-->
-                        </div><!--end row--> 
+                                    </div>          
+                                </div>     
+                            </div>
+                        </div> 
                     </div>
                 </div>
+            </div>
 
-
-            </div><!-- container -->
-
-            <?php include('inc/footer.php'); ?><!--end footer-->
+            <?php include('inc/footer.php'); ?>
         </div>
-        <!-- end page content -->
     </div>
-    <!-- end page-wrapper -->
 
-    
     <?php include('inc/scripts.php'); ?>
-
-      
-      
-  </body>
-
-
-<!-- Mirrored from mannatthemes.com/dastone/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Dec 2020 21:59:40 GMT -->
+</body>
 </html>
