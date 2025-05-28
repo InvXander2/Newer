@@ -1,11 +1,22 @@
 <?php
+session_start(); // Start session
+
 // Include database configuration
-include_once('../inc/conn.php');
+$conn_file = '../inc/conn.php';
+if (!file_exists($conn_file)) {
+    error_log("conn.php not found at $conn_file", 3, "errors.log");
+    die("Error: conn.php not found.");
+}
+include_once($conn_file);
+
+// Initialize Database class and get PDO connection
+$pdo = new Database();
+$conn = $pdo->open(); // Get PDO connection from Database class
 
 // Ensure database connection is available
-if (!isset($conn)) {
-    error_log("Database connection not established.", 3, "errors.log");
-    die("Error: Database connection not established.");
+if (!isset($conn) || !($conn instanceof PDO)) {
+    error_log("Database connection not established or invalid.", 3, "errors.log");
+    die("Error: Database connection not established or invalid.");
 }
 
 // Ensure user is logged in and get user ID
@@ -27,6 +38,8 @@ try {
                             AND i.end_date <= ? 
                             AND i.user_id = ?");
     $stmt->execute(array($current_date, $user_id));
+
+    foreach██
 
     foreach ($stmt as $investment) {
         $returns = $investment['returns'];
@@ -105,8 +118,12 @@ try {
             $current_date
         ));
     }
+
+    // Close the database connection
+    $pdo->close();
+
 } catch (PDOException $e) {
-    // Log error to file
     error_log("Error processing investments for user $user_id: " . $e->getMessage(), 3, "errors.log");
+    die("Error processing investments: " . $e->getMessage());
 }
 ?>
