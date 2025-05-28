@@ -46,13 +46,13 @@
     if (empty($row2)) {
         $loss_gain = "";
         $percent_loss_gain = "";
-    }elseif ($row1["balance"] > $row2["balance"]) {
+    } elseif ($row1["balance"] > $row2["balance"]) {
         $loss_gain = "Increase";
         $percent_loss_gain = ($row1["balance"] - $row2["balance"]) * 100 / $row2["balance"];
-    }elseif ($row2["balance"] > $row1["balance"]) {
+    } elseif ($row2["balance"] > $row1["balance"]) {
         $loss_gain = "Decrease";
         $percent_loss_gain = ($row2["balance"] - $row1["balance"]) * 100 / $row2["balance"];
-    }else{
+    } else {
         $loss_gain = "";
         $percent_loss_gain = "";
     }
@@ -74,7 +74,6 @@
     $result6 = $conne->query($sql6);
     $row6 = $result6->fetch_assoc();
     $no_of_inv_comp = $row6['numrows'];
-
 
     $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = $id && status = 'completed' ");
     $stmt->execute();
@@ -106,25 +105,21 @@
     $stmt3->execute();
 
     foreach($stmt3 as $prow){
-        
         $amount_plan2 = $prow['returns'];
         $total_plan2 += $amount_plan2;
 
         $percent_plan2 = number_format($total_plan2*100/$total, 0);
-
     } 
 
     $stmt3 = $conn->prepare("SELECT * FROM investment WHERE user_id = $id && status = 'completed' && invest_plan_id = 3 ");
     $stmt3->execute();
 
     foreach($stmt3 as $prow){
-
         $amount_plan3 = $prow['returns'];
         $total_plan3 += $amount_plan3;
 
         $percent_plan3 = number_format($total_plan3*100/$total, 0);
     }  
-
 ?>
 
     <body class="dark-topbar">
@@ -132,7 +127,6 @@
         <?php include('inc/sidebar.php'); ?>
         <!-- end left-sidenav-->
         
-
         <div class="page-wrapper">
             <!-- Top Bar Start -->
             <?php include('inc/header.php'); ?>
@@ -168,14 +162,14 @@
                                                             </div>
                                                         </div>
                                                     ';
-                                            }else{echo '';}
-
+                                            } else {
+                                                echo '';
+                                            }
                                         ?>
-
                                     </div><!--end col-->
                                     <div class="col-auto align-self-center">
                                         <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                            <span class="day-name" id="Day_Name">Today:</span>&nbsp;
+                                            <span class="day-name" id="Day_Name">Today:</span> 
                                             <span class="" id="Select_date">Jan 01</span>
                                             <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                         </a>
@@ -222,25 +216,21 @@
                                             <div class="row d-flex justify-content-center">
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold">Wallet Balance</p>
-                                                    <h3 class="m-0">&#36; <?php echo number_format_short($row1["balance"], 2); ?></h3>
-
+                                                    <h3 class="m-0">$ <?php echo number_format_short($row1["balance"], 2); ?></h3>
                                                     <?php
-
                                                     if ($loss_gain == "Increase") {
                                                         echo "
                                                             <p class='mb-0 text-truncate text-muted'><span class='text-success'><i class='mdi mdi-trending-up'></i>".number_format($percent_loss_gain, 1, '.', '')."%</span> ".$loss_gain."</p>
                                                         ";
-                                                    }elseif ($loss_gain == "Decrease") {
+                                                    } elseif ($loss_gain == "Decrease") {
                                                         echo "
                                                             <p class='mb-0 text-truncate text-muted'><span class='text-danger'><i class='mdi mdi-trending-down'></i>".number_format($percent_loss_gain, 1, '.', '')."%</span> ".$loss_gain."</p>
                                                         ";
-                                                    }else{
+                                                    } else {
                                                         echo "
                                                             <p class='mb-0 text-truncate text-muted'>Make a Deposit Now</p>";
                                                     }
-
                                                     ?>
-
                                                 </div>
                                                 <div class="col-auto align-self-center">
                                                     <div class="report-main-icon bg-light-alt">
@@ -268,92 +258,68 @@
                                             </div>
                                         </div><!--end card-body--> 
                                     </div><!--end card--> 
-                                </div> <!--end col--> <div class="col-md-6 col-lg-3">
-        <div class="col-md-6 col-lg-3">
-          <div class="card report-card">
-            <div class="card-body">
-              <div class="row d-flex justify-content-center">
-
-                <?php if ($no_of_inv > 0) : ?>
-                  <div class="col">
-                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
-                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
-                    <h5 class="mb-0 text-truncate text-muted">
-                      <?php foreach ($row5 as $inv) : ?>
-                        <div class="mb-2">
-                          <strong><?= htmlspecialchars($inv->name); ?></strong><br>
-                          Current Return: <span class="text-success"><?= number_format($inv->current, 2); ?></span><br>
-                          Guaranteed Return: <span class="text-primary"><?= number_format($inv->returns, 2); ?></span>
-                        </div>
-                      <?php endforeach; ?>
-                    </h5>
-                  </div>
-
-                  <div class="col-auto align-self-center">
-                    <div class="report-main-icon bg-light-alt">
-                      <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
-                    </div>
-                  </div>
-
-                <?php else : ?>
-                  <div class="col">
-                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
-                    <h5 class="mb-0 text-danger">
-                      <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
-                      You have no ongoing investment. Invest now to earn.
-                    </h5>
-                  </div>
-                <?php endif; ?>
-
-              </div>
-            </div><!--end card-body-->
-          </div><!--end card-->
-        </div> <!--end col-->
+                                </div> <!--end col-->
                                 <div class="col-md-6 col-lg-3">
                                     <div class="card report-card">
                                         <div class="card-body">
                                             <div class="row d-flex justify-content-center">
-
-
-                                                <?php
-
-                                                    if ($no_of_inv_comp > 0) { ?>                                                
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold">Completed Investments</p>
-                                                    
-
-                                                    <h3 class="m-0"><?= $no_of_inv_comp; ?></h3>
-                                                    <h5 class="m-0"> 
-                                                        &#36; <?= number_format_short($total, 2); ?> 
-                                                                                               
-                                                    </h5>
-                                                    <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i></span> Total Amount Earned</p>
-
-                                                </div>
-                                                <div class="col-auto align-self-center">
-                                                    <div class="report-main-icon bg-light-alt">
-                                                        <i data-feather="briefcase" class="align-self-center text-blue icon-sm"></i>  
+                                                <?php if ($no_of_inv > 0) : ?>
+                                                    <div class="col">
+                                                        <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                                                        <h3 class="m-0"><?= $no_of_inv; ?></h3>
+                                                        <h5 class="mb-0 text-truncate text-muted">
+                                                            <?php foreach ($row5 as $inv) : ?>
+                                                                <div class="mb-2">
+                                                                    <strong><?= htmlspecialchars($inv->name); ?></strong><br>
+                                                                    Current Return: <span class="text-success"><?= number_format($inv->current, 2); ?></span><br>
+                                                                    Guaranteed Return: <span class="text-primary"><?= number_format($inv->returns, 2); ?></span>
+                                                                </div>
+                                                            <?php endforeach; ?>
+                                                        </h5>
                                                     </div>
-                                                </div>
-                                                        
-                                                <?php }else{
-                                                    echo '
-
+                                                    <div class="col-auto align-self-center">
+                                                        <div class="report-main-icon bg-light-alt">
+                                                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
+                                                        </div>
+                                                    </div>
+                                                <?php else : ?>
+                                                    <div class="col">
+                                                        <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                                                        <h5 class="mb-0 text-danger">
+                                                            <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
+                                                            You have no ongoing investment. Invest now to earn.
+                                                        </h5>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div><!--end card-body-->
+                                    </div><!--end card-->
+                                </div> <!--end col-->
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card report-card">
+                                        <div class="card-body">
+                                            <div class="row d-flex justify-content-center">
+                                                <?php if ($no_of_inv_comp > 0) : ?>
                                                     <div class="col">
                                                         <p class="text-dark mb-0 font-weight-semibold">Completed Investments</p>
-
+                                                        <h3 class="m-0"><?= $no_of_inv_comp; ?></h3>
+                                                        <h5 class="m-0">$ <?= number_format_short($total, 2); ?></h5>
+                                                        <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i></span> Total Amount Earned</p>
+                                                    </div>
+                                                    <div class="col-auto align-self-center">
+                                                        <div class="report-main-icon bg-light-alt">
+                                                            <i data-feather="briefcase" class="align-self-center text-blue icon-sm"></i>  
+                                                        </div>
+                                                    </div>
+                                                <?php else : ?>
+                                                    <div class="col">
+                                                        <p class="text-dark mb-0 font-weight-semibold">Completed Investments</p>
                                                         <h5 class="mb-0 text-danger">
-                                                        <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
-
+                                                            <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                             You have not invested yet. Invest now to earn.                                             
                                                         </h5>
-
                                                     </div>
-                                                    ';
-                                                }
-
-                                                ?>
-                                                
+                                                <?php endif; ?>
                                             </div>
                                         </div><!--end card-body--> 
                                     </div><!--end card--> 
@@ -368,7 +334,7 @@
                                         <div class="col-auto"> 
                                             <div class="dropdown">
                                                 <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                   Investment/ Yield
+                                                    Investment/ Yield
                                                 </a>
                                             </div>               
                                         </div><!--end col-->
@@ -391,7 +357,7 @@
                                         <div class="col-auto"> 
                                             <div class="dropdown">
                                                 <a href="#" style="cursor: context-menu; width: 120%;" class="btn btn-sm btn-outline-light">
-                                                   All
+                                                    All
                                                 </a>
                                             </div>         
                                         </div><!--end col-->
@@ -404,38 +370,32 @@
                                     <div class="table-responsive mt-2">
                                         <table class="table border-dashed mb-0">
                                             <thead>
-                                            <tr>
-                                                <th>Plan</th>
-                                                <th class="text-right">Invested</th>
-                                                <th class="text-right">Earned</th>
-                                            </tr>
+                                                <tr>
+                                                    <th>Plan</th>
+                                                    <th class="text-right">Invested</th>
+                                                    <th class="text-right">Earned</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
-                                            <?php
-                                                foreach($stmt1 as $plan1){ ?>
+                                                <?php foreach($stmt1 as $plan1) : ?>
                                                     <tr>
                                                         <td><?= $plan1->name ?></td>
                                                         <?php 
                                                         $stmt2 = $conn->prepare("SELECT * FROM investment WHERE user_id = $id && invest_plan_id = $plan1->id && status = 'completed' ");
                                                         $stmt2->execute();
-
                                                         $total_invested = 0;
                                                         $total_earned = 0;
-                                                        foreach($stmt2 as $sinv){
-                                                          $amount_inv = $sinv['capital'];
-                                                          $total_invested += $amount_inv;
-
-                                                          $amount_got = $sinv['returns'];
-                                                          $total_earned += $amount_got;
+                                                        foreach($stmt2 as $sinv) {
+                                                            $amount_inv = $sinv['capital'];
+                                                            $total_invested += $amount_inv;
+                                                            $amount_got = $sinv['returns'];
+                                                            $total_earned += $amount_got;
                                                         }
                                                         ?>
-                                                        <td class="text-right"><?= $total_invested; ?>
-                                                        </td>
+                                                        <td class="text-right"><?= $total_invested; ?></td>
                                                         <td class="text-right"><?= $total_earned; ?></td>
                                                     </tr>
-
-                                            <?php } ?>
-                                            
+                                                <?php endforeach; ?>
                                             </tbody>
                                         </table><!--end /table-->
                                     </div><!--end /div-->                                 
@@ -443,7 +403,6 @@
                             </div><!--end card--> 
                         </div> <!--end col--> 
                     </div><!--end row-->
-
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="card">
@@ -459,46 +418,36 @@
                                         <?php
                                         $newQuery = $conn->query("SELECT * from news order by 1 desc limit 7");
                                         if ($newQuery->rowCount()) {
-                                           $news = $newQuery->fetchAll(PDO::FETCH_OBJ);
+                                            $news = $newQuery->fetchAll(PDO::FETCH_OBJ);
                                         }
                                         $index = 1;
                                         foreach ($news as $new) : 
-
                                             if ($index == 1) {
                                                 $tag1 = "Crypto News";
                                                 $tag2 = "Apps";
-                                                
-                                            }elseif ($index == 2) {
+                                            } elseif ($index == 2) {
                                                 $tag1 = "Cryptocurrency";
                                                 $tag2 = "Tech";
-                                            }elseif ($index == 3) {
+                                            } elseif ($index == 3) {
                                                 $tag1 = "Bitcoin";
                                                 $tag2 = "Tech";
                                             }
                                         ?>
-
-                                        <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
-                                            <div class="media">
-                                                <img src="../admin/images/<?= $new->photo; ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
-                                                <div class="media-body align-self-center"> 
-                                                    <h6 class="m-0"><?= substrwords($new->short_title, 30); ?></h6>
-                                                    <p class="mb-0 text-muted"><?= $tag1; ?>, <?= $tag2; ?></p>                                                                                           
-                                                </div><!--end media body-->
-                                            </div>
-                                            <div class="align-self-center">
-                                                <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= $new->slug; ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>  
-                                            </div>                                            
-                                        </li>
-
-                                            
-
-
-                                    <?php
-                                        $index++;
+                                            <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
+                                                <div class="media">
+                                                    <img src="../admin/images/<?= $new->photo; ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
+                                                    <div class="media-body align-self-center"> 
+                                                        <h6 class="m-0"><?= substrwords($new->short_title, 30); ?></h6>
+                                                        <p class="mb-0 text-muted"><?= $tag1; ?>, <?= $tag2; ?></p>                                                                                           
+                                                    </div><!--end media body-->
+                                                </div>
+                                                <div class="align-self-center">
+                                                    <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= $new->slug; ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>  
+                                                </div>                                            
+                                            </li>
+                                        <?php
+                                            $index++;
                                         endforeach; ?>
-
-                                        
-
                                     </ul>                                
                                 </div><!--end card-body--> 
                             </div><!--end card--> 
@@ -517,8 +466,6 @@
                                 </div><!--end card-body--> 
                             </div><!--end card--> 
                         </div><!--end col-->
-                        
-                        
                         <div class="col-lg-4">
                             <div class="card">   
                                 <div class="card-header">
@@ -531,21 +478,17 @@
                                 <div class="card-body"> 
                                     <div class="analytic-dash-activity" data-simplebar>
                                         <div class="activity">
-
                                             <?php
-                                                $stmtact = $conn->prepare("SELECT COUNT(*) AS numrows FROM activity WHERE user_id=$id");
-                                                $stmtact->execute();
-                                                $drowact = $stmtact->fetch();
-                                                $no_of_act = $drowact['numrows'];
-
-                                                $actQuery = $conn->query("SELECT * FROM activity WHERE user_id=$id order by 1 desc Limit 6");
-                                                if ($actQuery->rowCount()) {
-                                                   $actrow = $actQuery->fetchAll(PDO::FETCH_OBJ);
-                                                }
-                                                if($no_of_act > 0){
-
-                                                    foreach ($actrow as $act) : ?>
-
+                                            $stmtact = $conn->prepare("SELECT COUNT(*) AS numrows FROM activity WHERE user_id=$id");
+                                            $stmtact->execute();
+                                            $drowact = $stmtact->fetch();
+                                            $no_of_act = $drowact['numrows'];
+                                            $actQuery = $conn->query("SELECT * FROM activity WHERE user_id=$id order by 1 desc Limit 6");
+                                            if ($actQuery->rowCount()) {
+                                                $actrow = $actQuery->fetchAll(PDO::FETCH_OBJ);
+                                            }
+                                            if($no_of_act > 0) {
+                                                foreach ($actrow as $act) : ?>
                                                     <div class="activity-info">
                                                         <div class="icon-info-activity">
                                                             <i class="mdi mdi-clock-outline bg-soft-primary"></i>
@@ -559,41 +502,30 @@
                                                             </div>    
                                                         </div>
                                                     </div>
-
-
-                                            <?php
-                                              endforeach; }else{ ?>
-
+                                                <?php
+                                                endforeach;
+                                            } else { ?>
                                                 <div class="activity-info">
                                                     <h5>
                                                         No Activity Yet
                                                     </h5>
                                                 </div>
-
-                                            <?php  }
-                                            ?>
-
-                                            
-
+                                            <?php } ?>
                                         </div><!--end activity-->
                                     </div><!--end analytics-dash-activity-->
                                 </div>  <!--end card-body-->                                     
                             </div><!--end card--> 
                         </div><!--end col--> 
-                       
                     </div><!--end row-->
                     <div class="row">                        
                         <div class="col-lg-12">
                             <div class="card">
                                 <script src="https://widgets.coingecko.com/coingecko-coin-market-ticker-list-widget.js"></script>
-                                <coingecko-coin-market-ticker-list-widget  coin-id="bitcoin" currency="usd" locale="en"></coingecko-coin-market-ticker-list-widget>
+                                <coingecko-coin-market-ticker-list-widget coin-id="bitcoin" currency="usd" locale="en"></coingecko-coin-market-ticker-list-widget>
                             </div><!--end card--> 
                         </div> <!--end col-->  
                     </div><!--end row-->
-                    
-
                 </div><!-- container -->
-
                 <?php include('inc/footer.php'); ?><!--end footer-->
             </div>
             <!-- end page content -->
@@ -602,45 +534,28 @@
 
         <!-- Chart Data -->
         <?php
-
-            $invests = array();
-            $capital = array();
-            for( $m = 1; $m <= 12; $m++ ) {
-                try{
-                    $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = $id && status = 'completed' AND MONTH(end_date)=:month AND YEAR(end_date)=:year");
-                    $stmt->execute(['month'=>$m, 'year'=>$year]);
-                    $total = $total2 = 0;                    
-                    foreach($stmt as $srow){
-                        $amount = $srow['returns'] - $srow['capital'];
-                        $total += $amount;   
-
-                        $amount2 = $srow['capital'];
-                        $total2 += $amount2; 
-                    }
-                    array_push($invests, round($total, 2));
-
-                    array_push($capital, round($total2, 2));
+        $invests = array();
+        $capital = array();
+        for($m = 1; $m <= 12; $m++) {
+            try {
+                $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = $id && status = 'completed' AND MONTH(end_date)=:month AND YEAR(end_date)=:year");
+                $stmt->execute(['month'=>$m, 'year'=>$year]);
+                $total = $total2 = 0;                    
+                foreach($stmt as $srow) {
+                    $amount = $srow['returns'] - $srow['capital'];
+                    $total += $amount;   
+                    $amount2 = $srow['capital'];
+                    $total2 += $amount2; 
                 }
-                catch(PDOException $e){
-                    echo $e->getMessage();
-                }
-
+                array_push($invests, round($total, 2));
+                array_push($capital, round($total2, 2));
+            } catch(PDOException $e) {
+                echo $e->getMessage();
             }
-
-            $invests = json_encode($invests);
-            $capital = json_encode($capital);
-
+        }
+        $invests = json_encode($invests);
+        $capital = json_encode($capital);
         ?>
-
-        
-
-
         <?php include('inc/scripts.php'); ?>
-
-        
-        
     </body>
-
-
-<!-- Mirrored from mannatthemes.com/dastone/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Dec 2020 21:59:40 GMT -->
 </html>
