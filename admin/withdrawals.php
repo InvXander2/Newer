@@ -47,13 +47,13 @@
               <table id="example1" class="table table-bordered">
                 <thead>
                   <th class="hidden"></th>
-                  <th>Change Status</th>
                   <th>Username</th>
                   <th>Date</th>
                   <th>Amount</th>
                   <th>Payment Method</th>
                   <th>Payment Info</th>
                   <th>Status</th>
+                  <th>Change Status</th>
                 </thead>
                 <tbody>
                   <?php
@@ -66,12 +66,12 @@
                         echo "
                           <tr>
                             <td class='hidden'></td>
-                            <td>".$row['request_status']."</td>
                             <td>".$row['username']."</td>
                             <td>".$row['trans_date']."</td>
                             <td>&#36; ".number_format($row['amount'], 2)."</td>
                             <td>".$row['payment_mode']."</td>
                             <td>".$row['payment_info']."</td>
+                            <td>".$row['request_status']."</td>
                             <td>
                               <button class='btn btn-info btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Change Status</button>
                             </td>
