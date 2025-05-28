@@ -1,5 +1,7 @@
 <?php
     include('init.php');
+	include('inc/header.php'); ?>    
+    <!-- header-section end  -->
 
     include 'admin/session.php';
 
@@ -126,6 +128,9 @@
     </div>
     <!-- account section end -->
 
+  </div> <!-- page-wrapper end -->
+<?php include('inc/footer.php') ?>
+    <!-- footer section end -->
   </div> <!-- page-wrapper end -->
   <?php include('inc/scripts.php') ?>
   </body>
