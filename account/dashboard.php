@@ -1,5 +1,4 @@
 <?php
-    session_start();
     include('../inc/config.php');
     include('../admin/includes/format.php');
 
@@ -18,7 +17,7 @@
         header('location: ../login.php');
     }
 
-	include('process_investments.php');
+    include('process_investments.php');
 
     $today = date('Y-m-d');
     $year = date('Y');
