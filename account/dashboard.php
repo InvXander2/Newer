@@ -17,8 +17,6 @@
         header('location: ../login.php');
     }
 
-    include('process_investments.php');
-
     $today = date('Y-m-d');
     $year = date('Y');
     if(isset($_GET['year'])){
