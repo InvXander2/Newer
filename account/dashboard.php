@@ -656,33 +656,3 @@
 
 <!-- Mirrored from mannatthemes.com/dastone/default/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 01 Dec 2020 21:59:40 GMT -->
 </html>
-
-
-<div class="card">
-    <div class="card-header">
-        <h4 class="card-title">Active Plans</h4>
-    </div>
-    <div class="card-body">
-        <?php
-        $query = "SELECT investments.*, plans.name AS plan_name 
-                  FROM investments 
-                  JOIN plans ON investments.invest_plan_id = plans.plan_id 
-                  WHERE investments.user_id = $id AND investments.status = 'active'";
-        $result = mysqli_query($conne, $query);
-        ?>
-        <?php if (mysqli_num_rows($result) > 0): ?>
-            <?php while($row = mysqli_fetch_assoc($result)): ?>
-                <div class="plan-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
-                    <h5><?= htmlspecialchars($row['plan_name']) ?></h5>
-                    <p><strong>Capital:</strong> $<?= number_format($row['capital'], 2) ?></p>
-                    <p><strong>Current Return:</strong> $<?= number_format($row['current'], 2) ?></p>
-                    <p><strong>Guaranteed Return:</strong> $<?= number_format($row['returns'], 2) ?></p>
-                    <p><strong>Start Date:</strong> <?= date('M d, Y', strtotime($row['start_date'])) ?></p>
-                    <p><strong>End Date:</strong> <?= date('M d, Y', strtotime($row['end_date'])) ?></p>
-                </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No active plans found.</p>
-        <?php endif; ?>
-    </div>
-</div>
