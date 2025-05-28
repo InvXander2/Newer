@@ -22,7 +22,8 @@ if (!isset($conn) || !($conn instanceof PDO)) {
 // Ensure user is logged in and get user ID
 if (!isset($_SESSION['user_id'])) {
     error_log("User not logged in.", 3, "errors.log");
-    die("Error: User not logged in.");
+    header("Location: /login.php"); // Redirect to login page
+    exit;
 }
 $user_id = $_SESSION['user_id'];
 
@@ -81,7 +82,7 @@ try {
     $cancelled_stmt = $conn->prepare("SELECT * FROM investment 
                                       WHERE status = 'cancelled' 
                                       AND invest_id NOT IN (SELECT invest_id FROM transaction WHERE remark LIKE 'Refund%') 
-                                      AND user_id = ?");
+                                      AND i.user_id = ?");
     $cancelled_stmt->execute(array($user_id));
 
     foreach ($cancelled_stmt as $investment) {
