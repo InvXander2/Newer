@@ -28,11 +28,11 @@
 		){ 		
 			$baseurl = 'http://localhost/nexusinsights';
 		}  else {			
-			$baseurl = 'https://nexusinsights.it.com/';
+			$baseurl = 'https://nexusinsights.eu/';
 		}
 	//main url for SEO configurations
-	$main_url = 'https://nexusinsights.it.com/';
-	$sweet_url = 'nexusinsights.it.com';
+	$main_url = 'https://nexusinsights.eu/';
+	$sweet_url = 'nexusinsights.eu';
 	$noreply_password = 'Pass@001-.com';
 	//main website configuration settings
 		$settings = (object) array(
@@ -42,8 +42,8 @@
 			'siteTagline' => 'A Cryptocurrency Investment Company',
 			'phoneNumber' => '+1 (516) 2001 615',
 			'address' => '38 Curity Ave, East York, ON M4B 0A2, Canada',
-			'email' => 'info@nexusinsights.it.com',
-			'email2' => 'support@nexusinsights.it.com',
+			'email' => 'info@nexusinsights.eu',
+			'email2' => 'support@nexusinsights.eu',
 			'email3' => '',
 			'instagram' => '',
 			'facebook' => '',
