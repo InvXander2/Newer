@@ -1,6 +1,3 @@
-<?php
-include('../inc/config.php'); // Ensure this includes your database connection ($conn)
-
 try {
     $current_date = date('Y-m-d H:i:s');
 
@@ -28,7 +25,4 @@ try {
         $current_balance = $last_trans ? $last_trans['balance'] : 0;
 
         // Credit returns to balance
-        $new_balance = $current_balance + $returns;
-        $insert_trans = $conn->prepare("INSERT INTO transaction (user_id, trans_date, type, amount, remark, balance) 
-                                        VALUES (?, ?, '1', ?, ?, ?)");
-        $insert_trans->execute([$user_id, $current_date, $returns, "
+        $new_balance = $current_balance + $returns
