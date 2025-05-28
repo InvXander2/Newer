@@ -62,6 +62,12 @@ include('inc/head.php');
                             <input type="text" name="full_name" class="form-control" value="<?= htmlspecialchars($row0['full_name']) ?>">
                         </div>
 
+                        <!-- Username -->
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" name="uname" class="form-control" value="<?= htmlspecialchars($row0['uname']) ?>">
+                        </div>
+
                         <!-- Gender -->
                         <div class="form-group">
                             <label>Gender</label>
@@ -101,12 +107,6 @@ include('inc/head.php');
                         <div class="form-group">
                             <label>Address</label>
                             <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($row0['address']) ?>">
-                        </div>
-
-                        <!-- Username -->
-                        <div class="form-group">
-                            <label>Username</label>
-                            <input type="text" name="uname" class="form-control" value="<?= htmlspecialchars($row0['uname']) ?>">
                         </div>
 
                         <!-- Submit -->
