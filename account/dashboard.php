@@ -259,7 +259,7 @@ foreach ($stmt3 as $prow) {
 
     <div class="page-wrapper">
         <!-- Top Bar Start -->
-        <?php include('inc/header.php'); ?>
+        <?php include('../inc/header.php'); ?>
         <!-- Top Bar End -->
 
         <!-- Page Content-->
