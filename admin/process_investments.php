@@ -1,28 +1,27 @@
+<?php
+include('../inc/config.php');
+
 try {
     $current_date = date('Y-m-d H:i:s');
+    $user_id = 8; // Test with a known user
+    $returns = 240; // Test with a known return amount
+    $plan_name = "Starter Plan"; // Test plan name
+    $invest_id = 1; // Test investment ID
+    $current_balance = 1000; // Test balance
 
-    // Find investments that are due
-    $stmt = $conn->prepare("SELECT i.*, ip.name 
-                            FROM investment i 
-                            JOIN investment_plans ip ON i.invest_plan_id = ip.id 
-                            WHERE i.status = 'in progress' AND i.end_date <= ?");
-    $stmt->execute([$current_date]);
+    // Update investment status
+    $update_stmt = $conn->prepare("UPDATE investment SET status = 'completed' WHERE invest_id = ?");
+    $update_stmt->execute([$invest_id]);
 
-    foreach ($stmt as $investment) {
-        $user_id = $investment['user_id'];
-        $returns = $investment['returns'];
-        $plan_name = $investment['name'];
-        $invest_id = $investment['invest_id'];
+    // Credit returns to balance
+    $new_balance = $current_balance + $returns;
+    $insert_trans = $conn->prepare("INSERT INTO transaction (user_id, trans_date, type, amount, remark, balance) 
+                                    VALUES (?, ?, '1', ?, ?, ?)");
+    $insert_trans->execute([$user_id, $current_date, $returns, "Investment returns from $plan_name", $new_balance]);
 
-        // Update investment status to completed
-        $update_stmt = $conn->prepare("UPDATE investment SET status = 'completed' WHERE invest_id = ?");
-        $update_stmt->execute([$invest_id]);
-
-        // Get the user's latest balance
-        $balance_stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = ? ORDER BY trans_id DESC LIMIT 1");
-        $balance_stmt->execute([$user_id]);
-        $last_trans = $balance_stmt->fetch(PDO::FETCH_ASSOC);
-        $current_balance = $last_trans ? $last_trans['balance'] : 0;
-
-        // Credit returns to balance
-        $new_balance = $current_balance + $returns
+    echo "Test completed successfully.";
+} catch (PDOException $e) {
+    error_log("Error: " . $e->getMessage(), 3, "errors.log");
+    echo "Error occurred. Check errors.log.";
+}
+?>
