@@ -269,50 +269,46 @@
                                         </div><!--end card-body--> 
                                     </div><!--end card--> 
                                 </div> <!--end col--> <div class="col-md-6 col-lg-3">
-                    <div class="col-md-6 col-lg-3">
-                <div class="card report-card">
-                  <div class="card-body">
-                      <div class="row d-flex justify-content-center">
-        
-                        <?php
-                                if ($no_of_inv > 0) { ?>
-                        <div class="col">
-                         <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
-          
-                          <h3 class="m-0"><?= $no_of_inv; ?></h3>
-                          <h5 class="mb-0 text-truncate text-muted">
-                            <?php foreach ($row5 as $inv) : ?>
-                              <div class="mb-2">
-                              <strong><?= htmlspecialchars($inv->name); ?></strong><br>
-                              Current Return: <span class="text-success"><?= number_format($inv->current, 2); ?></span><br>
-                             Guaranteed Return: <span class="text-primary"><?= number_format($inv->returns, 2); ?></span>
-                            </div>
-                            <?php endforeach; ?>
-                          </h5>
+        <div class="col-md-6 col-lg-3">
+          <div class="card report-card">
+            <div class="card-body">
+              <div class="row d-flex justify-content-center">
+
+                <?php if ($no_of_inv > 0) : ?>
+                  <div class="col">
+                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
+                    <h5 class="mb-0 text-truncate text-muted">
+                      <?php foreach ($row5 as $inv) : ?>
+                        <div class="mb-2">
+                          <strong><?= htmlspecialchars($inv->name); ?></strong><br>
+                          Current Return: <span class="text-success"><?= number_format($inv->current, 2); ?></span><br>
+                          Guaranteed Return: <span class="text-primary"><?= number_format($inv->returns, 2); ?></span>
                         </div>
-        
-                       <div class="col-auto align-self-center">
-                         <div class="report-main-icon bg-light-alt">
-                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
-                          </div>
-                       </div>
-                       <?php } else {
-                                    echo '
-                                    <div class="col">
-                                        <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
-                                        <h5 class="mb-0 text-danger">
-                                            <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
-                                            You have no ongoing investment. Invest now to earn.                                                
-                                      </h5>
-                                    </div>
-                                    ';
-                                }
-                               ?>
-        
-                      </div>
-                   </div><!--end card-body-->
-                  </div><!--end card-->
-                </div> <!--end col-->
+                      <?php endforeach; ?>
+                    </h5>
+                  </div>
+
+                  <div class="col-auto align-self-center">
+                    <div class="report-main-icon bg-light-alt">
+                      <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
+                    </div>
+                  </div>
+
+                <?php else : ?>
+                  <div class="col">
+                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                    <h5 class="mb-0 text-danger">
+                      <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
+                      You have no ongoing investment. Invest now to earn.
+                    </h5>
+                  </div>
+                <?php endif; ?>
+
+              </div>
+            </div><!--end card-body-->
+          </div><!--end card-->
+        </div> <!--end col-->
                                 <div class="col-md-6 col-lg-3">
                                     <div class="card report-card">
                                         <div class="card-body">
