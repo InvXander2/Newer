@@ -41,7 +41,7 @@
 			'siteTitleCap' => 'NEXUS INSIGHTS',
 			'siteTagline' => 'A Cryptocurrency Investment Company',
 			'phoneNumber' => '+1 (516) 2001 615',
-			'address' => '38 Curity Ave, East York, ON M4B 0A2, Canada',
+			'address' => '17 Willow Lane, Bristol, BS1 4XY, United Kingdom',
 			'email' => 'info@nexusinsights.eu',
 			'email2' => 'support@nexusinsights.eu',
 			'email3' => '',
