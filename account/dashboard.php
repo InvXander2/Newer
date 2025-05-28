@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include('../inc/config.php');
     include('../admin/includes/format.php');
 
