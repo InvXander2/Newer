@@ -109,12 +109,6 @@ include('inc/head.php');
                             <input type="text" name="uname" class="form-control" value="<?= htmlspecialchars($row0['uname']) ?>">
                         </div>
 
-                        <!-- Password -->
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input type="password" name="password" class="form-control" placeholder="Leave blank to keep current password">
-                        </div>
-
                         <!-- Submit -->
                         <div class="form-group">
                             <button type="submit" name="update" class="btn btn-primary">Update Profile</button>
