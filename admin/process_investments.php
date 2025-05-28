@@ -1,6 +1,6 @@
 <?php
 // Include database configuration
-include('../inc/config.php');
+include('../inc/conn.php');
 
 // Ensure database connection is available
 if (!isset($conn)) {
