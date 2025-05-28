@@ -14,7 +14,7 @@
         <ul class="metismenu left-sidenav-menu">
             <li class="menu-label mt-0">Main</li>
             <li>
-                <a href="dashboard"> <i data-feather="home" class="align-self-center menu-icon"></i><span>Dashboa</span></a>
+                <a href="dashboard"> <i data-feather="home" class="align-self-center menu-icon"></i><span>Dashboard</span></a>
             </li>
 
             <hr class="hr-dashed hr-menu">
