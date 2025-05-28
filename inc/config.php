@@ -26,13 +26,13 @@
 		if(
 			( $_SERVER['REMOTE_ADDR'] == '::1' ) || ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' )
 		){ 		
-			$baseurl = 'http://localhost/primeassetsltd';
+			$baseurl = 'http://localhost/nexusinsights';
 		}  else {			
-			$baseurl = 'https://primeassetslimited.com/';
+			$baseurl = 'https://nexusinsights.it.com/';
 		}
 	//main url for SEO configurations
-	$main_url = 'https://primeassetslimited.com/';
-	$sweet_url = 'primeassetslimited.com';
+	$main_url = 'https://nexusinsights.it.com/';
+	$sweet_url = 'nexusinsights.it.com';
 	$noreply_password = 'Pass@001-.com';
 	//main website configuration settings
 		$settings = (object) array(
