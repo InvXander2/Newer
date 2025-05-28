@@ -8,7 +8,7 @@ $page_parent = '';
 $page_title = 'Welcome to the Official Website of ' . $settings->siteTitle;
 $page_description = $settings->siteTitle . ' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
 
-include('inc/head.php');
+include('../inc/head.php');
 
 $id = $_SESSION['user'];
 
