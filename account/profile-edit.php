@@ -94,9 +94,7 @@ include('inc/head.php');
                         <div class="form-group">
                             <label>Nationality</label>
                             <select name="nationality" class="form-control">
-                                <?php
-                                include('../inc/countries.php');
-                                ?>
+                                <?php include('../inc/countries.php'); ?>
                                 <script>
                                     document.querySelector('[name="nationality"]').value = <?= json_encode($row0['nationality']) ?>;
                                 </script>
@@ -109,8 +107,17 @@ include('inc/head.php');
                             <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($row0['address']) ?>">
                         </div>
 
-                        <!-- Submit -->
+                        <!-- Profile Picture -->
                         <div class="form-group">
+                            <label>Profile Picture</label><br>
+                            <?php if (!empty($row0['photo'])): ?>
+                                <img src="../images/users/<?= htmlspecialchars($row0['photo']) ?>" alt="Profile Picture" width="100" class="mb-2"><br>
+                            <?php endif; ?>
+                            <input type="file" name="photo" accept="image/*" class="form-control-file">
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="form-group mt-3">
                             <button type="submit" name="update" class="btn btn-primary">Update Profile</button>
                         </div>
 
