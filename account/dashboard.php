@@ -462,20 +462,6 @@
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
-                                        <h4 class="card-title">Earnings By Channel</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div id="barchart" class="apex-charts ml-n4"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center">
-                                    <div class="col">
                                         <h4 class="card-title">Activity</h4>
                                     </div><!--end col-->
                                 </div><!--end row-->
