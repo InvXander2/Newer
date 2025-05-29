@@ -8,7 +8,7 @@ if (!isset($id)) {
     $id = $_SESSION['user'] ?? 0; // Fallback to 0 if user not logged in
 }
 
-// Use PDO ($conn) instead of $conne (MySQLi) for consistency
+// Use PDO ($conn) for consistency
 try {
     $stmt0 = $conn->prepare("SELECT * FROM users WHERE id = ?");
     $stmt0->execute([$id]);
@@ -32,21 +32,19 @@ try {
 
 <div class="topbar">            
     <!-- Navbar -->
-    <nav class="navbar-custom" style="display: flex; align-items: center;">    
-        <ul class="list-unstyled topbar-nav mb-0">                        
+    <nav class="navbar-custom">    
+        <ul class="list-unstyled topbar-nav mb-0" style="display: flex; align-items: center;">                        
             <li>
                 <button class="nav-link button-menu-mobile">
                     <i data-feather="menu" class="align-self-center topbar-icon"></i>
                 </button>
+            </li>
+            <li class="topbar-logo" style="margin-left: 10px;">
+                <a href="/" title="<?php echo htmlspecialchars($settings->siteTitle); ?>">
+                    <img src="../assets/images/logo.png" alt="Logo" style="max-height: 30px;">
+                </a>
             </li>                          
         </ul>
-
-        <!-- Logo -->
-        <div class="topbar-logo" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
-            <a href="/" title="<?php echo htmlspecialchars($settings->siteTitle); ?>">
-                <img src="../assets/images/logo.png" alt="Logo" style="max-height: 30px;">
-            </a>
-        </div>
 
         <ul class="list-unstyled topbar-nav float-right mb-0">  
             <li class="dropdown hide-phone">
