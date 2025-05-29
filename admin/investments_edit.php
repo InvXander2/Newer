@@ -29,6 +29,7 @@ if (isset($_POST['edit'])) {
         $capital = $investment['capital'];
         $returns = $investment['returns'];
         $plan_name = $investment['plan_name'] ?? 'Investment Plan';
+        $act_time = date('Y-m-d h:i A');
 
         // Debugging: Log investment details
         error_log("investments_edit.php: user_id=$user_id, capital=$capital, returns=$returns, plan_name=$plan_name", 3, 'debug.log');
@@ -40,7 +41,7 @@ if (isset($_POST['edit'])) {
         $stmt = $conn->prepare("UPDATE investment SET status = :status WHERE invest_id = :id");
         $stmt->execute(['status' => $status, 'id' => $id]);
 
-        // Only process balance and remark for 'completed' or 'cancelled'
+        // Only process balance, remark, and activity for 'completed' or 'cancelled'
         if ($status === 'completed' || $status === 'cancelled') {
             // Get user's current balance from the latest transaction
             $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
@@ -54,7 +55,7 @@ if (isset($_POST['edit'])) {
                 // Credit capital + returns to user's balance
                 $amount = $capital + $returns;
                 $new_balance = $current_balance + $amount;
-                $remark = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
+                $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
@@ -64,13 +65,23 @@ if (isset($_POST['edit'])) {
                     'amount' => $amount,
                     'type' => 1, // Credit
                     'balance' => $new_balance,
-                    'remark' => $remark
+                    'remark' => $message
+                ]);
+
+                // Log activity
+                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'message' => $message,
+                    'category' => 'Investment Completion',
+                    'date_sent' => $act_time
                 ]);
             } elseif ($status === 'cancelled') {
                 // Credit only capital to user's balance
                 $amount = $capital;
                 $new_balance = $current_balance + $amount;
-                $remark = "Your investment of $$capital for $plan_name has been cancelled, and $$capital has been refunded to your account.";
+                $message = "Your investment of $$capital for $plan_name has been cancelled, and $$capital has been refunded to your account.";
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
@@ -80,12 +91,22 @@ if (isset($_POST['edit'])) {
                     'amount' => $amount,
                     'type' => 1, // Credit
                     'balance' => $new_balance,
-                    'remark' => $remark
+                    'remark' => $message
+                ]);
+
+                // Log activity
+                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'message' => $message,
+                    'category' => 'Investment Cancellation',
+                    'date_sent' => $act_time
                 ]);
             }
 
-            // Debugging: Log transaction details
-            error_log("investments_edit.php: status=$status, amount=$amount, new_balance=$new_balance, remark=$remark", 3, 'debug.log');
+            // Debugging: Log transaction and activity details
+            error_log("investments_edit.php: status=$status, amount=$amount, new_balance=$new_balance, message=$message", 3, 'debug.log');
         }
 
         // Commit transaction
