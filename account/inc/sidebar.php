@@ -53,9 +53,6 @@
             </li>
 
 
-            <li>
-                <a href="logout_action"><i data-feather="log-out" class="align-self-center menu-icon"></i><span>Logout</span></a>
-            </li>
         </ul>
 
         <div class="bitcoin-converter mt-40">
