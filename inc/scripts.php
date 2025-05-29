@@ -8,6 +8,8 @@
 <script src="assets/js/contact.js"></script>
 <!-- Data binder -->
 <script src="assets/js/vendor/data.binder.js/data.binder.js" type="text/javascript"></script>
+<!-- ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <!-- dashboard custom js -->
 <script src="assets/js/app.js"></script>
 
