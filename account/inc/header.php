@@ -32,11 +32,11 @@ try {
 
 <div class="topbar">            
     <!-- Navbar -->
-    <nav class="navbar-custom" style="display: flex; justify-content: space-between; align-items: center;">    
+    <nav class="navbar-custom" style="display: flex; justify-content: space-between; align-items: center; width: 100%;">    
         <ul class="list-unstyled topbar-nav mb-0" style="display: flex; align-items: center;">                        
             <li>
-                <button class="nav-link button-menu-mobile">
-                    <i data-feather="menu" class="align-self-center topbar-icon"></i>
+                <button class="nav-link button-menu-mobile" style="display: inline-block; visibility: visible; opacity: 1; padding: 10px; font-size: 24px;">
+                    <i data-feather="menu" class="align-self-center topbar-icon" style="width: 24px; height: 24px; display: inline-block;">☰</i>
                 </button>
             </li>
             <li class="topbar-logo" style="margin-left: 10px;">
@@ -49,8 +49,8 @@ try {
         <ul class="list-unstyled topbar-nav mb-0" style="display: flex; align-items: center; margin-left: auto;">  
             <li class="dropdown hide-phone">
                 <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="false" aria-expanded="false">
-                    <i data-feather="search" class="topbar-icon"></i>
+                    aria-haspopup="false" aria-expanded="false" style="display: inline-block; visibility: visible;">
+                    <i data-feather="search" class="topbar-icon" style="width: 24px; height: 24px; display: inline-block;">🔍</i>
                 </a>
                 
                 <div class="dropdown-menu dropdown-menu-right dropdown-lg p-0">
@@ -66,8 +66,8 @@ try {
 
             <li class="dropdown notification-list">
                 <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="false" aria-expanded="false">
-                    <i data-feather="bell" class="align-self-center topbar-icon"></i>
+                    aria-haspopup="false" aria-expanded="false" style="display: inline-block; visibility: visible;">
+                    <i data-feather="bell" class="align-self-center topbar-icon" style="width: 24px; height: 24px; display: inline-block;">🔔</i>
                     <?php if ($no_of_msg > 0) {
                         echo "<span class='badge badge-danger badge-pill noti-icon-badge'>".$no_of_msg."</span>";
                     } else { echo ""; } ?>
@@ -124,4 +124,13 @@ try {
         </ul><!--end topbar-nav-->
     </nav>
     <!-- end navbar-->
+    <style>
+        /* Debug: Highlight icons */
+        .button-menu-mobile, .topbar-icon { color: #000 !important; background: transparent !important; }
+        .hide-phone { display: inline-block !important; }
+        @media (max-width: 767px) {
+            .button-menu-mobile, .topbar-icon { display: inline-block !important; }
+            .hide-phone { display: none !important; } /* Respect original mobile hiding */
+        }
+    </style>
 </div>
