@@ -9,21 +9,21 @@
             <hr class="hr-dashed hr-menu">
             <li class="menu-label my-2">Info</li>
 
-
             <li>
                 <a href="investments"><i data-feather="bar-chart" class="align-self-center menu-icon"></i><span>Investment Plans</span></a>
             </li>
-
 
             <li>
                 <a href="deposits"><i data-feather="credit-card" class="align-self-center menu-icon"></i><span>Deposit Funds</span></a>
             </li>
 
-
             <li>
                 <a href="withdrawals"><i data-feather="briefcase" class="align-self-center menu-icon"></i><span>Withdraw Funds</span></a>
             </li>
 
+            <li>
+                <a href="history"><i data-feather="clock" class="align-self-center menu-icon"></i><span>Transaction History</span></a>
+            </li>
 
             <hr class="hr-dashed hr-menu">
             <li class="menu-label my-2">User Options</li>
@@ -32,22 +32,17 @@
                 <a href="referrals"><i data-feather="git-merge" class="align-self-center menu-icon"></i><span>Referrals</span></a>
             </li>
 
-
             <li>
                 <a href="messages"><i data-feather="inbox" class="align-self-center menu-icon"></i><span>Inbox</span></a>
             </li>
-
 
             <li>
                 <a href="password-update"><i data-feather="lock" class="align-self-center menu-icon"></i><span>Change Password</span></a>
             </li>       
 
-
             <li>
                 <a href="../contact"><i data-feather="life-buoy" class="align-self-center menu-icon"></i><span>Contact Support</span></a>
             </li>
-
-
         </ul>
 
         <div class="bitcoin-converter mt-40">
