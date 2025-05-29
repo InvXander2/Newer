@@ -113,7 +113,7 @@
                                                 <label>Deposit Charge: 0%</label>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-2">
-                                                <label>Deposit Limit: ($100 - $10,000,000)</label>
+                                                <label>Deposit Limit: ($100 - $100,000)</label>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-2">
                                                 <div class="input-group mb-3">
@@ -161,9 +161,9 @@
                     $('#deposit-amount').addClass('is-invalid');
                     return false;
                 }
-                if (amount > 10000000) {
+                if (amount > 100000) {
                     e.preventDefault();
-                    $error.text('Deposit amount cannot exceed $10,000,000.').show();
+                    $error.text('Deposit amount cannot exceed $100,000.').show();
                     $('#deposit-amount').addClass('is-invalid');
                     return false;
                 }
