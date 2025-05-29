@@ -43,7 +43,12 @@ if (isset($_POST['edit'])) {
 
         // Only process balance, remark, and activity for 'completed' or 'cancelled'
         if ($status === 'completed' || $status === 'cancelled') {
-            // Get user's current balance from the latest transaction
+            // Prevent duplicate credits
+            if ($investment['status'] === $status) {
+                throw new Exception("Investment is already $status.");
+            }
+
+            // Get user's current balance
             $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
             $stmt->execute(['user_id' => $user_id]);
             $current_balance = $stmt->fetchColumn() ?: 0;
@@ -52,7 +57,7 @@ if (isset($_POST['edit'])) {
             error_log("investments_edit.php: current_balance=$current_balance", 3, 'debug.log');
 
             if ($status === 'completed') {
-                // Credit capital + returns to user's balance
+                // Credit capital + returns
                 $amount = $returns;
                 $new_balance = $current_balance + $amount;
                 $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
@@ -78,7 +83,7 @@ if (isset($_POST['edit'])) {
                     'date_sent' => $act_time
                 ]);
             } elseif ($status === 'cancelled') {
-                // Credit only capital to user's balance
+                // Credit only capital
                 $amount = $capital;
                 $new_balance = $current_balance + $amount;
                 $message = "Your investment of $$capital for $plan_name has been cancelled, and $$capital has been refunded to your account.";
