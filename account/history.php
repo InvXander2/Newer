@@ -1,6 +1,5 @@
 <?php
-session_start(); // Start session
-
+// session_start() removed to avoid duplicate call, as session.php starts the session
 include('../inc/config.php');
 include('../admin/session.php');
 
@@ -59,7 +58,7 @@ $pdo->close();
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
+                                        <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
