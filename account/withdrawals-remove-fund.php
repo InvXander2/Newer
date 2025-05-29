@@ -18,28 +18,49 @@ if (!isset($_SESSION['user'])) {
 
 $conn = $pdo->open();
 
-// Fetch user balance
-$stmt = $conn->prepare("SELECT balance FROM users WHERE id = :id");
-$stmt->execute(['id' => $id]);
-$user = $stmt->fetch(PDO::FETCH_OBJ);
-$balance = $user->balance ?? 0; // Default to 0 if balance is not found
+// Fetch user balance from transaction table (type=1 for credits, type=2 for debits)
+try {
+    $stmt = $conn->prepare("
+        SELECT (
+            COALESCE(SUM(CASE WHEN type = 1 THEN amount ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN type = 2 THEN amount ELSE 0 END), 0)
+        ) AS balance
+        FROM transaction
+        WHERE user_id = :user_id
+    ");
+    $stmt->execute(['user_id' => $id]);
+    $user = $stmt->fetch(PDO::FETCH_OBJ);
+    $balance = $user->balance ?? 0;
+} catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
+    header('location: withdrawals-remove-fund.php');
+    exit();
+}
 
-$withdrawal_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id && type=2 order by 1 desc");
+// Fetch withdrawal requests
+$withdrawal_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 2 ORDER BY id DESC");
+$withdrawal_madeQuery->execute(['user_id' => $id]);
 if ($withdrawal_madeQuery->rowCount()) {
     $withdrawal_made = $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ);
 }
 
+// Fetch payment methods
 $payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
 if ($payment_methodQuery->rowCount()) {
     $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
 }
 
-$payment_completeQuery = $conn->query("SELECT * FROM payment_methods order by 1 asc Limit 1");
+// Fetch default payment method
+$payment_completeQuery = $conn->query("SELECT * FROM payment_methods ORDER BY id ASC LIMIT 1");
 if ($payment_completeQuery->rowCount()) {
     $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
 }
 
-$withdrawalHistory = "SELECT * FROM transaction WHERE user_id = $id && type = 2";
+// Withdrawal history query
+$withdrawalHistoryQuery = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id AND type = 2");
+$withdrawalHistoryQuery->execute(['user_id' => $id]);
+$withdrawalHistory = $withdrawalHistoryQuery->fetchAll(PDO::FETCH_OBJ);
 
 ?>
 
@@ -66,8 +87,8 @@ $withdrawalHistory = "SELECT * FROM transaction WHERE user_id = $id && type = 2"
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
-                                        <span class="" id="Select_date">Jan 11</span>
+                                        <span class="day-name" id="Day_Name">Today:</span> 
+                                        <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
