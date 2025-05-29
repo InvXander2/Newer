@@ -20,7 +20,7 @@
 
     // Use parameterized query to prevent SQL injection
     $deposit_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :id AND type = 1 ORDER BY user_id DESC");
-    $deposit_madeQuery->execute(['user_id' => $id]);
+    $deposit_madeQuery->execute(['id' => $id]);
     if ($deposit_madeQuery->rowCount()) {
         $deposit_made = $deposit_madeQuery->fetchAll(PDO::FETCH_OBJ);
     }
