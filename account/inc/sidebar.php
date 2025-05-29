@@ -26,7 +26,7 @@
 
 
             <hr class="hr-dashed hr-menu">
-            <li class="menu-label my-2">Account & Settings</li>
+            <li class="menu-label my-2">User Options</li>
 
             <li>
                 <a href="referrals"><i data-feather="git-merge" class="align-self-center menu-icon"></i><span>Referrals</span></a>
