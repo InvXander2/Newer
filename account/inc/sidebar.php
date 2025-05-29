@@ -1,11 +1,9 @@
-
-
 <div class="left-sidenav">
     <!-- LOGO -->
     <div class="brand">
-        <a href="<?php echo $baseurl ?>" class="logo">
+        <a href="<?php echo $baseurl ?>" class="">
             <span>
-                <img height="150%" src="../assets/images/logo.png" alt="prime-logo" class="logo-md">
+                <img height="150%" src="" alt="prime-logo" class="logo-md">
             </span>
         </a>
     </div>
