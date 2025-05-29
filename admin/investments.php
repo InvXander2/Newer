@@ -106,65 +106,15 @@
                             </td>
                             <td><?php echo htmlspecialchars($row['start_date']); ?></td>
                             <td><?php echo htmlspecialchars($row['end_date']); ?></td>
-                            <td>
-                              <?php 
-                                $iv_end = strtotime($row['end_date']);
-                                $t_day = strtotime($now);
-                                if ($t_day >= $iv_end && $row['invest_status'] == 'in progress') {
-                                  // Begin transaction
-                                  $conn->beginTransaction();
-
-                                  // Update status to completed
-                                  $stmt = $conn->prepare("UPDATE investment SET status = :c_status WHERE invest_id = :c_id");
-                                  $stmt->execute(['c_status' => 'completed', 'c_id' => $row['invest_id']]);
-
-                                  // Get user's current balance
-                                  $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
-                                  $stmt->execute(['user_id' => $row['user_id']]);
-                                  $current_balance = $stmt->fetchColumn() ?: 0;
-
-                                  // Credit capital + returns
-                                  $amount = $row['capital'] + $row['returns'];
-                                  $new_balance = $current_balance + $amount;
-
-                                  // Insert transaction
-                                  $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
-                                                          VALUES (:user_id, :amount, :type, :balance, NOW())");
-                                  $stmt->execute([
-                                    'user_id' => $row['user_id'],
-                                    'amount' => $amount,
-                                    'type' => 1, // Credit
-                                    'balance' => $new_balance
-                                  ]);
-
-                                  // Log activity
-                                  $act_time = date('Y-m-d h:i A');
-                                  $message = "Your investment of $" . number_format($row['capital'], 2) . " for " . htmlspecialchars($row['plan_name']) . " has been completed, and $" . number_format($amount, 2) . " has been credited to your account.";
-                                  $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
-                                                          VALUES (:user_id, :message, :category, :date_sent)");
-                                  $stmt->execute([
-                                    'user_id' => $row['user_id'],
-                                    'message' => $message,
-                                    'category' => 'Investment Completion',
-                                    'date_sent' => $act_time
-                                  ]);
-
-                                  // Commit transaction
-                                  $conn->commit();
-
-                                  echo 'completed';
-                                } else {
-                                  echo htmlspecialchars($row['invest_status']);
-                                }
-                              ?>
-                            </td>
+                            <td><?php echo htmlspecialchars($row['invest_status']); ?></td>
                             <td>
                               <button class="btn btn-primary btn-sm edit btn-flat" data-id="<?php echo $row['invest_id']; ?>"><i class="fa fa-edit"></i> Status</button>
                             </td>
                           </tr>
                       <?php } 
                     } catch (PDOException $e) {
-                      echo $e->getMessage();
+                      $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+                      error_log("investments.php: Error - " . $e->getMessage(), 3, 'debug.log');
                     }
                     $pdo->close(); 
                   ?>
@@ -203,6 +153,9 @@ function getRow(id){
     success: function(response){
       $('.invid').val(response.invest_id);
       $('#invest_status').val(response.invest_status);
+    },
+    error: function(xhr, status, error) {
+      console.log('AJAX Error: ' + error);
     }
   });
 }
