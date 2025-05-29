@@ -38,29 +38,55 @@ try {
     exit();
 }
 
-// Fetch withdrawal requests
-$withdrawal_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 2 ORDER BY id DESC");
-$withdrawal_madeQuery->execute(['user_id' => $id]);
-if ($withdrawal_madeQuery->rowCount()) {
-    $withdrawal_made = $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ);
+// Fetch withdrawal requests using request_id
+try {
+    $withdrawal_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 2 ORDER BY request_id DESC");
+    $withdrawal_madeQuery->execute(['user_id' => $id]);
+    if ($withdrawal_madeQuery->rowCount()) {
+        $withdrawal_made = $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ);
+    } else {
+        $withdrawal_made = [];
+    }
+} catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
 }
 
 // Fetch payment methods
-$payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
-if ($payment_methodQuery->rowCount()) {
-    $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
+try {
+    $payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
+    if ($payment_methodQuery->rowCount()) {
+        $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
+    } else {
+        $payment_method = [];
+    }
+} catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
 }
 
 // Fetch default payment method
-$payment_completeQuery = $conn->query("SELECT * FROM payment_methods ORDER BY id ASC LIMIT 1");
-if ($payment_completeQuery->rowCount()) {
-    $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
+try {
+    $payment_completeQuery = $conn->query("SELECT * FROM payment_methods ORDER BY id ASC LIMIT 1");
+    if ($payment_completeQuery->rowCount()) {
+        $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
+    } else {
+        $payment_complete = [];
+    }
+} catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
 }
 
 // Withdrawal history query
-$withdrawalHistoryQuery = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id AND type = 2");
-$withdrawalHistoryQuery->execute(['user_id' => $id]);
-$withdrawalHistory = $withdrawalHistoryQuery->fetchAll(PDO::FETCH_OBJ);
+try {
+    $withdrawalHistoryQuery = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id AND type = 2");
+    $withdrawalHistoryQuery->execute(['user_id' => $id]);
+    $withdrawalHistory = $withdrawalHistoryQuery->fetchAll(PDO::FETCH_OBJ);
+} catch (PDOException $e) {
+    $_SESSION['error'] = "Database error: " . $e->getMessage();
+    error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
+}
 
 ?>
 
