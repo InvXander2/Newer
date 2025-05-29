@@ -18,7 +18,9 @@
 
     $conn = $pdo->open();
 
-    $deposit_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id AND type=1 ORDER BY user_id DESC");
+    // Use parameterized query to prevent SQL injection
+    $deposit_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :id AND type = 1 ORDER BY id DESC");
+    $deposit_madeQuery->execute(['id' => $id]);
     if ($deposit_madeQuery->rowCount()) {
         $deposit_made = $deposit_madeQuery->fetchAll(PDO::FETCH_OBJ);
     }
@@ -56,19 +58,18 @@
                             <div class="row">
                                 <div class="col">
                                     <h4 class="page-title">Deposits</h4>
-                                </div><!--end col-->
+                                </div>
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
+                                        <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date">Jan 11</span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
-                                </div><!--end col-->
-                            </div><!--end row-->
-                        </div><!--end page-title-box-->
-                    </div><!--end col-->
-                </div><!--end row-->
-                <!-- end page title end breadcrumb -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <?php
                     if (isset($_SESSION['error'])) {
@@ -104,85 +105,97 @@
                             <div class="card-header">
                                 <h4 class="card-title">Fund Account</h4>
                                 <p class="text-muted mb-0">Add Fund to your Account</p>
-                            </div><!--end card-header-->
+                            </div>
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
                                         <form class="form-horizontal auth-form" method="post" action="deposits-payment-option" id="deposit-form">
                                             <div class="form-group mb-2">
                                                 <label>Deposit Charge: 0%</label>
-                                            </div><!--end form-group-->
+                                            </div>
                                             <div class="form-group mb-2">
                                                 <label>Deposit Limit: ($100 - $100,000)</label>
-                                            </div><!--end form-group-->
+                                            </div>
                                             <div class="form-group mb-2">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                                    <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="10000000" step="0.01" required />
+                                                    <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
                                                     <div class="input-group-append"><span class="input-group-text">.00</span></div>
                                                 </div>
-                                                <div id="deposit-error" class="invalid-feedback" style="display: none;"></div>
-                                            </div><!--end form-group-->
+                                                <div id="deposit-error" class="invalid-feedback"></div>
+                                            </div>
                                             <div class="form-group mb-0 row">
                                                 <div class="col-12">
-                                                    <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" name="addFund">Fund <i class="fas fa-money-bill ml-1"></i></button>
-                                                </div><!--end col-->
-                                            </div><!--end form-group-->
-                                        </form><!--end form-->
+                                                    <button class="btn btn-primary btn-block waves-effect waves-light" type="submit" name="addFund" id="fund-button" disabled>Fund <i class="fas fa-money-bill ml-1"></i></button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                            </div><!--end card-body-->
-                        </div><!--end card-->
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!-- container -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-            <?php include('inc/footer.php'); ?><!--end footer-->
+            <?php include('inc/footer.php'); ?>
         </div>
-        <!-- end page content -->
     </div>
-    <!-- end page-wrapper -->
 
     <!-- JavaScript for deposit form validation -->
     <script>
         $(document).ready(function() {
-            $('#deposit-form').on('submit', function(e) {
-                var amount = parseFloat($('#deposit-amount').val());
-                var $error = $('#deposit-error');
+            var $amountInput = $('#deposit-amount');
+            var $error = $('#deposit-error');
+            var $fundButton = $('#fund-button');
 
-                // Clear previous errors
+            // Function to validate amount and update button state
+            function validateAmount() {
+                var amount = parseFloat($amountInput.val());
                 $error.hide().text('');
-                $('#deposit-amount').removeClass('is-invalid');
+                $amountInput.removeClass('is-invalid');
 
-                // Validate amount
                 if (isNaN(amount) || amount < 100) {
-                    e.preventDefault();
                     $error.text('Deposit amount must be at least $100.').show();
-                    $('#deposit-amount').addClass('is-invalid');
+                    $amountInput.addClass('is-invalid');
+                    $fundButton.prop('disabled', true);
                     return false;
                 }
                 if (amount > 100000) {
-                    e.preventDefault();
                     $error.text('Deposit amount cannot exceed $100,000.').show();
-                    $('#deposit-amount').addClass('is-invalid');
+                    $amountInput.addClass('is-invalid');
+                    $fundButton.prop('disabled', true);
                     return false;
                 }
-
+                $fundButton.prop('disabled', false);
                 return true;
-            });
+            }
 
-            // Prevent negative input
-            $('#deposit-amount').on('input', function() {
+            // Validate on input
+            $amountInput.on('input', function() {
                 var value = $(this).val();
+                console.log('Input value:', value); // Debug
                 if (value < 0) {
                     $(this).val('');
-                    $('#deposit-error').text('Negative amounts are not allowed.').show();
-                    $(this).addClass('is-invalid');
+                    $error.text('Negative amounts are not allowed.').show();
+                    $amountInput.addClass('is-invalid');
+                    $fundButton.prop('disabled', true);
                 } else {
-                    $('#deposit-error').hide();
-                    $(this).removeClass('is-invalid');
+                    validateAmount();
                 }
             });
+
+            // Validate on form submission
+            $('#deposit-form').on('submit', function(e) {
+                console.log('Form submit attempted'); // Debug
+                if (!validateAmount()) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            // Initial validation
+            validateAmount();
         });
     </script>
 
