@@ -23,7 +23,7 @@ $investor_email = $row['email'];
 $investor_name = $row['full_name'];
 
 if (isset($_POST['complete'])) {
-    $invest_id = $_POST['invest_id']; // Investment ID passed from form
+    $invest_id = $_POST['invest_id'];
 
     if (empty($invest_id)) {
         $_SESSION['error'] = 'Investment ID is missing.';
@@ -58,130 +58,106 @@ if (isset($_POST['complete'])) {
     $act_time = date('Y-m-d h:i A');
 
     try {
+        // Begin transaction
+        $conn->beginTransaction();
+
         // Update investment status to completed
         $stmt = $conn->prepare("UPDATE investment SET status=:status, end_date=:completion_date WHERE invest_id=:invest_id AND user_id=:user_id");
         $stmt->execute(['status' => $status, 'completion_date' => $completion_date, 'invest_id' => $invest_id, 'user_id' => $user_id]);
 
-        // Fetch investment details for email and activity log
+        // Fetch investment details
         $capital = $investment['capital'];
+        $returns = $investment['returns'];
         $invest_plan_id = $investment['invest_plan_id'];
 
-        // Fetch plan name from investment_plans table
+        // Fetch plan name
         $stmt = $conn->prepare("SELECT name FROM investment_plans WHERE id=:invest_plan_id");
         $stmt->execute(['invest_plan_id' => $invest_plan_id]);
         $plan = $stmt->fetch();
-        $plan_name = $plan['name'] ?? 'Investment Plan'; // Fallback if plan name not found
+        $plan_name = $plan['name'] ?? 'Investment Plan';
 
-        // Log activity
-        $activity = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) VALUES (:user_id, :message, :category, :start_date)");
-        $activity->execute([
+        // Get current balance
+        $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
+        $stmt->execute(['user_id' => $user_id]);
+        $current_balance = $stmt->fetchColumn() ?: 0;
+
+        // Credit capital + returns
+        $amount = $capital + $returns;
+        $new_balance = $current_balance + $amount;
+        $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
+
+        // Insert transaction with remark
+        $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
+                                VALUES (:user_id, :amount, :type, :balance, NOW(), :remark)");
+        $stmt->execute([
             'user_id' => $user_id,
-            'message' => 'Your investment of $' . $capital . ' for ' . $plan_name . ' has been completed.',
-            'category' => 'Investment Completion',
-            'start_date' => $act_time
+            'amount' => $amount,
+            'type' => 1, // Credit
+            'balance' => $new_balance,
+            'remark' => $message
         ]);
 
+        // Log activity
+        $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                VALUES (:user_id, :message, :category, :date_sent)");
+        $stmt->execute([
+            'user_id' => $user_id,
+            'message' => $message,
+            'category' => 'Investment Completion',
+            'date_sent' => $act_time
+        ]);
+
+        // Commit transaction
+        $conn->commit();
+
+        // Debugging: Log details
+        error_log("investment-complete.php: invest_id=$invest_id, user_id=$user_id, status=$status, amount=$amount, new_balance=$new_balance, message=$message, time=" . date('Y-m-d H:i:s'), 3, '../debug.log');
+
         // Prepare email content
-        $message = "
-            <div id='_rc_sig'>
-                <div id=':or' class='ii gt'>
-                    <div id=':oq' class='a3s aiL msg4873022159957722792'>
-                        <div id='m_4873022159957722792body' class='m_4873022159957722792body' style='background-color: #f3f2f1; margin: 0; padding: 0;'>
-                            <div style='font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; direction: ltr;'>
-                                <table class='m_4873022159957722792main' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#F3F2F1'>
+        $email_message = "
+            <div style='font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; direction: ltr;'>
+                <table border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#F3F2F1'>
+                    <tbody>
+                        <tr>
+                            <td align='center' bgcolor='#F3F2F1' style='padding: 0 8px;'>
+                                <table border='0' width='100%' cellspacing='0' cellpadding='0' style='max-width: 600px; padding: 0 0 15px 0;'>
                                     <tbody>
                                         <tr>
-                                            <td class='m_4873022159957722792outer-box' style='padding: 0 8px;' align='center' bgcolor='#F3F2F1'>
-                                                <table style='max-width: 600px; padding: 0 0 15px 0;' border='0' width='100%' cellspacing='0' cellpadding='0'>
+                                            <td align='left' style='padding: 10px 0 13px 0;'>
+                                                <a href='https://www.nexusinsights.eu'>
+                                                    <img style='display: block;' src='https://www.nexusinsights.eu/assets/images/logo-dark.png' alt='prime-logo' width='300' height='60' border='0' />
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#FFFFFF' style='max-width: 600px;'>
+                                    <tbody>
+                                        <tr>
+                                            <td style='padding-bottom: 24px !important;'>
+                                                <table border='0' width='100%' cellspacing='0' cellpadding='0'>
                                                     <tbody>
                                                         <tr>
-                                                            <td style='padding: 10px 0 13px 0;' align='left'>
-                                                                <a href='https://www.nexusinsights.eu'>
-                                                                    <img
-                                                                        class='m_4873022159957722792jecl-Icon-img CToWUd'
-                                                                        style='display: block;'
-                                                                        src='https://www.nexusinsights.eu/assets/images/logo-dark.png'
-                                                                        alt='prime-logo'
-                                                                        width='300'
-                                                                        height='60'
-                                                                        border='0'
-                                                                    />
-                                                                </a>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table class='m_4873022159957722792width-600' style='max-width: 600px;' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#FFFFFF'>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td class='m_4873022159957722792content-box' style='padding-bottom: 24px !important;'>
+                                                            <td>
                                                                 <table border='0' width='100%' cellspacing='0' cellpadding='0'>
                                                                     <tbody>
                                                                         <tr>
-                                                                            <td>
-                                                                                <table border='0' width='100%' cellspacing='0' cellpadding='0'>
-                                                                                    <tbody>
-                                                                                        <tr>
-                                                                                            <td style='padding: 16px 10px 0;'>
-                                                                                                <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
-                                                                                                    <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'> <strong>Dear " . $investor_name . ",</strong> </span>
-                                                                                                </p>
-                                                                                                <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'> </p>
-                                                                                                <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
-                                                                                                    <span style='color: #000000;'>
-                                                                                                        Your investment of $" . $capital . " for the " . $plan_name . " has been successfully completed on " . $completion_date . ". You can view the details in your Nexus Insights account.
-                                                                                                    </span>
-                                                                                                </p>
-                                                                                                <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'> </p>
-                                                                                                <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
-                                                                                                    <span style='color: #000000;'>
-                                                                                                        For any inquiries, please contact
-                                                                                                        <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
-                                                                                                    </span>
-                                                                                                </p>
-                                                                                            </td>
-                                                                                        </tr>
-                                                                                    </tbody>
-                                                                                </table>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td> </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                                <table style='max-width: 550px; height: 264px; width: 114.979%;' border='0' width='573' cellspacing='0' cellpadding='0' bgcolor='#F2F2F2'>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td style='padding: 24px 4px; width: 100%;'>
-                                                                <table style='max-width: 424px;' border='0' cellspacing='0' cellpadding='0' align='center'>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;' align='center'>
-                                                                                *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a> if you have any query.
-                                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'> View Our Available Plans </a>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                                <table style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; height: 63px; width: 69.7305%;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
-                                                                    <tbody>
-                                                                        <tr style='height: 43px;'>
-                                                                            <td lang='en' style='padding: 0px; height: 43px;' align='center'>© 2021 Nexus Insights Limited.</td>
-                                                                        </tr>
-                                                                        <tr style='height: 10px;'>
-                                                                            <td class='m_4873022159957722792j-6' style='padding: 15px 0px 25px; height: 10px;' align='center'>
-                                                                                <span class='m_4873022159957722792j-5'><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu'>Home</a>|</span>
-                                                                                <a class='m_4873022159957722792j-1' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/about'>About</a>
-                                                                                <span class='m_4873022159957722792j-5'>|</span>
-                                                                                <a class='m_4873022159957722792j-2' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'>Plans</a> <br />
-                                                                                <a class='m_4873022159957722792j-3' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/news'> News </a>
-                                                                                <span class='m_4873022159957722792j-5'>|</span>
-                                                                                <a class='m_4873022159957722792j-4' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/contact'>Contact</a>
+                                                                            <td style='padding: 16px 10px 0;'>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
+                                                                                    <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
+                                                                                </p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
+                                                                                    <span style='color: #000000;'>
+                                                                                        Your investment of $$capital for the $plan_name has been successfully completed on $completion_date, and $$amount has been credited to your account. You can view the details in your Nexus Insights account.
+                                                                                    </span>
+                                                                                </p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
+                                                                                    <span style='color: #000000;'>
+                                                                                        For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
+                                                                                    </span>
+                                                                                </p>
                                                                             </td>
                                                                         </tr>
                                                                     </tbody>
@@ -194,24 +170,59 @@ if (isset($_POST['complete'])) {
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                <table border='0' width='573' cellspacing='0' cellpadding='0' bgcolor='#F2F2F2' style='max-width: 550px; height: 264px; width: 114.979%;'>
+                                    <tbody>
+                                        <tr>
+                                            <td style='padding: 24px 4px; width: 100%;'>
+                                                <table border='0' cellspacing='0' cellpadding='0' align='center' style='max-width: 424px;'>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td align='center' style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;'>
+                                                                *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a> if you have any query.
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'> View Our Available Plans </a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <table border='0' width='100%' cellspacing='0' cellpadding='0' align='center' style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; height: 63px; width: 69.7305%;'>
+                                                    <tbody>
+                                                        <tr style='height: 43px;'>
+                                                            <td align='center' lang='en' style='padding: 0px; height: 43px;'>© 2021 Nexus Insights Limited.</td>
+                                                        </tr>
+                                                        <tr style='height: 10px;'>
+                                                            <td align='center' style='padding: 15px 0px 25px; height: 10px;'>
+                                                                <span><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu'>Home</a>|</span>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/about'>About</a>
+                                                                <span>|</span>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'>Plans</a> <br />
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/news'> News </a>
+                                                                <span>|</span>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/contact'>Contact</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         ";
 
         // Notify Admin
-        $msg = $investor_name . " has completed an investment of $" . $capital . " for " . $plan_name . ". Login to Admin for details.";
-        $msg = wordwrap($msg, 70);
-        mail($settings->email, "Investment Completed", $msg);
+        $admin_msg = "$investor_name has completed an investment of $$capital for $plan_name. Login to Admin for details.";
+        $admin_msg = wordwrap($admin_msg, 70);
+        mail($settings->email, "Investment Completed", $admin_msg);
 
-        // Load PHPMailer
+        // Send email to user
         require '../vendor/autoload.php';
 
         $mail = new PHPMailer(true);
         try {
-            // Server settings
             $mail->IsSMTP();
             $mail->Host = $sweet_url;
             $mail->Port = '465';
@@ -225,20 +236,18 @@ if (isset($_POST['complete'])) {
             $mail->IsHTML(true);
 
             $mail->Subject = $settings->siteTitle . " Investment Completion Confirmation";
-            $mail->Body = $message;
+            $mail->Body = $email_message;
 
             $mail->send();
-
-            unset($_SESSION['full_name']);
-            unset($_SESSION['username']);
-            unset($_SESSION['email']);
 
             $_SESSION['success'] = 'Your investment has been successfully completed. Check your email for confirmation.';
         } catch (Exception $e) {
             $_SESSION['success'] = 'Your investment has been completed. A confirmation email could not be sent.';
         }
     } catch (PDOException $e) {
+        $conn->rollBack();
         $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+        error_log("investment-complete.php: Error - " . $e->getMessage(), 3, '../debug.log');
     }
 
     $pdo->close();
