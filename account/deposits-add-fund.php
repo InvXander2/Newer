@@ -12,7 +12,7 @@
     $id = $_SESSION['user'];
 
     if (!isset($_SESSION['user'])) {
-        header('Location: ../login.php');
+        header('location: ../login.php');
         exit();
     }
 
@@ -108,7 +108,7 @@
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form class="form-horizontal auth-form" method="post" action="deposit-add-fund.php" id="deposit-form">
+                                        <form class="form-horizontal auth-form" method="post" action="deposits-payment-option" id="deposit-form">
                                             <div class="form-group mb-2">
                                                 <label>Deposit Charge: 0%</label>
                                             </div><!--end form-group-->
@@ -121,6 +121,7 @@
                                                     <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
                                                     <div class="input-group-append"><span class="input-group-text">.00</span></div>
                                                 </div>
+                                                <div id="deposit-error" class="invalid-feedback" style="display: none;"></div>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-0 row">
                                                 <div class="col-12">
@@ -141,6 +142,63 @@
         <!-- end page content -->
     </div>
     <!-- end page-wrapper -->
+
+    <!-- JavaScript for deposit form validation -->
+    <script>
+        $(document).ready(function() {
+            var $depositInput = $('#deposit-amount');
+            var $error = $('#deposit-error');
+
+            // Function to validate the deposit amount
+            function validateAmount(value) {
+                var amount = parseFloat(value);
+                $error.hide().text('');
+                $depositInput.removeClass('is-invalid');
+
+                if (isNaN(amount) || value === '') {
+                    $error.text('Please enter a valid amount.').show();
+                    $depositInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount < 100) {
+                    $error.text('Deposit amount must be at least $100.').show();
+                    $depositInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount > 100000) {
+                    $error.text('Deposit amount cannot exceed $100,000.').show();
+                    $depositInput.addClass('is-invalid');
+                    return false;
+                }
+                return true;
+            }
+
+            // Real-time validation on input
+            $depositInput.on('input', function() {
+                var value = $(this).val();
+                validateAmount(value);
+            });
+
+            // Prevent negative input
+            $depositInput.on('keypress', function(e) {
+                if (e.key === '-' || $(this).val().includes('-')) {
+                    e.preventDefault();
+                    $error.text('Negative amounts are not allowed.').show();
+                    $depositInput.addClass('is-invalid');
+                }
+            });
+
+            // Form submission validation
+            $('#deposit-form').on('submit', function(e) {
+                var value = $depositInput.val();
+                if (!validateAmount(value)) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
 
     <?php include('inc/scripts.php'); ?>
 </body>
