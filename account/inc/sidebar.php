@@ -34,11 +34,6 @@
 
 
             <li>
-                <a href="profile"><i data-feather="user" class="align-self-center menu-icon"></i><span>Profile</span></a>
-            </li>
-
-
-            <li>
                 <a href="messages"><i data-feather="inbox" class="align-self-center menu-icon"></i><span>Inbox</span></a>
             </li>
 
