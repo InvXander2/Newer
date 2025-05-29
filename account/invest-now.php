@@ -32,7 +32,7 @@
 		$start_date = date('Y-m-d H:i:s');
 		$end_date = date('Y-m-d H:i:s', strtotime($start_date . ' + ' . $invest_duration . ' days'));
 
-		$remarks = 'Invested in ' . $row0['name'] . ' plan';
+		$remarks = 'Invested in ' . $row0['name'] . '';
 		$new_balance = $user_bal - $invest_amount;
 		$category = $row0['name'];
 		$message = 'Current Ongoing investment';
