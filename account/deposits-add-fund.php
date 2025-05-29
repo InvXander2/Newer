@@ -119,7 +119,7 @@
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                                                     <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
-                                                    <div class="input-group-append"><span class="input-group-text">.00</span></div>
+                                                    <div class="input-group-append"></div>
                                                 </div>
                                                 <div id="deposit-error" class="invalid-feedback" style="display: none;"></div>
                                             </div><!--end form-group-->
