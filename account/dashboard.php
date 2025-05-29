@@ -359,13 +359,6 @@
                                     </div><!--end col-->
                                 </div><!--end row-->
                             </div><!--end card-header-->
-                            <div class="card-body">
-                                <div class="">
-                                    <div id="ana_dash_1" class="apex-charts"></div>
-                                </div>
-                            </div><!--end card-body-->
-                        </div><!--end card-->
-                    </div><!--end col-->
                     <div class="col-lg-3">
                         <div class="card">
                             <div class="card-header">
