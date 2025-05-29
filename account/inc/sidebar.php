@@ -1,5 +1,5 @@
 <div class="left-sidenav">
-    <div class="menu-content h-100" data-simplebar>
+    <div class="menu-content h-100" data-simplebar style="padding-top: 0;">
         <ul class="metismenu left-sidenav-menu">
             <li class="menu-label mt-0">Main</li>
             <li>
