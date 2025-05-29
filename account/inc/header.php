@@ -1,35 +1,53 @@
 <?php
 // inc/header.php
-// Ensure $settings is available (loaded via config.php)
+// Ensure $settings, $conn, and $id are available (loaded via config.php or session.php)
 if (!isset($settings)) {
     include('../inc/config.php');
 }
+if (!isset($id)) {
+    $id = $_SESSION['user'] ?? 0; // Fallback to 0 if user not logged in
+}
 
-$sql0 = "SELECT * FROM users WHERE id=$id";
-$result0 = $conne->query($sql0);
-$row0 = $result0->fetch_assoc();
+// Use PDO ($conn) instead of $conne (MySQLi) for consistency
+try {
+    $stmt0 = $conn->prepare("SELECT * FROM users WHERE id = ?");
+    $stmt0->execute([$id]);
+    $row0 = $stmt0->fetch(PDO::FETCH_ASSOC);
 
-$stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM direct_message WHERE user_id=0 || (user_id=$id && status=0)");
-$stmt->execute();
-$drow = $stmt->fetch();
-$no_of_msg = $drow['numrows'];
+    $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM direct_message WHERE user_id = 0 OR (user_id = ? AND status = 0)");
+    $stmt->execute([$id]);
+    $drow = $stmt->fetch(PDO::FETCH_ASSOC);
+    $no_of_msg = $drow['numrows'];
 
-$stmtQuery = $conn->query("SELECT * FROM direct_message WHERE user_id=$id || user_id=0 && status<2 order by 1 desc Limit 4");
-if ($stmtQuery->rowCount()) {
+    $stmtQuery = $conn->prepare("SELECT * FROM direct_message WHERE (user_id = ? OR user_id = 0) AND status < 2 ORDER BY msg_id DESC LIMIT 4");
+    $stmtQuery->execute([$id]);
     $dmrow = $stmtQuery->fetchAll(PDO::FETCH_OBJ);
+} catch (PDOException $e) {
+    error_log("Error in header.php queries: " . $e->getMessage(), 3, "../errors.log");
+    $row0 = ['full_name' => 'Guest', 'photo' => 'profile.jpg'];
+    $no_of_msg = 0;
+    $dmrow = [];
 }
 ?>
 
 <div class="topbar">            
-    <!-- Logo -->
-    <div class="topbar-logo" style="display: flex; justify-content: center; align-items: center; padding: 10px 0;">
-        <a href="/" title="<?php echo htmlspecialchars($settings->siteTitle); ?>">
-            <img src="../assets/images/logo.png" alt="Logo" style="max-height: 50px;">
-        </a>
-    </div>
-
     <!-- Navbar -->
-    <nav class="navbar-custom">    
+    <nav class="navbar-custom" style="display: flex; align-items: center;">    
+        <ul class="list-unstyled topbar-nav mb-0">                        
+            <li>
+                <button class="nav-link button-menu-mobile">
+                    <i data-feather="menu" class="align-self-center topbar-icon"></i>
+                </button>
+            </li>                          
+        </ul>
+
+        <!-- Logo -->
+        <div class="topbar-logo" style="flex-grow: 1; display: flex; justify-content: center; align-items: center;">
+            <a href="/" title="<?php echo htmlspecialchars($settings->siteTitle); ?>">
+                <img src="../assets/images/logo.png" alt="Logo" style="max-height: 30px;">
+            </a>
+        </div>
+
         <ul class="list-unstyled topbar-nav float-right mb-0">  
             <li class="dropdown hide-phone">
                 <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
@@ -96,24 +114,16 @@ if ($stmtQuery->rowCount()) {
                 <a class="nav-link dropdown-toggle waves-effect waves-light nav-user" data-toggle="dropdown" href="#" role="button"
                     aria-haspopup="false" aria-expanded="false">
                     <span class="ml-1 nav-user-name hidden-sm"><?php echo $row0["full_name"] ?></span>
-                    <img src="../admin/images/<?php if (!empty($row0["photo"])) { echo $row0["photo"]; } else { echo "profile.jpg"; } ?>" alt="profile-user" class="rounded-circle thumb-img" />
+                    <img src="../admin/images/<?php if (!empty($row0["photo"])) { echo $row0["photo"]; } else { echo "profile.jpg"; } ?>" alt="profile-user" class="rounded-circle thumb-xs" />                                 
                 </a>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="profile"><i> Profile</a>
-                    <a class="dropdown-item" href="settings.php"><i> Settings</i></a>
-                    <div class="divider"></div>
-                    <a class="dropdown-item" href="logout.php"><i> Logout</i></a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a class="dropdown-item" href="profile"><i data-feather="user" class="align-self-center icon-xs icon-dual mr-1"></i> Profile</a>
+                    <a class="dropdown-item" href="profile-edit"><i data-feather="settings" class="align-self-center icon-xs icon-dual mr-1"></i> Settings</a>
+                    <div class="dropdown-divider mb-0"></div>
+                    <a class="dropdown-item" href="logout_action"><i data-feather="power" class="align-self-center icon-xs icon-dual mr-1"></i> Logout</a>
                 </div>
             </li>
         </ul><!--end topbar-nav-->
-
-        <ul class="list-unstyled topbar-nav mb-0">                        
-            <li>
-                <button class="nav-link button-menu-mobile">
-                    <i data-feather="menu" class="align-self-center"></i>
-                </button>
-            </li>                            
-        </ul>
     </nav>
     <!-- end navbar-->
 </div>
