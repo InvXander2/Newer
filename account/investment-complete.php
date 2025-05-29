@@ -81,8 +81,8 @@ if (isset($_POST['complete'])) {
         $stmt->execute(['user_id' => $user_id]);
         $current_balance = $stmt->fetchColumn() ?: 0;
 
-        // Credit capital + returns
-        $amount = $capital + $returns;
+        // Credit returns
+        $amount = $returns;
         $new_balance = $current_balance + $amount;
         $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
 
