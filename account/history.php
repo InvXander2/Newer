@@ -107,37 +107,39 @@ $pdo->close();
                                 <div class="card">
                                     <div class="card-body">
                                         <?php if (!empty($transactions)) { ?>
-                                            <table class="table mb-0">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Transaction ID</th>
-                                                        <th>Date & Time (IST)</th>
-                                                        <th>Type</th>
-                                                        <th>Amount</th>
-                                                        <th>Remark</th>
-                                                        <th>Balance</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($transactions as $transaction) : ?>
+                                            <div style="overflow-x: auto;">
+                                                <table class="table mb-0" style="min-width: 800px;">
+                                                    <thead class="thead-light">
                                                         <tr>
-                                                            <td>TXID<?= $transaction->trans_id; ?></td>
-                                                            <td><?php 
-                                                                // Convert UTC to IST (UTC+5:30)
-                                                                $date = new DateTime($transaction->trans_date, new DateTimeZone('UTC'));
-                                                                $date->setTimezone(new DateTimeZone('Asia/Kolkata'));
-                                                                echo htmlspecialchars($date->format('Y-m-d h:i:s A'));
-                                                            ?></td>
-                                                            <td><span class="badge badge-boxed badge-outline-<?php echo $transaction->type == '1' ? 'success' : 'danger'; ?>">
-                                                                <?php echo $transaction->type == '1' ? 'Deposit' : 'Withdrawal/Investment'; ?>
-                                                            </span></td>
-                                                            <td>$<?php echo number_format($transaction->amount, 2); ?></td>
-                                                            <td><?php echo htmlspecialchars($transaction->remark); ?></td>
-                                                            <td>$<?php echo number_format($transaction->balance, 2); ?></td>
+                                                            <th>Transaction ID</th>
+                                                            <th>Date & Time (IST)</th>
+                                                            <th>Type</th>
+                                                            <th>Amount</th>
+                                                            <th>Remark</th>
+                                                            <th>Balance</th>
                                                         </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table><!--end /table-->
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php foreach ($transactions as $transaction) : ?>
+                                                            <tr>
+                                                                <td>TXID<?= $transaction->trans_id; ?></td>
+                                                                <td><?php 
+                                                                    // Convert UTC to IST (UTC+5:30)
+                                                                    $date = new DateTime($transaction->trans_date, new DateTimeZone('UTC'));
+                                                                    $date->setTimezone(new DateTimeZone('Asia/Kolkata'));
+                                                                    echo htmlspecialchars($date->format('Y-m-d h:i:s A'));
+                                                                ?></td>
+                                                                <td><span class="badge badge-boxed badge-outline-<?php echo $transaction->type == '1' ? 'success' : 'danger'; ?>">
+                                                                    <?php echo $transaction->type == '1' ? 'Deposit' : 'Withdrawal/Investment'; ?>
+                                                                </span></td>
+                                                                <td>$<?php echo number_format($transaction->amount, 2); ?></td>
+                                                                <td><?php echo htmlspecialchars($transaction->remark); ?></td>
+                                                                <td>$<?php echo number_format($transaction->balance, 2); ?></td>
+                                                            </tr>
+                                                        <?php endforeach; ?>
+                                                    </tbody>
+                                                </table><!--end /table-->
+                                            </div>
                                         <?php } else { ?>
                                             <p>No transactions found.</p>
                                         <?php } ?>
