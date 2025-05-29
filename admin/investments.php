@@ -22,22 +22,22 @@
     <!-- Main content -->
     <section class="content">
       <?php
-        if(isset($_SESSION['error'])){
+        if (isset($_SESSION['error'])) {
           echo "
             <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-warning'></i> Error!</h4>
-              ".$_SESSION['error']."
+              " . htmlspecialchars($_SESSION['error']) . "
             </div>
           ";
           unset($_SESSION['error']);
         }
-        if(isset($_SESSION['success'])){
+        if (isset($_SESSION['success'])) {
           echo "
             <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-check'></i> Success!</h4>
-              ".$_SESSION['success']."
+              " . htmlspecialchars($_SESSION['success']) . "
             </div>
           ";
           unset($_SESSION['success']);
@@ -65,27 +65,29 @@
                   <?php
                     $conn = $pdo->open();
 
-                    try{
-                      $stmt = $conn->prepare("SELECT *, investment.status AS invest_status FROM investment LEFT JOIN investment_plans ON investment_plans.id=investment.invest_plan_id LEFT JOIN users ON users.id=investment.user_id order by invest_id desc");
+                    try {
+                      $stmt = $conn->prepare("SELECT *, investment.status AS invest_status, investment_plans.name AS plan_name 
+                                              FROM investment 
+                                              LEFT JOIN investment_plans ON investment_plans.id = investment.invest_plan_id 
+                                              LEFT JOIN users ON users.id = investment.user_id 
+                                              ORDER BY invest_id DESC");
                       $stmt->execute();
 
                       $now = date('Y-m-d H:i:s');
 
-
-                      foreach($stmt as $row){ ?>
-
+                      foreach ($stmt as $row) { ?>
                           <tr>
-                            <td><?php echo $row['uname']; ?></td>
-                            <td><?php echo $row['name']; ?></td>
-                            <td>&#36; <?php echo number_format($row['capital'], 2); ?></td>
-                            <td>&#36; <?php echo number_format($row['returns'], 2); ?></td>
+                            <td><?php echo htmlspecialchars($row['uname']); ?></td>
+                            <td><?php echo htmlspecialchars($row['plan_name']); ?></td>
+                            <td>$ <?php echo number_format($row['capital'], 2); ?></td>
+                            <td>$ <?php echo number_format($row['returns'], 2); ?></td>
                             <td>
                               <?php
                                 $date_ivstart = strtotime($row['start_date']);
                                 $date_ivend = strtotime($row['end_date']);
                                 $date_now = strtotime($now);
 
-                                $secs = $date_now - $date_ivstart;// == <seconds between the two times>
+                                $secs = $date_now - $date_ivstart;
                                 $day = $secs / 86400;
 
                                 $total_days = ($date_ivend - $date_ivstart) / 86400;
@@ -93,44 +95,79 @@
                                 $current_cpd = $row['capital'] + ($row['capital'] * $row['rate'] / $total_days * $day / 100);
 
                                 if ($row['invest_status'] == 'in progress') {
-                                  $query = $conn->prepare("UPDATE investment SET current=:current_cpd WHERE invest_id=:cpd_id");
-                                  $query->execute(['current_cpd'=>$current_cpd, 'cpd_id'=>$row['invest_id']]);
+                                  $query = $conn->prepare("UPDATE investment SET current = :current_cpd WHERE invest_id = :cpd_id");
+                                  $query->execute(['current_cpd' => $current_cpd, 'cpd_id' => $row['invest_id']]);
 
                                   echo number_format($current_cpd, 2);
-
-                                }else{
-                                echo number_format($row['current'], 2);}
+                                } else {
+                                  echo number_format($row['current'], 2);
+                                }
                               ?>
                             </td>
-                            <td><?php echo $row['start_date']; ?></td>
-                            <td><?php echo $row['end_date']; ?></td>
+                            <td><?php echo htmlspecialchars($row['start_date']); ?></td>
+                            <td><?php echo htmlspecialchars($row['end_date']); ?></td>
                             <td>
                               <?php 
                                 $iv_end = strtotime($row['end_date']);
                                 $t_day = strtotime($now);
-                                if ($t_day >= $iv_end) {
-                                  $stmt = $conn->prepare("UPDATE investment SET status=:c_status WHERE invest_id=:c_id");
-                                  $stmt->execute(['c_status'=>'completed', 'c_id'=>$row['invest_id']]);
+                                if ($t_day >= $iv_end && $row['invest_status'] == 'in progress') {
+                                  // Begin transaction
+                                  $conn->beginTransaction();
+
+                                  // Update status to completed
+                                  $stmt = $conn->prepare("UPDATE investment SET status = :c_status WHERE invest_id = :c_id");
+                                  $stmt->execute(['c_status' => 'completed', 'c_id' => $row['invest_id']]);
+
+                                  // Get user's current balance
+                                  $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
+                                  $stmt->execute(['user_id' => $row['user_id']]);
+                                  $current_balance = $stmt->fetchColumn() ?: 0;
+
+                                  // Credit capital + returns
+                                  $amount = $row['capital'] + $row['returns'];
+                                  $new_balance = $current_balance + $amount;
+
+                                  // Insert transaction
+                                  $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
+                                                          VALUES (:user_id, :amount, :type, :balance, NOW())");
+                                  $stmt->execute([
+                                    'user_id' => $row['user_id'],
+                                    'amount' => $amount,
+                                    'type' => 1, // Credit
+                                    'balance' => $new_balance
+                                  ]);
+
+                                  // Log activity
+                                  $act_time = date('Y-m-d h:i A');
+                                  $message = "Your investment of $" . number_format($row['capital'], 2) . " for " . htmlspecialchars($row['plan_name']) . " has been completed, and $" . number_format($amount, 2) . " has been credited to your account.";
+                                  $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                                          VALUES (:user_id, :message, :category, :date_sent)");
+                                  $stmt->execute([
+                                    'user_id' => $row['user_id'],
+                                    'message' => $message,
+                                    'category' => 'Investment Completion',
+                                    'date_sent' => $act_time
+                                  ]);
+
+                                  // Commit transaction
+                                  $conn->commit();
 
                                   echo 'completed';
-
-                                }else{
-                                echo $row['invest_status'];}
+                                } else {
+                                  echo htmlspecialchars($row['invest_status']);
+                                }
                               ?>
                             </td>
                             <td>
                               <button class="btn btn-primary btn-sm edit btn-flat" data-id="<?php echo $row['invest_id']; ?>"><i class="fa fa-edit"></i> Status</button>
                             </td>
                           </tr>
-
-                    <?php  
-                      } 
-                    } 
-
-                    catch(PDOException $e){
+                      <?php } 
+                    } catch (PDOException $e) {
                       echo $e->getMessage();
                     }
-                    $pdo->close(); ?>
+                    $pdo->close(); 
+                  ?>
                 </tbody>
               </table>
             </div>
@@ -140,8 +177,8 @@
     </section>
      
   </div>
-  	<?php include 'includes/footer.php'; ?>
-    <?php include 'includes/investments_modal.php'; ?>
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/investments_modal.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -149,21 +186,19 @@
 <?php include 'includes/scripts.php'; ?>
 <script>
 $(function(){
-
   $(document).on('click', '.edit', function(e){
     e.preventDefault();
     $('#edit').modal('show');
     var id = $(this).data('id');
     getRow(id);
   });
-
 });
 
 function getRow(id){
   $.ajax({
     type: 'POST',
     url: 'investments_row.php',
-    data: {id:id},
+    data: {id: id},
     dataType: 'json',
     success: function(response){
       $('.invid').val(response.invest_id);
