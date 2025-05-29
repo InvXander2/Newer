@@ -57,7 +57,7 @@ if (isset($_POST['edit'])) {
             error_log("investments_edit.php: current_balance=$current_balance", 3, 'debug.log');
 
             if ($status === 'completed') {
-                // Credit capital + returns
+                // Credit returns
                 $amount = $returns;
                 $new_balance = $current_balance + $amount;
                 $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
@@ -128,6 +128,9 @@ if (isset($_POST['edit'])) {
 } else {
     $_SESSION['error'] = 'Please select a status to update.';
 }
+
+// Debugging: Log session status
+error_log("investments_edit.php: SESSION success=" . ($_SESSION['success'] ?? 'none') . ", error=" . ($_SESSION['error'] ?? 'none'), 3, 'debug.log');
 
 header('location: investments.php');
 ?>
