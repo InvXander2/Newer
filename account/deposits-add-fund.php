@@ -59,7 +59,7 @@
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
+                                        <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date">Jan 11</span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
@@ -118,7 +118,7 @@
                                             <div class="form-group mb-2">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                                    <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="10000000" step="0.01" required />
+                                                    <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
                                                     <div class="input-group-append"><span class="input-group-text">.00</span></div>
                                                 </div>
                                                 <div id="deposit-error" class="invalid-feedback" style="display: none;"></div>
@@ -146,42 +146,56 @@
     <!-- JavaScript for deposit form validation -->
     <script>
         $(document).ready(function() {
-            $('#deposit-form').on('submit', function(e) {
-                var amount = parseFloat($('#deposit-amount').val());
-                var $error = $('#deposit-error');
+            var $depositInput = $('#deposit-amount');
+            var $error = $('#deposit-error');
 
-                // Clear previous errors
+            // Function to validate the deposit amount
+            function validateAmount(value) {
+                var amount = parseFloat(value);
                 $error.hide().text('');
-                $('#deposit-amount').removeClass('is-invalid');
+                $depositInput.removeClass('is-invalid');
 
-                // Validate amount
-                if (isNaN(amount) || amount < 100) {
-                    e.preventDefault();
+                if (isNaN(amount) || value === '') {
+                    $error.text('Please enter a valid amount.').show();
+                    $depositInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount < 100) {
                     $error.text('Deposit amount must be at least $100.').show();
-                    $('#deposit-amount').addClass('is-invalid');
+                    $depositInput.addClass('is-invalid');
                     return false;
                 }
                 if (amount > 100000) {
-                    e.preventDefault();
                     $error.text('Deposit amount cannot exceed $100,000.').show();
-                    $('#deposit-amount').addClass('is-invalid');
+                    $depositInput.addClass('is-invalid');
                     return false;
                 }
-
                 return true;
+            }
+
+            // Real-time validation on input
+            $depositInput.on('input', function() {
+                var value = $(this).val();
+                validateAmount(value);
             });
 
             // Prevent negative input
-            $('#deposit-amount').on('input', function() {
-                var value = $(this).val();
-                if (value < 0) {
-                    $(this).val('');
-                    $('#deposit-error').text('Negative amounts are not allowed.').show();
-                    $(this).addClass('is-invalid');
-                } else {
-                    $('#deposit-error').hide();
-                    $(this).removeClass('is-invalid');
+            $depositInput.on('keypress', function(e) {
+                if (e.key === '-' || $(this).val().includes('-')) {
+                    e.preventDefault();
+                    $error.text('Negative amounts are not allowed.').show();
+                    $depositInput.addClass('is-invalid');
                 }
+            });
+
+            // Form submission validation
+            $('#deposit-form').on('submit', function(e) {
+                var value = $depositInput.val();
+                if (!validateAmount(value)) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
             });
         });
     </script>
