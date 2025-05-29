@@ -59,7 +59,6 @@
                 <i class="mdi mdi-close"></i>
             </a>
             <h5 class="mt-3"><?php echo $settings->siteTitle; ?></h5>
-            <p class="mb-3"><?php echo $settings->siteTagline; ?></p>
         </div>
     </div>
 </div>
