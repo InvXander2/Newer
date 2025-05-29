@@ -6,6 +6,9 @@ if (isset($_POST['edit'])) {
     $id = $_POST['id'];
     $status = $_POST['status'];
 
+    // Debugging: Log input values
+    error_log("investments_edit.php: id=$id, status=$status", 3, 'debug.log');
+
     $conn = $pdo->open();
 
     try {
@@ -28,6 +31,9 @@ if (isset($_POST['edit'])) {
         $plan_name = $investment['plan_name'] ?? 'Investment Plan';
         $act_time = date('Y-m-d h:i A');
 
+        // Debugging: Log investment details
+        error_log("investments_edit.php: user_id=$user_id, capital=$capital, returns=$returns, plan_name=$plan_name", 3, 'debug.log');
+
         // Begin transaction
         $conn->beginTransaction();
 
@@ -35,60 +41,66 @@ if (isset($_POST['edit'])) {
         $stmt = $conn->prepare("UPDATE investment SET status = :status WHERE invest_id = :id");
         $stmt->execute(['status' => $status, 'id' => $id]);
 
-        // Get user's current balance from the latest transaction
-        $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
-        $stmt->execute(['user_id' => $user_id]);
-        $current_balance = $stmt->fetchColumn() ?: 0;
+        // Only process balance and activity for 'completed' or 'cancelled'
+        if ($status === 'completed' || $status === 'cancelled') {
+            // Get user's current balance from the latest transaction
+            $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
+            $stmt->execute(['user_id' => $user_id]);
+            $current_balance = $stmt->fetchColumn() ?: 0;
 
-        if ($status === 'completed') {
-            // Credit capital + returns to user's balance
-            $amount = $capital + $returns;
-            $new_balance = $current_balance + $amount;
+            // Debugging: Log current balance
+            error_log("investments_edit.php: current_balance=$current_balance", 3, 'debug.log');
 
-            // Insert transaction
-            $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
-                                    VALUES (:user_id, :amount, :type, :balance, NOW())");
-            $stmt->execute([
-                'user_id' => $user_id,
-                'amount' => $amount,
-                'type' => 1, // Credit
-                'balance' => $new_balance
-            ]);
+            if ($status === 'completed') {
+                // Credit capital + returns to user's balance
+                $amount = $capital + $returns;
+                $new_balance = $current_balance + $amount;
 
-            // Log activity
-            $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
-            $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
-                                    VALUES (:user_id, :message, :category, :date_sent)");
-            $stmt->execute([
-                'user_id' => $user_id,
-                'message' => $message,
-                'category' => 'Investment Completion',
-                'date_sent' => $act_time
-            ]);
-        } elseif ($status === 'canceled') {
-            // Credit only capital to user's balance
-            $new_balance = $current_balance + $capital;
+                // Insert transaction
+                $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
+                                        VALUES (:user_id, :amount, :type, :balance, NOW())");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'amount' => $amount,
+                    'type' => 1, // Credit
+                    'balance' => $new_balance
+                ]);
 
-            // Insert transaction
-            $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
-                                    VALUES (:user_id, :amount, :type, :balance, NOW())");
-            $stmt->execute([
-                'user_id' => $user_id,
-                'amount' => $capital,
-                'type' => 1, // Credit
-                'balance' => $new_balance
-            ]);
+                // Log activity
+                $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
+                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'message' => $message,
+                    'category' => 'Investment Completion',
+                    'date_sent' => $act_time
+                ]);
+            } elseif ($status === 'cancelled') {
+                // Credit only capital to user's balance
+                $new_balance = $current_balance + $capital;
 
-            // Log activity
-            $message = "Your investment of $$capital for $plan_name has been canceled, and $$capital has been refunded to your account.";
-            $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
-                                    VALUES (:user_id, :message, :category, :date_sent)");
-            $stmt->execute([
-                'user_id' => $user_id,
-                'message' => $message,
-                'category' => 'Investment Cancellation',
-                'date_sent' => $act_time
-            ]);
+                // Insert transaction
+                $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
+                                        VALUES (:user_id, :amount, :type, :balance, NOW())");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'amount' => $capital,
+                    'type' => 1, // Credit
+                    'balance' => $new_balance
+                ]);
+
+                // Log activity
+                $message = "Your investment of $$capital for $plan_name has been cancelled, and $$capital has been refunded to your account.";
+                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt->execute([
+                    'user_id' => $user_id,
+                    'message' => $message,
+                    'category' => 'Investment Cancellation',
+                    'date_sent' => $act_time
+                ]);
+            }
         }
 
         // Commit transaction
@@ -98,6 +110,7 @@ if (isset($_POST['edit'])) {
         // Rollback transaction on error
         $conn->rollBack();
         $_SESSION['error'] = 'Error updating investment: ' . $e->getMessage();
+        error_log("investments_edit.php: Error - " . $e->getMessage(), 3, 'debug.log');
     }
 
     $pdo->close();
