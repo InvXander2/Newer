@@ -123,7 +123,7 @@
                                         </div><!--end form-group--> 
                 
                                         <div class="form-group mb-2">
-                                            <label>Withdrawal Limit: ($100 - $10,000,000)</label>
+                                            <label>Withdrawal Limit: ($100 - $100,000)</label>
                                                                       
                                         </div><!--end form-group-->
             
@@ -131,7 +131,7 @@
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                                                 <input type="number" name="withdrawal_amount" class="form-control" placeholder="Enter Amount to Withdraw" aria-label="Amount (to the nearest dollar)" />
-                                                <div class="input-group-append"><span class="input-group-text">.00</span></div>
+                                                <div class="input-group-append"></div>
                                             </div>
                                         </div><!--end form-group-->                     
                                                             
