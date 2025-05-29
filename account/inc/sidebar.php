@@ -1,15 +1,4 @@
-
-
 <div class="left-sidenav">
-    <!-- LOGO -->
-    <div class="brand">
-        <a href="<?php echo $baseurl ?>" class="logo">
-            <span>
-                <img height="150%" src="../assets/images/logo.png" alt="prime-logo" class="logo-md">
-            </span>
-        </a>
-    </div>
-    <!--end logo-->
     <div class="menu-content h-100" data-simplebar>
         <ul class="metismenu left-sidenav-menu">
             <li class="menu-label mt-0">Main</li>
@@ -20,21 +9,21 @@
             <hr class="hr-dashed hr-menu">
             <li class="menu-label my-2">Info</li>
 
-
             <li>
                 <a href="investments"><i data-feather="bar-chart" class="align-self-center menu-icon"></i><span>Investment Plans</span></a>
             </li>
-
 
             <li>
                 <a href="deposits"><i data-feather="credit-card" class="align-self-center menu-icon"></i><span>Deposit Funds</span></a>
             </li>
 
-
             <li>
                 <a href="withdrawals"><i data-feather="briefcase" class="align-self-center menu-icon"></i><span>Withdraw Funds</span></a>
             </li>
 
+            <li>
+                <a href="history"><i data-feather="history" class="align-self-center menu-icon"></i><span>Transaction History</span></a>
+            </li>
 
             <hr class="hr-dashed hr-menu">
             <li class="menu-label my-2">Account & Settings</li>
@@ -43,26 +32,21 @@
                 <a href="referrals"><i data-feather="git-merge" class="align-self-center menu-icon"></i><span>Referrals</span></a>
             </li>
 
-
             <li>
                 <a href="profile"><i data-feather="user" class="align-self-center menu-icon"></i><span>Profile</span></a>
             </li>
-
 
             <li>
                 <a href="messages"><i data-feather="inbox" class="align-self-center menu-icon"></i><span>Inbox</span></a>
             </li>
 
-
             <li>
                 <a href="password-update"><i data-feather="lock" class="align-self-center menu-icon"></i><span>Change Password</span></a>
             </li>       
 
-
             <li>
                 <a href="../contact"><i data-feather="life-buoy" class="align-self-center menu-icon"></i><span>Contact Support</span></a>
             </li>
-
 
             <li>
                 <a href="logout_action"><i data-feather="log-out" class="align-self-center menu-icon"></i><span>Logout</span></a>
