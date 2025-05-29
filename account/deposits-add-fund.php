@@ -18,7 +18,7 @@
 
     $conn = $pdo->open();
 
-    $deposit_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id AND type=1 ORDER BY id DESC");
+    $deposit_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id AND type=1 ORDER BY user_id DESC");
     if ($deposit_madeQuery->rowCount()) {
         $deposit_made = $deposit_madeQuery->fetchAll(PDO::FETCH_OBJ);
     }
