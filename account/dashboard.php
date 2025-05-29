@@ -489,7 +489,7 @@
                                         $stmtact->execute();
                                         $drowact = $stmtact->fetch();
                                         $no_of_act = $drowact['numrows'];
-                                        $actQuery = $conn->query("SELECT * FROM activity WHERE user_id = $id ORDER BY id DESC LIMIT 6");
+                                        $actQuery = $conn->query("SELECT * FROM activity WHERE user_id = $id ORDER BY act_id DESC LIMIT 6");
                                         if ($actQuery->rowCount()) {
                                             $actrow = $actQuery->fetchAll(PDO::FETCH_OBJ);
                                         }
