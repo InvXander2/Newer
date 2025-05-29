@@ -1,28 +1,109 @@
 <?php
-	include 'includes/session.php';
-	include 'includes/slugify.php';
+include 'includes/session.php';
+include 'includes/slugify.php';
 
-	if(isset($_POST['edit'])){
-		$id = $_POST['id'];
-		$status = $_POST['status'];
+if (isset($_POST['edit'])) {
+    $id = $_POST['id'];
+    $status = $_POST['status'];
 
-		$conn = $pdo->open();
+    $conn = $pdo->open();
 
-		try{
-			$stmt = $conn->prepare("UPDATE investment SET status=:status WHERE invest_id=:id");
-			$stmt->execute(['status'=>$status, 'id'=>$id]);
-			$_SESSION['success'] = 'Updated successfully';
-		}
-		catch(PDOException $e){
-			$_SESSION['error'] = $e->getMessage();
-		}
-		
-		$pdo->close();
-	}
-	else{
-		$_SESSION['error'] = 'Select Status first';
-	}
+    try {
+        // Fetch investment details
+        $stmt = $conn->prepare("SELECT i.*, ip.name AS plan_name, u.id AS user_id 
+                                FROM investment i 
+                                LEFT JOIN investment_plans ip ON ip.id = i.invest_plan_id 
+                                LEFT JOIN users u ON u.id = i.user_id 
+                                WHERE i.invest_id = :id");
+        $stmt->execute(['id' => $id]);
+        $investment = $stmt->fetch(PDO::FETCH_ASSOC);
 
-	header('location: investments.php');
+        if (!$investment) {
+            throw new Exception('Investment not found.');
+        }
 
+        $user_id = $investment['user_id'];
+        $capital = $investment['capital'];
+        $returns = $investment['returns'];
+        $plan_name = $investment['plan_name'] ?? 'Investment Plan';
+        $act_time = date('Y-m-d h:i A');
+
+        // Begin transaction
+        $conn->beginTransaction();
+
+        // Update investment status
+        $stmt = $conn->prepare("UPDATE investment SET status = :status WHERE invest_id = :id");
+        $stmt->execute(['status' => $status, 'id' => $id]);
+
+        // Get user's current balance from the latest transaction
+        $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
+        $stmt->execute(['user_id' => $user_id]);
+        $current_balance = $stmt->fetchColumn() ?: 0;
+
+        if ($status === 'completed') {
+            // Credit capital + returns to user's balance
+            $amount = $capital + $returns;
+            $new_balance = $current_balance + $amount;
+
+            // Insert transaction
+            $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
+                                    VALUES (:user_id, :amount, :type, :balance, NOW())");
+            $stmt->execute([
+                'user_id' => $user_id,
+                'amount' => $amount,
+                'type' => 1, // Credit
+                'balance' => $new_balance
+            ]);
+
+            // Log activity
+            $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
+            $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                    VALUES (:user_id, :message, :category, :date_sent)");
+            $stmt->execute([
+                'user_id' => $user_id,
+                'message' => $message,
+                'category' => 'Investment Completion',
+                'date_sent' => $act_time
+            ]);
+        } elseif ($status === 'canceled') {
+            // Credit only capital to user's balance
+            $new_balance = $current_balance + $capital;
+
+            // Insert transaction
+            $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date) 
+                                    VALUES (:user_id, :amount, :type, :balance, NOW())");
+            $stmt->execute([
+                'user_id' => $user_id,
+                'amount' => $capital,
+                'type' => 1, // Credit
+                'balance' => $new_balance
+            ]);
+
+            // Log activity
+            $message = "Your investment of $$capital for $plan_name has been canceled, and $$capital has been refunded to your account.";
+            $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
+                                    VALUES (:user_id, :message, :category, :date_sent)");
+            $stmt->execute([
+                'user_id' => $user_id,
+                'message' => $message,
+                'category' => 'Investment Cancellation',
+                'date_sent' => $act_time
+            ]);
+        }
+
+        // Commit transaction
+        $conn->commit();
+        $_SESSION['success'] = 'Investment status updated successfully';
+    } catch (Exception $e) {
+        // Rollback transaction on error
+        $conn->rollBack();
+        $_SESSION['error'] = 'Error updating investment: ' . $e->getMessage();
+    }
+
+    $pdo->close();
+} else {
+    $_SESSION['error'] = 'Please select a status to update.';
+}
+
+header('location: investments.php');
 ?>
