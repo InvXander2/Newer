@@ -108,7 +108,7 @@
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form class="form-horizontal auth-form" method="post" action="deposits-payment-option" id="deposit-form">
+                                        <form class="form-horizontal auth-form" method="post" action="deposit-add-fund.php" id="deposit-form">
                                             <div class="form-group mb-2">
                                                 <label>Deposit Charge: 0%</label>
                                             </div><!--end form-group-->
@@ -119,7 +119,7 @@
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                                                     <input type="number" name="deposit_amount" class="form-control" id="deposit-amount" placeholder="Enter Deposit Amount" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
-                                                    <div class="input-group-append"></div>
+                                                    <div class="input-group-append"><span class="input-group-text">.00</span></div>
                                                 </div>
                                                 <div id="deposit-error" class="invalid-feedback" style="display: none;"></div>
                                             </div><!--end form-group-->
@@ -188,14 +188,12 @@
                 }
             });
 
-            // Form submission validation
+            // Allow form submission regardless of validation
             $('#deposit-form').on('submit', function(e) {
+                // No e.preventDefault() here, allowing the form to submit
                 var value = $depositInput.val();
-                if (!validateAmount(value)) {
-                    e.preventDefault();
-                    return false;
-                }
-                return true;
+                validateAmount(value); // Still show warnings for user feedback
+                return true; // Always allow submission
             });
         });
     </script>
