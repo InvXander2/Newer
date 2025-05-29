@@ -1,13 +1,4 @@
 <div class="left-sidenav">
-    <!-- LOGO -->
-    <div class="brand">
-        <a href="<?php echo $baseurl ?>" class="">
-            <span>
-                <img height="150%" src="" alt="prime-logo" class="logo-md">
-            </span>
-        </a>
-    </div>
-    <!--end logo-->
     <div class="menu-content h-100" data-simplebar>
         <ul class="metismenu left-sidenav-menu">
             <li class="menu-label mt-0">Main</li>
