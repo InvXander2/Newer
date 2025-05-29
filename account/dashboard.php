@@ -258,7 +258,7 @@
                             <div class="col-md-6 col-lg-3">
                                 <div class="card report-card">
                                     <div class="card-body">
-                                        <div class="row d-flex justify-content-center">
+                                        <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0) : ?>
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
@@ -273,26 +273,32 @@
                                                             $is_running = $end_date > $current_date && !$is_completed;
                                                         ?>
                                                             <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
-                                                                <strong><?= htmlspecialchars($inv->name); ?></strong><br>
-                                                                Current Return: <span class="text-success">$<?= number_format($inv->current, 2); ?></span><br>
-                                                                Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span>
-                                                                <form action="investment-complete.php" method="POST" class="d-inline">
-                                                                    <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
-                                                                    <button type="submit" name="complete" class="btn btn-sm btn-success mt-2"
-                                                                            <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
-                                                                        Complete
-                                                                    </button>
-                                                                </form>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <div>
+                                                                        <strong><?= htmlspecialchars($inv->name); ?></strong>
+                                                                        <div class="return-info">
+                                                                            <p class="mb-1">Current Return: <span class="text-success">$<?= number_format($inv->current, 2); ?></span></p>
+                                                                            <p class="mb-0">Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="d-flex align-items-center">
+                                                                        <form action="investment-complete.php" method="POST" class="d-inline mr-2">
+                                                                            <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
+                                                                            <button type="submit" name="complete" class="btn btn-sm btn-success"
+                                                                                    <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                                                Complete
+                                                                            </button>
+                                                                        </form>
+                                                                        <div class="report-main-icon bg-light-alt">
+                                                                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         <?php
                                                             $index++;
                                                         endforeach;
                                                         ?>
-                                                    </div>
-                                                </div>
-                                                <div class="col-auto align-self-center">
-                                                    <div class="report-main-icon bg-light-alt">
-                                                        <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
                                                     </div>
                                                 </div>
                                             <?php else : ?>
