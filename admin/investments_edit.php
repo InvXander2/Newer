@@ -53,7 +53,7 @@ if (isset($_POST['edit'])) {
 
             if ($status === 'completed') {
                 // Credit capital + returns to user's balance
-                $amount = $capital + $returns;
+                $amount = $returns;
                 $new_balance = $current_balance + $amount;
                 $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
 
