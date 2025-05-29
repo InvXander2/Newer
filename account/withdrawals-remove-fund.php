@@ -19,8 +19,8 @@ if (!isset($_SESSION['user'])) {
 $conn = $pdo->open();
 
 // Fetch user balance
-$stmt = $conn->prepare("SELECT balance FROM users WHERE id = :user_id");
-$stmt->execute(['user_id' => $id]);
+$stmt = $conn->prepare("SELECT balance FROM users WHERE id = :id");
+$stmt->execute(['id' => $id]);
 $user = $stmt->fetch(PDO::FETCH_OBJ);
 $balance = $user->balance ?? 0; // Default to 0 if balance is not found
 
