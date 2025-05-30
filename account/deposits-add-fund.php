@@ -36,35 +36,7 @@
     $depositHistory = "SELECT * FROM transaction WHERE user_id = :id AND type = 1";
 ?>
 
-<style>
-    body, .page-wrapper, .page-content, .container-fluid {
-        background-color: #1a1a1a !important;
-        color: #ffffff !important;
-    }
-    .card, .card-header, .card-body {
-        background-color: #2a2a2a !important;
-        color: #ffffff !important;
-        border: 1px solid #3a3a3a !important;
-    }
-    .page-title-box, .alert {
-        background-color: #2a2a2a !important;
-        color: #ffffff !important;
-    }
-    .form-control, .input-group-text {
-        background-color: #2a2a2a !important;
-        color: #ffffff !important;
-        border: 1px solid #3a3a3a !important;
-    }
-    .btn-outline-primary {
-        color: #ffffff !important;
-        border-color: #3a3a3a !important;
-    }
-    .btn-outline-primary:hover {
-        background-color: #3a3a3a !important;
-    }
-</style>
-
-<body data-bs-theme="dark">
+<body>
     <!-- Left Sidenav -->
     <?php include('inc/sidebar.php'); ?>
     <!-- end left-sidenav-->
