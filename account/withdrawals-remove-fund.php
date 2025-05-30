@@ -30,7 +30,7 @@ try {
     ");
     $stmt->execute(['user_id' => $id]);
     $user = $stmt->fetch(PDO::FETCH_OBJ);
-    $balance = $user->balance ?? 0;
+    $balance = floatval($user->balance ?? 0); // Ensure balance is a float
 } catch (PDOException $e) {
     $_SESSION['error'] = "Database error: " . $e->getMessage();
     error_log($e->getMessage(), 3, '/home/vol19_2/infinityfree.com/if0_39045086/htdocs/logs/error.log');
@@ -207,6 +207,9 @@ try {
             var $error = $('#withdrawal-error');
             var balance = <?php echo json_encode($balance); ?>;
 
+            // Debug: Log balance to console
+            console.log('Available balance:', balance);
+
             // Function to validate the withdrawal amount
             function validateAmount(value) {
                 var amount = parseFloat(value);
@@ -259,6 +262,7 @@ try {
             // Form submission validation
             $('#withdrawal-form').on('submit', function(e) {
                 var value = $withdrawalInput.val();
+                console.log('Submitted amount:', value); // Debug
                 if (!validateAmount(value)) {
                     e.preventDefault();
                     return false;
