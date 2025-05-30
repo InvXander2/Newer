@@ -25,7 +25,7 @@
         if(isset($_SESSION['error'])){
           echo "
             <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-warning'></i> Error!</h4>
               ".$_SESSION['error']."
             </div>
@@ -35,7 +35,7 @@
         if(isset($_SESSION['success'])){
           echo "
             <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-check'></i> Success!</h4>
               ".$_SESSION['success']."
             </div>
@@ -49,47 +49,47 @@
             <div class="box-header with-border">
               <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i class="fa fa-plus"></i> New</a>
             </div>
-
-
-
             <div class="box-body">
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th>Trans Date</th>
-                  <th>Payment Method</th>
-                  <th>Username</th>
-                  <th>Amount</th>
-                </thead>
-                <tbody>
-                  <?php
-                    $conn = $pdo->open();
+              <div class="table-responsive">
+                <table id="example1" class="table table-bordered">
+                  <thead>
+                    <th>Trans Date</th>
+                    <th>Payment Method</th>
+                    <th>Username</th>
+                    <th>Amount</th>
+                    <th>Actions</th>
+                  </thead>
+                  <tbody>
+                    <?php
+                      $conn = $pdo->open();
 
-                    try{
-                      $stmt = $conn->prepare("SELECT * FROM hp_transactions WHERE type=1 ORDER BY id DESC");
-                      $stmt->execute();
-                      foreach($stmt as $row){
-                        echo "
-                          <tr>
-                            <td>".$row['trans_date']."</td>
-                            <td>".$row['payment_mode']."</td>
-                            <td>".$row['username']."</td>
-                            <td>".$row['amount']."</td>
-                            <td>
-                              <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
-                              <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
-                            </td>
-                          </tr>
-                        ";
+                      try{
+                        $stmt = $conn->prepare("SELECT * FROM hp_transactions WHERE type=1 ORDER BY id DESC");
+                        $stmt->execute();
+                        foreach($stmt as $row){
+                          echo "
+                            <tr>
+                              <td>".$row['trans_date']."</td>
+                              <td>".$row['payment_mode']."</td>
+                              <td>".$row['username']."</td>
+                              <td>".$row['amount']."</td>
+                              <td>
+                                <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
+                                <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
+                              </td>
+                            </tr>
+                          ";
+                        }
                       }
-                    }
-                    catch(PDOException $e){
-                      echo $e->getMessage();
-                    }
+                      catch(PDOException $e){
+                        echo $e->getMessage();
+                      }
 
-                    $pdo->close();
-                  ?>
-                </tbody>
-              </table>
+                      $pdo->close();
+                    ?>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -97,9 +97,9 @@
     </section>
      
   </div>
-  	<?php include 'includes/footer.php'; ?>
-    <?php include 'includes/hp_deposits_modal.php'; ?>
-    <?php include 'includes/hp_deposits_modal2.php'; ?>
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/hp_deposits_modal.php'; ?>
+  <?php include 'includes/hp_deposits_modal2.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -157,16 +157,24 @@ function getRow(id){
     data: {id:id},
     dataType: 'json',
     success: function(response){
-
       $('.username').html(response.username);
       $('.did').val(response.did);
       $('#edit_payment_type').val(response.payment);
       $('#edit_username').val(response.username);
       $('#edit_amount').val(response.amount);
-
     }
   });
 }
 </script>
+<style>
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive table {
+  min-width: 800px; /* Adjust based on your table's content width */
+}
+</style>
 </body>
 </html>
