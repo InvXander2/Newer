@@ -2,7 +2,7 @@
 
 class Database {
  
-	private $server = "mysql:host=sql201.infinityfree.com;dbname=if0_39045086_hyip_db";
+	private $server = "mysql:host=sql201.infinityfree.com;dbname=if0_39045086_Nexusinsights";
 	private $username = "if0_39045086";
 	private $password = "Xgyuc8McZpz8Rr";
 	private $options  = array(
