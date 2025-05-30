@@ -30,9 +30,23 @@ try {
 }
 ?>
 
+<style>
+    .topbar, .navbar-custom, .dropdown-menu, .notification-menu {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+    }
+    .dropdown-item, .app-search-topbar input {
+        background-color: #2a2a2a !important;
+        color: #ffffff !important;
+    }
+    .dropdown-item:hover {
+        background-color: #3a3a3a !important;
+    }
+</style>
+
 <div class="topbar">            
     <!-- Navbar -->
-    <nav class="navbar-custom" style="display: flex; justify-content: space-between; align-items: center;">    
+    <nav class="navbar-custom" style="display: flex; justify-content: space-between; align-items: center;" data-bs-theme="dark">    
         <ul class="list-unstyled topbar-nav mb-0" style="display: flex; align-items: center;">                        
             <li>
                 <button class="nav-link button-menu-mobile">
