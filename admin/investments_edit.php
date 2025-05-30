@@ -6,6 +6,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 if (isset($_POST['edit'])) {
+    $id = $_POST['id'];
+    $status = $_POST['status'];
+
     // Debugging: Log input values
     error_log("investments_edit.php: id=$id, status=$status, time=" . date('Y-m-d H:i:s'), 3, 'debug.log');
 
@@ -13,11 +16,13 @@ if (isset($_POST['edit'])) {
 
     try {
         // Fetch investment details
-        $stmt = $conn->prepare("SELECT i.*, ip.name AS plan_name, u.id AS user_id, u.email, u.full_name 
-                                FROM investment i 
-                                LEFT JOIN investment_plans ip ON ip.id = i.invest_plan_id 
-                                LEFT JOIN users u ON u.id = i.user_id 
-                                WHERE i.invest_id = :id");
+        $stmt = $conn->prepare("
+            SELECT i.*, COALESCE(ip.name, 'Unknown Plan') AS plan_name, u.id AS user_id, u.email, u.full_name 
+            FROM investment i 
+            LEFT JOIN investment_plans ip ON ip.id = i.invest_plan_id 
+            LEFT JOIN users u ON u.id = i.user_id 
+            WHERE i.invest_id = :id
+        ");
         $stmt->execute(['id' => $id]);
         $investment = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -28,7 +33,7 @@ if (isset($_POST['edit'])) {
         $user_id = $investment['user_id'];
         $capital = $investment['capital'];
         $returns = $investment['returns'];
-        $plan_name = $investment['plan_name'] ?? 'Investment Plan';
+        $plan_name = $investment['plan_name'];
         $investor_email = $investment['email'];
         $investor_name = $investment['full_name'];
         $act_time = date('Y-m-d h:i A');
@@ -75,8 +80,10 @@ if (isset($_POST['edit'])) {
                 $activity_category = $plan_name;
 
                 // Insert transaction with remark and status
-                $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark, status) 
-                                        VALUES (:user_id, :amount, :type, :balance, NOW(), :remark, 'completed')");
+                $stmt = $conn->prepare("
+                    INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark, status) 
+                    VALUES (:user_id, :amount, :type, :balance, NOW(), :remark, 'completed')
+                ");
                 $stmt->execute([
                     'user_id' => $user_id,
                     'amount' => $amount,
@@ -86,8 +93,10 @@ if (isset($_POST['edit'])) {
                 ]);
 
                 // Log activity
-                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
-                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt = $conn->prepare("
+                    INSERT INTO activity (user_id, message, category, date_sent) 
+                    VALUES (:user_id, :message, :category, :date_sent)
+                ");
                 $stmt->execute([
                     'user_id' => $user_id,
                     'message' => $activity_message,
@@ -128,13 +137,13 @@ if (isset($_POST['edit'])) {
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
                                                                                         </p>
-                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
+                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='color: #000000;'>
                                                                                                 Your investment of $$capital for the $plan_name has been successfully completed on $completion_date. $transaction_remark, and you can view the details in your Nexus Insights account.
                                                                                             </span>
                                                                                         </p>
-                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
+                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='color: #000000;'>
                                                                                                 For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
@@ -230,8 +239,10 @@ if (isset($_POST['edit'])) {
                 $activity_category = $plan_name;
 
                 // Insert transaction with remark and status
-                $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark, status) 
-                                        VALUES (:user_id, :amount, :type, :balance, NOW(), :remark, 'completed')");
+                $stmt = $conn->prepare("
+                    INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark, status) 
+                    VALUES (:user_id, :amount, :type, :balance, NOW(), :remark, 'completed')
+                ");
                 $stmt->execute([
                     'user_id' => $user_id,
                     'amount' => $amount,
@@ -241,8 +252,10 @@ if (isset($_POST['edit'])) {
                 ]);
 
                 // Log activity
-                $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
-                                        VALUES (:user_id, :message, :category, :date_sent)");
+                $stmt = $conn->prepare("
+                    INSERT INTO activity (user_id, message, category, date_sent) 
+                    VALUES (:user_id, :message, :category, :date_sent)
+                ");
                 $stmt->execute([
                     'user_id' => $user_id,
                     'message' => $activity_message,
@@ -283,13 +296,13 @@ if (isset($_POST['edit'])) {
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
                                                                                         </p>
-                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
+                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='color: #000000;'>
                                                                                                 Your investment of $$capital for the $plan_name has been cancelled on $completion_date. $transaction_remark, and $$amount has been refunded to your account. You can view the details in your Nexus Insights account.
                                                                                             </span>
                                                                                         </p>
-                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
+                                                                                        <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='color: #000000;'>
                                                                                                 For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
