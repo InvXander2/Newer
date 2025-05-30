@@ -38,6 +38,10 @@ try {
     exit();
 }
 
+// Set dynamic min and max based on balance
+$min_amount = $balance < 100 ? $balance : 100;
+$max_amount = $balance > 100000 ? 100000 : $balance;
+
 // Fetch withdrawal requests using request_id
 try {
     $withdrawal_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 2 ORDER BY request_id DESC");
@@ -170,12 +174,12 @@ try {
                                                 <label>Charge: 0%</label>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-2">
-                                                <label>Withdrawal Limit: ($100 - $100,000)</label>
+                                                <label>Withdrawal Limit: ($<?php echo number_format($min_amount, 2); ?> - $<?php echo number_format($max_amount, 2); ?>)</label>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-2">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                                    <input type="number" name="withdrawal_amount" id="withdrawal-amount" class="form-control" placeholder="Enter Amount to Withdraw" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
+                                                    <input type="number" name="withdrawal_amount" id="withdrawal-amount" class="form-control" placeholder="Enter Amount to Withdraw" aria-label="Amount (to the nearest dollar)" min="<?php echo $min_amount; ?>" max="<?php echo $max_amount; ?>" step="0.01" required />
                                                     <div class="input-group-append"></div>
                                                 </div>
                                                 <div id="withdrawal-error" class="invalid-feedback" style="display: none;"></div>
@@ -205,10 +209,14 @@ try {
         $(document).ready(function() {
             var $withdrawalInput = $('#withdrawal-amount');
             var $error = $('#withdrawal-error');
-            var balance = <?php echo json_encode($balance); ?>;
+            var balance = parseFloat(<?php echo json_encode($balance); ?>);
+            var minAmount = parseFloat(<?php echo json_encode($min_amount); ?>);
+            var maxAmount = parseFloat(<?php echo json_encode($max_amount); ?>);
 
-            // Debug: Log balance to console
-            console.log('Available balance:', balance);
+            // Debug: Log values to console
+            console.log('Balance:', balance);
+            console.log('Min Amount:', minAmount);
+            console.log('Max Amount:', maxAmount);
 
             // Function to validate the withdrawal amount
             function validateAmount(value) {
@@ -226,13 +234,13 @@ try {
                     $withdrawalInput.addClass('is-invalid');
                     return false;
                 }
-                if (amount < 100) {
-                    $error.text('Withdrawal amount must be at least $100.').show();
+                if (amount < minAmount) {
+                    $error.text('Withdrawal amount must be at least $' + minAmount.toFixed(2) + '.').show();
                     $withdrawalInput.addClass('is-invalid');
                     return false;
                 }
-                if (amount > 100000) {
-                    $error.text('Withdrawal amount cannot exceed $100,000.').show();
+                if (amount > maxAmount) {
+                    $error.text('Withdrawal amount cannot exceed $' + maxAmount.toFixed(2) + '.').show();
                     $withdrawalInput.addClass('is-invalid');
                     return false;
                 }
@@ -265,8 +273,10 @@ try {
                 console.log('Submitted amount:', value); // Debug
                 if (!validateAmount(value)) {
                     e.preventDefault();
+                    console.log('Validation failed'); // Debug
                     return false;
                 }
+                console.log('Validation passed'); // Debug
                 return true;
             });
         });
