@@ -60,7 +60,7 @@ if (isset($_POST['edit'])) {
                 // Credit returns
                 $amount = $returns;
                 $new_balance = $current_balance + $amount;
-                $message = "Your investment of $$capital for $plan_name has been completed, and $$amount has been credited to your account.";
+                $message = "$plan_name investment cancelled";
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
@@ -79,14 +79,14 @@ if (isset($_POST['edit'])) {
                 $stmt->execute([
                     'user_id' => $user_id,
                     'message' => $message,
-                    'category' => 'Investment Completion',
+                    'category' => $plan_name,
                     'date_sent' => $act_time
                 ]);
             } elseif ($status === 'cancelled') {
                 // Credit only capital
                 $amount = $capital;
                 $new_balance = $current_balance + $amount;
-                $message = "Your investment of $$capital for $plan_name has been cancelled, and $$capital has been refunded to your account.";
+                $message = "Investment Cancelled";
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
