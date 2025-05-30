@@ -17,7 +17,7 @@ if (isset($_POST['edit'])) {
     try {
         // Fetch investment details
         $stmt = $conn->prepare("
-            SELECT i.*, COALESCE(ip.name, 'Unknown Plan') AS plan_name, u.id AS user_id, u.email, u.full_name 
+            SELECT i.*, i.status AS invest_status, COALESCE(ip.name, 'Unknown Plan') AS plan_name, u.id AS user_id, u.email, u.full_name 
             FROM investment i 
             LEFT JOIN investment_plans ip ON ip.id = i.invest_plan_id 
             LEFT JOIN users u ON u.id = i.user_id 
@@ -36,11 +36,12 @@ if (isset($_POST['edit'])) {
         $plan_name = $investment['plan_name'];
         $investor_email = $investment['email'];
         $investor_name = $investment['full_name'];
+        $current_status = $investment['invest_status'];
         $act_time = date('Y-m-d h:i A');
         $completion_date = date('Y-m-d');
 
         // Debugging: Log investment details
-        error_log("investments_edit.php: user_id=$user_id, capital=$capital, returns=$returns, plan_name=$plan_name, email=$investor_email", 3, 'debug.log');
+        error_log("investments_edit.php: user_id=$user_id, capital=$capital, returns=$returns, plan_name=$plan_name, email=$investor_email, current_status=$current_status", 3, 'debug.log');
 
         // Begin transaction
         $conn->beginTransaction();
@@ -52,7 +53,7 @@ if (isset($_POST['edit'])) {
         // Only process balance, remark, activity, and emails for 'completed' or 'cancelled'
         if ($status === 'completed' || $status === 'cancelled') {
             // Prevent duplicate credits
-            if ($investment['status'] === $status) {
+            if ($current_status === $status) {
                 throw new Exception("Investment is already $status.");
             }
 
@@ -135,7 +136,7 @@ if (isset($_POST['edit'])) {
                                                                                 <tr>
                                                                                     <td style='padding: 16px 10px 0;'>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
-                                                                                            <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
+                                                                                            <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear {$investor_name},</strong></span>
                                                                                         </p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
@@ -147,7 +148,7 @@ if (isset($_POST['edit'])) {
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                             <span style='color: #000000;'>
                                                                                                 For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
-                                                                                            </span>
+                                                                25 </span>
                                                                                         </p>
                                                                                     </td>
                                                                                 </tr>
@@ -205,7 +206,7 @@ if (isset($_POST['edit'])) {
                 ";
 
                 // Notify admin
-                $admin_msg = "$investor_name has completed an investment of $$capital for $plan_name. Login to Admin for details.";
+                $admin_msg = "{$investor_name} has completed an investment of $$capital for $plan_name. Login to Admin for details.";
                 $admin_msg = wordwrap($admin_msg, 70);
                 mail($settings->email, "Investment Completed", $admin_msg);
 
@@ -294,7 +295,7 @@ if (isset($_POST['edit'])) {
                                                                                 <tr>
                                                                                     <td style='padding: 16px 10px 0;'>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
-                                                                                            <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
+                                                                                            <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear {$investor_name},</strong></span>
                                                                                         </p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
                                                                                         <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
@@ -364,7 +365,7 @@ if (isset($_POST['edit'])) {
                 ";
 
                 // Notify admin
-                $admin_msg = "$investor_name has cancelled an investment of $$capital for $plan_name. Login to Admin for details.";
+                $admin_msg = "{$investor_name} has cancelled an investment of $$capital for $plan_name. Login to Admin for details.";
                 $admin_msg = wordwrap($admin_msg, 70);
                 mail($settings->email, "Investment Cancelled", $admin_msg);
 
