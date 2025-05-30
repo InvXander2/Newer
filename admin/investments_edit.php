@@ -6,16 +6,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 if (isset($_POST['edit'])) {
-    // CSRF token validation
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        $_SESSION['error'] = 'Invalid CSRF token.';
-        header('location: investments.php');
-        exit();
-    }
-
-    $id = $_POST['id'];
-    $status = $_POST['status'];
-
     // Debugging: Log input values
     error_log("investments_edit.php: id=$id, status=$status, time=" . date('Y-m-d H:i:s'), 3, 'debug.log');
 
