@@ -93,5 +93,5 @@
 		$_SESSION['error'] = 'Fill up Latest Deposit form first';
 	}
 
-	header('location: investments.php');
+	header('location: dashboard.php');
 ?>
