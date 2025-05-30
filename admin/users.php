@@ -89,6 +89,7 @@
                               <td>
                                 <button class='btn btn-primary btn-sm msg btn-flat' data-id='".$row['id']."'><i class='fa fa-envelope'></i> DM</button>
                                 <button class='btn btn-success btn-sm fund btn-flat' data-id='".$row['id']."'><i class='fa fa-money'></i> Fund</button>
+                                <button class='btn btn-warning btn-sm withdraw btn-flat' data-id='".$row['id']."'><i class='fa fa-minus-circle'></i> Withdraw</button>
                                 <button class='btn btn-info btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
                                 <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
                               </td>
@@ -114,6 +115,35 @@
   </div>
   <?php include 'includes/footer.php'; ?>
   <?php include 'includes/users_modal.php'; ?>
+
+  <!-- Withdraw Modal -->
+  <div class="modal fade" id="withdraw">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h4 class="modal-title"><b>Withdraw Amount for <span class="fullname"></span></b></h4>
+        </div>
+        <div class="modal-body">
+          <form class="form-horizontal" method="POST" action="users_withdraw.php" id="withdraw_form">
+            <input type="hidden" class="userid" name="id">
+            <div class="form-group">
+              <label for="withdraw_amount" class="col-sm-3 control-label">Amount</label>
+              <div class="col-sm-9">
+                <input type="number" class="form-control" id="withdraw_amount" name="amount" required min="0" step="0.01">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Close</button>
+          <button type="submit" class="btn btn-warning btn-flat" name="withdraw" form="withdraw_form"><i class="fa fa-minus-circle"></i> Withdraw</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 <!-- ./wrapper -->
@@ -158,6 +188,13 @@ $(function(){
 
   $(document).on('click', '.status', function(e){
     e.preventDefault();
+    var id = $(this).data('id');
+    getRow(id);
+  });
+
+  $(document).on('click', '.withdraw', function(e){
+    e.preventDefault();
+    $('#withdraw').modal('show');
     var id = $(this).data('id');
     getRow(id);
   });
