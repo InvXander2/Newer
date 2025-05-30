@@ -42,6 +42,9 @@
           ";
           unset($_SESSION['success']);
         }
+
+        // Generate CSRF token
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
       ?>
       <div class="row">
         <div class="col-xs-12">
@@ -66,18 +69,22 @@
                     $conn = $pdo->open();
 
                     try {
-                      $stmt = $conn->prepare("SELECT *, investment.status AS invest_status, investment_plans.name AS plan_name 
-                                              FROM investment 
-                                              LEFT JOIN investment_plans ON investment_plans.id = investment.invest_plan_id 
-                                              LEFT JOIN users ON users.id = investment.user_id 
-                                              ORDER BY invest_id DESC");
+                      $stmt = $conn->prepare("
+                        SELECT investment.*, investment.status AS invest_status, 
+                               COALESCE(investment_plans.name, 'Unknown Plan') AS plan_name, 
+                               users.uname AS username 
+                        FROM investment 
+                        LEFT JOIN investment_plans ON investment_plans.id = investment.invest_plan_id 
+                        LEFT JOIN users ON users.id = investment.user_id 
+                        ORDER BY invest_id DESC
+                      ");
                       $stmt->execute();
 
                       $now = date('Y-m-d H:i:s');
 
                       foreach ($stmt as $row) { ?>
                           <tr>
-                            <td><?php echo htmlspecialchars($row['plan_name'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($row['username'] ?? 'Unknown User'); ?></td>
                             <td><?php echo htmlspecialchars($row['plan_name']); ?></td>
                             <td>$ <?php echo number_format($row['capital'], 2); ?></td>
                             <td>$ <?php echo number_format($row['returns'], 2); ?></td>
@@ -107,11 +114,11 @@
                                 }
                               ?>
                             </td>
-                            <td><?php echo htmlspecialchars($row['start_date']); ?></td>
-                            <td><?php echo htmlspecialchars($row['end_date']); ?></td>
-                            <td><?php echo htmlspecialchars($row['invest_status']); ?></td>
+                            <td><?php echo htmlspecialchars($row['start_date'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($row['end_date'] ?? ''); ?></td>
+                            <td><?php echo htmlspecialchars($row['invest_status'] ?? ''); ?></td>
                             <td>
-                              <button class="btn btn-primary btn-sm edit btn-flat" data-id="<?php echo $row['invest_id']; ?>"><i class="fa fa-edit"></i> Status</button>
+                              <button class="btn btn-primary btn-sm edit btn-flat" data-id="<?php echo htmlspecialchars($row['invest_id'] ?? ''); ?>"><i class="fa fa-edit"></i> Status</button>
                             </td>
                           </tr>
                       <?php } 
@@ -150,7 +157,7 @@ $(function(){
     $.ajax({
       type: 'POST',
       url: 'investments_row.php',
-      data: {id: id},
+      data: {id: id, csrf_token: '<?php echo $_SESSION['csrf_token']; ?>'},
       dataType: 'json',
       success: function(response){
         $('.invid').val(response.invest_id);
