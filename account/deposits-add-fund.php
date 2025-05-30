@@ -46,6 +46,15 @@
         <?php include('inc/header.php'); ?>
         <!-- Top Bar End -->
 
+        <!-- Add CSS to set icon colors to grayish -->
+        <style>
+            .topbar .feather-menu,
+            .topbar .feather-search,
+            .topbar .feather-bell {
+                stroke: #6c757d; /* Grayish color to match the first file */
+            }
+        </style>
+
         <!-- Page Content-->
         <div class="page-content">
             <div class="container-fluid">
@@ -61,7 +70,7 @@
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                                         <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date">Jan 11</span>
-                                        <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
+                                        <i data-feather="calendar" class="align-self-center icon-xs ml-1" style="stroke: #6c757d;"></i>
                                     </a>
                                 </div><!--end col-->
                             </div><!--end row-->
