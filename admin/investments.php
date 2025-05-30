@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Ongoing Investments
+        Investments History
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Ongoing Investments</li>
+        <li class="active">Investments History</li>
       </ol>
     </section>
 
