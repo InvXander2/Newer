@@ -42,6 +42,13 @@ try {
     .dropdown-item:hover {
         background-color: #3a3a3a !important;
     }
+    /* Set top bar icons to grayish */
+    .topbar .feather-menu,
+    .topbar .feather-search,
+    .topbar .feather-bell,
+    .topbar .topbar-icon {
+        stroke: #6c757d !important; /* Grayish color */
+    }
 </style>
 
 <div class="topbar">            
