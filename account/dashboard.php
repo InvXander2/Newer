@@ -453,7 +453,7 @@
                                                 $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
                                                 $tag2 = $index == 1 ? "Apps" : "Tech";
                                                 ?>
-                                                < QListItem class="list-group-item align-items-center d-flex justify-content-between pt-0">
+                                                <QListItem class="list-group-item align-items-center d-flex justify-content-between pt-0">
                                                     <div class="media">
                                                         <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
                                                         <div class="media-body align-self-center">
@@ -464,7 +464,7 @@
                                                     <div class="align-self-center">
                                                         <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
                                                     </div>
-                                                </li>
+                                                </QListItem>
                                                 <?php
                                                 $index++;
                                             endforeach;
