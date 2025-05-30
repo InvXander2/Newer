@@ -132,7 +132,7 @@ try {
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Oh snap!</strong> " . $_SESSION['error'] . "
+                            <strong>Oh snap!</strong> " . htmlspecialchars($_SESSION['error']) . "
                         </div>
                     ";
                     unset($_SESSION['error']);
@@ -144,7 +144,7 @@ try {
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Well done!</strong> " . $_SESSION['success'] . "
+                            <strong>Well done!</strong> " . htmlspecialchars($_SESSION['success']) . "
                         </div>
                     ";
                     unset($_SESSION['success']);
@@ -162,7 +162,7 @@ try {
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form class="form-horizontal auth-form" method="post" action="withdrawals-payment-option.php" onsubmit="return validateWithdrawal()">
+                                        <form class="form-horizontal auth-form" method="post" action="withdrawals-payment-option.php" id="withdrawal-form">
                                             <div class="form-group mb-2">
                                                 <label>Available Balance: $<?php echo number_format($balance, 2); ?></label>
                                             </div><!--end form-group-->
@@ -175,10 +175,10 @@ try {
                                             <div class="form-group mb-2">
                                                 <div class="input-group mb-3">
                                                     <div class="input-group-prepend"><span class="input-group-text">$</span></div>
-                                                    <input type="number" name="withdrawal_amount" id="withdrawal_amount" class="form-control" placeholder="Enter Amount to Withdraw" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
+                                                    <input type="number" name="withdrawal_amount" id="withdrawal-amount" class="form-control" placeholder="Enter Amount to Withdraw" aria-label="Amount (to the nearest dollar)" min="100" max="100000" step="0.01" required />
                                                     <div class="input-group-append"></div>
                                                 </div>
-                                                <div id="error-message" class="text-danger" style="display: none;"></div>
+                                                <div id="withdrawal-error" class="invalid-feedback" style="display: none;"></div>
                                             </div><!--end form-group-->
                                             <div class="form-group mb-0 row">
                                                 <div class="col-12">
@@ -200,41 +200,74 @@ try {
     </div>
     <!-- end page-wrapper -->
 
-    <?php include('inc/scripts.php'); ?>
-
+    <!-- JavaScript for withdrawal form validation -->
     <script>
-        function validateWithdrawal() {
-            const withdrawalAmount = parseFloat(document.getElementById('withdrawal_amount').value);
-            const balance = <?php echo json_encode($balance); ?>;
-            const errorMessage = document.getElementById('error-message');
+        $(document).ready(function() {
+            var $withdrawalInput = $('#withdrawal-amount');
+            var $error = $('#withdrawal-error');
+            var balance = <?php echo json_encode($balance); ?>;
 
-            // Reset error message
-            errorMessage.style.display = 'none';
-            errorMessage.textContent = '';
+            // Function to validate the withdrawal amount
+            function validateAmount(value) {
+                var amount = parseFloat(value);
+                $error.hide().text('');
+                $withdrawalInput.removeClass('is-invalid');
 
-            if (isNaN(withdrawalAmount) || withdrawalAmount <= 0) {
-                errorMessage.textContent = 'Withdrawal amount must be greater than zero.';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-            if (withdrawalAmount < 100) {
-                errorMessage.textContent = 'Withdrawal amount must be at least $100.';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-            if (withdrawalAmount > 100000) {
-                errorMessage.textContent = 'Withdrawal amount cannot exceed $100,000 per transaction.';
-                errorMessage.style.display = 'block';
-                return false;
-            }
-            if (withdrawalAmount > balance) {
-                errorMessage.textContent = 'Withdrawal amount cannot exceed your available balance ($' + balance.toFixed(2) + ').';
-                errorMessage.style.display = 'block';
-                return false;
+                if (isNaN(amount) || value === '') {
+                    $error.text('Please enter a valid amount.').show();
+                    $withdrawalInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount <= 0) {
+                    $error.text('Withdrawal amount must be greater than zero.').show();
+                    $withdrawalInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount < 100) {
+                    $error.text('Withdrawal amount must be at least $100.').show();
+                    $withdrawalInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount > 100000) {
+                    $error.text('Withdrawal amount cannot exceed $100,000.').show();
+                    $withdrawalInput.addClass('is-invalid');
+                    return false;
+                }
+                if (amount > balance) {
+                    $error.text('Withdrawal amount cannot exceed your available balance ($' + balance.toFixed(2) + ').').show();
+                    $withdrawalInput.addClass('is-invalid');
+                    return false;
+                }
+                return true;
             }
 
-            return true; // Allow form submission
-        }
+            // Real-time validation on input
+            $withdrawalInput.on('input', function() {
+                var value = $(this).val();
+                validateAmount(value);
+            });
+
+            // Prevent negative input
+            $withdrawalInput.on('keypress', function(e) {
+                if (e.key === '-' || $(this).val().includes('-')) {
+                    e.preventDefault();
+                    $error.text('Negative amounts are not allowed.').show();
+                    $withdrawalInput.addClass('is-invalid');
+                }
+            });
+
+            // Form submission validation
+            $('#withdrawal-form').on('submit', function(e) {
+                var value = $withdrawalInput.val();
+                if (!validateAmount(value)) {
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+        });
     </script>
+
+    <?php include('inc/scripts.php'); ?>
 </body>
 </html>
