@@ -22,7 +22,7 @@
       <li class="header">MANAGE</li>
       <li><a href="users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
       <li><a href="investment_plans.php"><i class="fa fa-edit"></i> <span>Investment Plans</span></a></li>
-      <li><a href="investments.php"><i class="fa fa-handshake-o"></i> <span>Ongoing Investments</span></a></li>
+      <li><a href="investments.php"><i class="fa fa-handshake-o"></i> <span>Investments History</span></a></li>
       <li><a href="payment_methods.php"><i class="fa fa-credit-card"></i> <span>Payment Methods</span></a></li>
 
       <li class="treeview">
