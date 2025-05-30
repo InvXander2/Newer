@@ -26,7 +26,7 @@
         if(isset($_SESSION['error'])){
           echo "
             <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-warning'></i> Error!</h4>
               ".$_SESSION['error']."
             </div>
@@ -36,7 +36,7 @@
         if(isset($_SESSION['success'])){
           echo "
             <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-check'></i> Success!</h4>
               ".$_SESSION['success']."
             </div>
@@ -50,49 +50,49 @@
             <div class="box-header with-border">
               <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i class="fa fa-plus"></i> New</a>
             </div>
-
-
-
             <div class="box-body">
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th>Name</th>
-                  <th>Duration</th>
-                  <th>Rate</th>
-                  <th>Minimum Investment</th>
-                  <th>Maximum Investment</th>
-                </thead>
-                <tbody>
-                  <?php
-                    $conn = $pdo->open();
+              <div class="table-responsive">
+                <table id="example1" class="table table-bordered">
+                  <thead>
+                    <th>Name</th>
+                    <th>Duration</th>
+                    <th>Rate</th>
+                    <th>Minimum Investment</th>
+                    <th>Maximum Investment</th>
+                    <th>Actions</th>
+                  </thead>
+                  <tbody>
+                    <?php
+                      $conn = $pdo->open();
 
-                    try{
-                      $stmt = $conn->prepare("SELECT * FROM investment_plans ORDER BY id ASC");
-                      $stmt->execute();
-                      foreach($stmt as $row){
-                        echo "
-                          <tr>
-                            <td>".$row['name']."</td>
-                            <td>".$row['duration']."</td>
-                            <td>".$row['rate']."</td>
-                            <td>".$row['min_invest']."</td>
-                            <td>".$row['max_invest']."</td>
-                            <td>
-                              <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
-                              <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
-                            </td>
-                          </tr>
-                        ";
+                      try{
+                        $stmt = $conn->prepare("SELECT * FROM investment_plans ORDER BY id ASC");
+                        $stmt->execute();
+                        foreach($stmt as $row){
+                          echo "
+                            <tr>
+                              <td>".$row['name']."</td>
+                              <td>".$row['duration']."</td>
+                              <td>".$row['rate']."</td>
+                              <td>".$row['min_invest']."</td>
+                              <td>".$row['max_invest']."</td>
+                              <td>
+                                <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
+                                <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
+                              </td>
+                            </tr>
+                          ";
+                        }
                       }
-                    }
-                    catch(PDOException $e){
-                      echo $e->getMessage();
-                    }
+                      catch(PDOException $e){
+                        echo $e->getMessage();
+                      }
 
-                    $pdo->close();
-                  ?>
-                </tbody>
-              </table>
+                      $pdo->close();
+                    ?>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -100,9 +100,9 @@
     </section>
      
   </div>
-  	<?php include 'includes/footer.php'; ?>
-    <?php include 'includes/investment_plans_modal.php'; ?>
-    <?php include 'includes/investment_plans_modal2.php'; ?>
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/investment_plans_modal.php'; ?>
+  <?php include 'includes/investment_plans_modal2.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -167,10 +167,19 @@ function getRow(id){
       $('#edit_rate').val(response.rate);
       $('#edit_min_invest').val(response.min_invest);
       $('#edit_max_invest').val(response.max_invest);
-
     }
   });
 }
 </script>
+<style>
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive table {
+  min-width: 800px; /* Adjust based on your table's content width */
+}
+</style>
 </body>
 </html>
