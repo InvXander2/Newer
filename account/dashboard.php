@@ -239,24 +239,6 @@
                             <div class="col-md-6 col-lg-3">
                                 <div class="card report-card">
                                     <div class="card-body">
-                                        <div class="row d-flex justify-content-center">
-                                            <div class="col">
-                                                <p class="text-dark mb-0 font-weight-semibold">Last Session</p>
-                                                <h3 class="m-0"><?= date('h:i:s A', strtotime($row0['date_view'])) ?></h3>
-                                                <p class="mb-0 text-truncate text-muted"><?= date('D M j Y', strtotime($row0['date_view'])) ?></p>
-                                            </div>
-                                            <div class="col-auto align-self-center">
-                                                <div class="report-main-icon bg-light-alt">
-                                                    <i data-feather="clock" class="align-self-center text-blue icon-sm"></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div><!--end card-body-->
-                                </div><!--end card-->
-                            </div><!--end col-->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card report-card">
-                                    <div class="card-body">
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0) : ?>
                                                 <div class="col">
