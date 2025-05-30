@@ -86,7 +86,7 @@ if (isset($_POST['edit'])) {
                 // Credit only capital
                 $amount = $capital;
                 $new_balance = $current_balance + $amount;
-                $message = "$plan_name investment cancelled"; // Include plan_name for consistency
+                $message = "Investment cancelled"; // Include plan_name for consistency
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
