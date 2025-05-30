@@ -98,6 +98,9 @@
                                   $query = $conn->prepare("UPDATE investment SET current = :current_cpd WHERE invest_id = :cpd_id");
                                   $query->execute(['current_cpd' => $current_cpd, 'cpd_id' => $row['invest_id']]);
 
+                                  // Debugging: Log compound calculation
+                                  error_log("investments.php: invest_id={$row['invest_id']}, current_cpd=$current_cpd, time=" . date('Y-m-d H:i:s'), 3, 'debug.log');
+
                                   echo number_format($current_cpd, 2);
                                 } else {
                                   echo number_format($row['current'], 2);
@@ -142,23 +145,25 @@ $(function(){
     var id = $(this).data('id');
     getRow(id);
   });
-});
 
-function getRow(id){
-  $.ajax({
-    type: 'POST',
-    url: 'investments_row.php',
-    data: {id: id},
-    dataType: 'json',
-    success: function(response){
-      $('.invid').val(response.invest_id);
-      $('#invest_status').val(response.invest_status);
-    },
-    error: function(xhr, status, error) {
-      console.log('AJAX Error: ' + error);
-    }
-  });
-}
+  function getRow(id){
+    $.ajax({
+      type: 'POST',
+      url: 'investments_row.php',
+      data: {id: id},
+      dataType: 'json',
+      success: function(response){
+        $('.invid').val(response.invest_id);
+        $('#invest_status').val(response.invest_status);
+      },
+      error: function(xhr, status, error) {
+        console.log('AJAX Error: ' + error);
+        // Debugging: Log AJAX error
+        $.post('log_error.php', {error: 'AJAX Error in investments.php: ' + error + ', status: ' + status, xhr: xhr.responseText});
+      }
+    });
+  }
+});
 </script>
 </body>
 </html>
