@@ -77,7 +77,7 @@
 
                       foreach ($stmt as $row) { ?>
                           <tr>
-                            <td><?php echo htmlspecialchars($row['uname']); ?></td>
+                            <td><?php echo htmlspecialchars($row['plan_name'] ?? ''); ?></td>
                             <td><?php echo htmlspecialchars($row['plan_name']); ?></td>
                             <td>$ <?php echo number_format($row['capital'], 2); ?></td>
                             <td>$ <?php echo number_format($row['returns'], 2); ?></td>
