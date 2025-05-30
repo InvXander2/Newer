@@ -25,7 +25,7 @@
         if(isset($_SESSION['error'])){
           echo "
             <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-warning'></i> Error!</h4>
               ".$_SESSION['error']."
             </div>
@@ -35,7 +35,7 @@
         if(isset($_SESSION['success'])){
           echo "
             <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-check'></i> Success!</h4>
               ".$_SESSION['success']."
             </div>
@@ -45,57 +45,60 @@
       ?>
       <div class="row">
         <div class="col-xs-12">
+          <div class="box">
             <div class="box-body">
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th class="hidden"></th>
-                  <th>Username</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Payment Method</th>
-                  <th>Status</th>
-                  <th>Change Status</th>
-                </thead>
-                <tbody>
-                  <?php
-                    $conn = $pdo->open();
+              <div class="table-responsive">
+                <table id="example1" class="table table-bordered">
+                  <thead>
+                    <th class="hidden"></th>
+                    <th>Username</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Payment Method</th>
+                    <th>Status</th>
+                    <th>Change Status</th>
+                  </thead>
+                  <tbody>
+                    <?php
+                      $conn = $pdo->open();
 
-                    try{
-                      $stmt = $conn->prepare("SELECT *, users.uname AS username, request.status AS request_status, request.request_id AS id, users.id AS user_id FROM request LEFT JOIN users ON users.id=request.user_id WHERE request.type=1 ORDER BY request_id DESC");
-                      $stmt->execute();
-                      foreach($stmt as $row){
-                        
-                        echo "
-                          <tr>
-                            <td class='hidden'></td>
-                            <td>".$row['username']."</td>
-                            <td>".$row['trans_date']."</td>
-                            <td>&#36; ".number_format($row['amount'], 2)."</td>
-                            <td>".$row['payment_mode']."</td>
-                            <td>".$row['request_status']."</td>
-                            <td>
-                              <button class='btn btn-info btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Change Status</button>
-                            </td>
-                          </tr>
-                        ";
+                      try{
+                        $stmt = $conn->prepare("SELECT *, users.uname AS username, request.status AS request_status, request.request_id AS id, users.id AS user_id FROM request LEFT JOIN users ON users.id=request.user_id WHERE request.type=1 ORDER BY request_id DESC");
+                        $stmt->execute();
+                        foreach($stmt as $row){
+                          echo "
+                            <tr>
+                              <td class='hidden'></td>
+                              <td>".$row['username']."</td>
+                              <td>".$row['trans_date']."</td>
+                              <td>$ ".number_format($row['amount'], 2)."</td>
+                              <td>".$row['payment_mode']."</td>
+                              <td>".$row['request_status']."</td>
+                              <td>
+                                <button class='btn btn-info btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Change Status</button>
+                              </td>
+                            </tr>
+                          ";
+                        }
                       }
-                    }
-                    catch(PDOException $e){
-                      echo $e->getMessage();
-                    }
+                      catch(PDOException $e){
+                        echo $e->getMessage();
+                      }
 
-                    $pdo->close();
-                  ?>
-                </tbody>
-              </table>
+                      $pdo->close();
+                    ?>
+                  </tbody>
+                </table>
+              </div>
             </div>
+          </div>
         </div>
       </div>
     </section>
      
   </div>
-    <?php include 'includes/footer.php'; ?>
-    <?php include 'includes/request_modal.php'; ?>
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/request_modal.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -159,5 +162,15 @@ function getRow(id){
   });
 }
 </script>
+<style>
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive table {
+  min-width: 800px; /* Adjust based on your table's content width */
+}
+</style>
 </body>
 </html>
