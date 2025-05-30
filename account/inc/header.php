@@ -42,12 +42,12 @@ try {
     .dropdown-item:hover {
         background-color: #3a3a3a !important;
     }
-    /* Set top bar icons to lighter grayish */
+    /* Set top bar icons to grayish */
     .topbar .feather-menu,
     .topbar .feather-search,
     .topbar .feather-bell,
     .topbar .topbar-icon {
-        stroke: #adb5bd !important; /* Lighter grayish color */
+        stroke: #c9c7c7 !important; /* Grayish color */
     }
 </style>
 
