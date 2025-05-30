@@ -84,10 +84,9 @@ if (isset($_POST['complete'])) {
         // Credit returns
         $amount = $returns;
         $new_balance = $current_balance + $amount;
-        $message = "$plan_name Investment Completed";
-        $message2 = "Returns have been credited"
+        $transaction_remark = "Received return for $plan_name";
 
-        // Insert transaction with remark
+        // Insert transaction with updated remark
         $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
                                 VALUES (:user_id, :amount, :type, :balance, NOW(), :remark)");
         $stmt->execute([
@@ -95,15 +94,16 @@ if (isset($_POST['complete'])) {
             'amount' => $amount,
             'type' => 1, // Credit
             'balance' => $new_balance,
-            'remark' => $message
+            'remark' => $transaction_remark
         ]);
 
-        // Log activity
+        // Log activity with updated category and message
+        $activity_message = "Investment Completed";
         $stmt = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) 
                                 VALUES (:user_id, :message, :category, :date_sent)");
         $stmt->execute([
             'user_id' => $user_id,
-            'message' => $message2,
+            'message' => $activity_message,
             'category' => $plan_name,
             'date_sent' => $act_time
         ]);
@@ -112,7 +112,7 @@ if (isset($_POST['complete'])) {
         $conn->commit();
 
         // Debugging: Log details
-        error_log("investment-complete.php: invest_id=$invest_id, user_id=$user_id, status=$status, amount=$amount, new_balance=$new_balance, message=$message, time=" . date('Y-m-d H:i:s'), 3, '../debug.log');
+        error_log("investment-complete.php: invest_id=$invest_id, user_id=$user_id, status=$status, amount=$amount, new_balance=$new_balance, transaction_remark=$transaction_remark, activity_message=$activity_message, activity_category=$plan_name, time=" . date('Y-m-d H:i:s'), 3, '../debug.log');
 
         // Prepare email content
         $email_message = "
@@ -147,13 +147,13 @@ if (isset($_POST['complete'])) {
                                                                                 <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                     <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'><strong>Dear $investor_name,</strong></span>
                                                                                 </p>
-                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
                                                                                 <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                     <span style='color: #000000;'>
                                                                                         Your investment of $$capital for the $plan_name has been successfully completed on $completion_date, and $$amount has been credited to your account. You can view the details in your Nexus Insights account.
                                                                                     </span>
                                                                                 </p>
-                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>&nbsp;</p>
+                                                                                <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
                                                                                 <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                     <span style='color: #000000;'>
                                                                                         For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
