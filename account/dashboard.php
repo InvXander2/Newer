@@ -350,9 +350,6 @@
                                     </div><!--end col-->
                                     <div class="col-auto">
                                         <div class="dropdown">
-                                            <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                Investment/ Yield
-                                            </a>
                                         </div>
                                     </div><!--end col-->
                                 </div><!--end row-->
@@ -366,9 +363,6 @@
                                             </div><!--end col-->
                                             <div class="col-auto">
                                                 <div class="dropdown">
-                                                    <a href="#" style="cursor: context-menu; width: 120%;" class="btn btn-sm btn-outline-light">
-                                                        All
-                                                    </a>
                                                 </div>
                                             </div><!--end col-->
                                         </div><!--end row-->
