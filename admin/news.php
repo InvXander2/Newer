@@ -25,7 +25,7 @@
         if(isset($_SESSION['error'])){
           echo "
             <div class='alert alert-danger alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-warning'></i> Error!</h4>
               ".$_SESSION['error']."
             </div>
@@ -35,7 +35,7 @@
         if(isset($_SESSION['success'])){
           echo "
             <div class='alert alert-success alert-dismissible'>
-              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
+              <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
               <h4><i class='icon fa fa-check'></i> Success!</h4>
               ".$_SESSION['success']."
             </div>
@@ -49,51 +49,51 @@
             <div class="box-header with-border">
               <a href="#addnew" data-toggle="modal" class="btn btn-primary btn-sm btn-flat"><i class="fa fa-plus"></i> New</a>
             </div>
-
-
-
             <div class="box-body">
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th>Title</th>
-                  <th>Photo</th>
-                  <th>Details</th>
-                  <th>Date Posted</th>
-                </thead>
-                <tbody>
-                  <?php
-                    $conn = $pdo->open();
+              <div class="table-responsive">
+                <table id="example1" class="table table-bordered">
+                  <thead>
+                    <th>Title</th>
+                    <th>Photo</th>
+                    <th>Details</th>
+                    <th>Date Posted</th>
+                    <th>Actions</th>
+                  </thead>
+                  <tbody>
+                    <?php
+                      $conn = $pdo->open();
 
-                    try{
-                      $stmt = $conn->prepare("SELECT * FROM news");
-                      $stmt->execute();
-                      foreach($stmt as $row){
-                        $image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
-                        echo "
-                          <tr>
-                            <td>".$row['title']."</td>
-                            <td>
-                              <img src='".$image."' height='30px' width='30px'>
-                              <span class='pull-right'><a href='#edit_photo' class='photo' data-toggle='modal' data-id='".$row['id']."'><i class='fa fa-edit'></i></a></span>
-                            </td>
-                            <td><a href='#details' data-toggle='modal' class='btn btn-info btn-sm btn-flat desc' data-id='".$row['id']."'><i class='fa fa-search'></i> View</a></td>
-                            <td>".$row['posted']."</td>
-                            <td>
-                              <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
-                              <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
-                            </td>
-                          </tr>
-                        ";
+                      try{
+                        $stmt = $conn->prepare("SELECT * FROM news");
+                        $stmt->execute();
+                        foreach($stmt as $row){
+                          $image = (!empty($row['photo'])) ? 'images/'.$row['photo'] : 'images/noimage.jpg';
+                          echo "
+                            <tr>
+                              <td>".$row['title']."</td>
+                              <td>
+                                <img src='".$image."' height='30px' width='30px'>
+                                <span class='pull-right'><a href='#edit_photo' class='photo' data-toggle='modal' data-id='".$row['id']."'><i class='fa fa-edit'></i></a></span>
+                              </td>
+                              <td><a href='#details' data-toggle='modal' class='btn btn-info btn-sm btn-flat desc' data-id='".$row['id']."'><i class='fa fa-search'></i> View</a></td>
+                              <td>".$row['posted']."</td>
+                              <td>
+                                <button class='btn btn-success btn-sm edit btn-flat' data-id='".$row['id']."'><i class='fa fa-edit'></i> Edit</button>
+                                <button class='btn btn-danger btn-sm delete btn-flat' data-id='".$row['id']."'><i class='fa fa-trash'></i> Delete</button>
+                              </td>
+                            </tr>
+                          ";
+                        }
                       }
-                    }
-                    catch(PDOException $e){
-                      echo $e->getMessage();
-                    }
+                      catch(PDOException $e){
+                        echo $e->getMessage();
+                      }
 
-                    $pdo->close();
-                  ?>
-                </tbody>
-              </table>
+                      $pdo->close();
+                    ?>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -101,9 +101,9 @@
     </section>
      
   </div>
-  	<?php include 'includes/footer.php'; ?>
-    <?php include 'includes/news_modal.php'; ?>
-    <?php include 'includes/news_modal2.php'; ?>
+  <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/news_modal.php'; ?>
+  <?php include 'includes/news_modal2.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -169,10 +169,19 @@ function getRow(id){
       $('#edit_short_title').val(response.short_title);
       $('#edit_short_details').val(response.short_details);
       CKEDITOR.instances["editor2"].setData(response.details);
-
     }
   });
 }
 </script>
+<style>
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive table {
+  min-width: 800px; /* Adjust based on your table's content width */
+}
+</style>
 </body>
 </html>
