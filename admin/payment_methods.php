@@ -15,7 +15,6 @@
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li>Payment Methods</li>
         <li class="active">Payment Methods</li>
       </ol>
     </section>
