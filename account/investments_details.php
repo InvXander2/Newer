@@ -164,10 +164,9 @@ $now = date('Y-m-d H:i:s');
                                                             <tr>
                                                                 <th>Plan</th>
                                                                 <th>Capital</th>
-                                                                <th>ROI</th>
+                                                                <th>Return</th>
                                                                 <th>Start Date</th>
                                                                 <th>End Date</th>
-                                                                <th>Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -177,13 +176,6 @@ $now = date('Y-m-d H:i:s');
                                                                 <td>$ <?= number_format($investment_plan->returns, 2); ?></td>
                                                                 <td><?= $investment_plan->start_date; ?></td>
                                                                 <td><?= $investment_plan->end_date; ?></td>
-                                                                <td><span class="badge badge-boxed badge-outline-<?php if ($investment_plan->invest_status == 'in progress') {
-                                                                                                                        echo 'info';
-                                                                                                                    } elseif ($investment_plan->invest_status == 'cancelled') {
-                                                                                                                        echo 'danger';
-                                                                                                                    } elseif ($investment_plan->invest_status == 'completed') {
-                                                                                                                        echo 'success';
-                                                                                                                    } ?>"><?php echo $investment_plan->invest_status; ?></span></td>
                                                             </tr>
                                                         </tbody>
                                                     </table><!--end /table-->
