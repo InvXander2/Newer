@@ -120,8 +120,8 @@
                                                     <div class="form-group">
                                                         <label><strong>Payment Method:</strong> <?php echo htmlspecialchars($complete->name); ?></label>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <img src="../admin/images/<?php echo basename($complete->photo); ?>" alt="<?php echo htmlspecialchars($complete->name); ?>" style="max-width: 100px;">
+                                                    <div class="form-group text-center">
+                                                        <img src="../admin/images/<?php echo basename($complete->photo); ?>" alt="<?php echo htmlspecialchars($complete->name); ?>" style="max-width: 200px; display: block; margin: 0 auto;">
                                                     </div>
                                                     <div class="form-group">
                                                         <label><strong>Wallet Address:</strong> <?php echo htmlspecialchars($complete->wallet_address); ?></label>
