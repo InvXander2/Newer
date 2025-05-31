@@ -3,32 +3,20 @@ name: FTP Deploy
 on:
   push:
     branches:
-      - main
+      - main  # or your default branch
 
 jobs:
   ftp-deploy:
     name: Upload via FTP
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4  # Update to latest version
-
-      # Optional: Add Composer step if needed
-      - name: Install Composer Dependencies
-        run: composer install --no-dev --optimize-autoloader
-
-      - name: List repository files
-        run: ls -la  # Debug: Check available files
+        uses: actions/checkout@v3
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}/
-          local-dir: ./  # Use ./ for root, or public/ for specific folder
-          protocol: ftps
-          log-level: verbose
-          dry-run: false  # Set to true for testing
