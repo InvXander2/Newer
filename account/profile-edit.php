@@ -15,23 +15,20 @@ $id = $_SESSION['user'];
 $conn = $pdo->open();
 
 try {
-    // Sanitize user ID to prevent SQL injection (basic sanitization; replace with parameterized query if possible)
-    $id = intval($id); // Ensure $id is an integer
-    $sql = "SELECT * FROM users WHERE id = $id"; // Use with caution; see notes below
-
-    // Execute query using the Database class's query method
-    $result = $conn->query($sql);
-
-    // Fetch the user data
-    $row0 = $result->fetch_assoc(); // Assuming query() returns a MySQLi-like result
+    $sql = "SELECT * FROM users WHERE id = :id";
+    $stmt = $conn->prepare($sql); // Use PDO's prepare() on $conn
+    $stmt->execute(['id' => $id]);
+    $row0 = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$row0) {
         $_SESSION['error'] = "User not found.";
         header("location: dashboard.php");
         exit();
     }
-} catch (Exception $e) {
-    $_SESSION['error'] = "Database error: " . $e->getMessage();
+} catch (PDOException $e) {
+    // Log error and redirect
+    error_log("Database error in profile-edit.php: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+    $_SESSION['error'] = "Database error occurred.";
     header("location: dashboard.php");
     exit();
 } finally {
