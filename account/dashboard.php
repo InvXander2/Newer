@@ -201,16 +201,20 @@
                 }
                 ?>
 
-                <!-- Add Custom CSS for Button Styling -->
+                <!-- Add Custom CSS for Button and Title/Number Styling -->
                 <style>
                     .button-container {
                         display: flex;
                         justify-content: flex-end;
-                        width: 100%;
                     }
                     .btn-custom {
-                        width: 100px; /* Adjust width as needed */
+                        width: 100px; /* Half of 200px */
                         text-align: center;
+                    }
+                    .title-number-wrapper {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px; /* Space between title and number */
                     }
                 </style>
 
@@ -252,75 +256,81 @@
                             <div class="col-md-6 col-lg-3">
                                 <div class="card report-card">
                                     <div class="card-body">
-                                        <div class="row d-flex justify-content-between">
+                                        <div class="d-flex align-items-center justify-content-between">
                                             <?php if ($no_of_inv > 0) : ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <div class="button-container">
-                                                        <a href="investments_details.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">View All</a>
+                                                <div class="col-auto">
+                                                    <div class="title-number-wrapper">
+                                                        <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                                                        <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     </div>
-                                                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
-                                                    <div class="mt-3">
-                                                        <?php
-                                                        $current_date = new DateTime();
-                                                        $index = 0;
-                                                        foreach ($row5 as $inv) :
-                                                            $start_date = new DateTime($inv->start_date);
-                                                            $end_date = new DateTime($inv->end_date);
-                                                            $is_completed = $inv->status === 'completed';
-                                                            $is_running = $end_date > $current_date && !$is_completed;
+                                                </div>
+                                                <div class="button-container">
+                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary btn-custom ms-1">View All</a>
+                                                </div>
+                                                <div class="col-12 mt-3">
+                                                    <?php
+                                                    $current_date = new DateTime();
+                                                    $index = 0;
+                                                    foreach ($row5 as $inv) :
+                                                        $start_date = new DateTime($inv->start_date);
+                                                        $end_date = new DateTime($inv->end_date);
+                                                        $is_completed = $inv->status === 'completed';
+                                                        $is_running = $end_date > $current_date && !$is_completed;
 
-                                                            // Calculate progress
-                                                            $total_duration = $end_date->getTimestamp() - $start_date->getTimestamp();
-                                                            $elapsed = $current_date->getTimestamp() - $start_date->getTimestamp();
-                                                            $progress_percentage = ($total_duration > 0) ? min(100, ($elapsed / $total_duration) * 100) : 0;
-                                                            $days_remaining = $end_date->diff($current_date)->days;
-                                                            ?>
-                                                            <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
-                                                                <div class="d-flex justify-content-between align-items-center">
-                                                                    <div>
-                                                                        <strong><?= htmlspecialchars($inv->name); ?></strong>
-                                                                        <div class="return-info">
-                                                                            <p class="mb-1">Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
-                                                                            <div class="progress mt-2" style="height: 8px;">
-                                                                                <div class="progress-bar bg-success" role="progressbar" 
-                                                                                     style="width: <?= $progress_percentage ?>%;" 
-                                                                                     aria-valuenow="<?= $progress_percentage ?>" 
-                                                                                     aria-valuemin="0" 
-                                                                                     aria-valuemax="100">
-                                                                                </div>
+                                                        // Calculate progress
+                                                        $total_duration = $end_date->getTimestamp() - $start_date->getTimestamp();
+                                                        $elapsed = $current_date->getTimestamp() - $start_date->getTimestamp();
+                                                        $progress_percentage = ($total_duration > 0) ? min(100, ($elapsed / $total_duration) * 100) : 0;
+                                                        $days_remaining = $end_date->diff($current_date)->days;
+                                                        ?>
+                                                        <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <div>
+                                                                    <strong><?= htmlspecialchars($inv->name); ?></strong>
+                                                                    <div class="return-info">
+                                                                        <p class="mb-1">Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
+                                                                        <div class="progress mt-2" style="height: 8px;">
+                                                                            <div class="progress-bar bg-success" role="progressbar" 
+                                                                                 style="width: <?= $progress_percentage ?>%;" 
+                                                                                 aria-valuenow="<?= $progress_percentage ?>" 
+                                                                                 aria-valuemin="0" 
+                                                                                 aria-valuemax="100">
                                                                             </div>
-                                                                            <p class="mb-0 mt-1 text-muted">
-                                                                                <?= $is_completed ? 'Completed' : ($days_remaining . ' day' . ($days_remaining != 1 ? 's' : '') . ' remaining') ?>
-                                                                            </p>
                                                                         </div>
+                                                                        <p class="mb-0 mt-1 text-muted">
+                                                                            <?= $is_completed ? 'Completed' : ($days_remaining . ' day' . ($days_remaining != 1 ? 's' : '') . ' remaining') ?>
+                                                                        </p>
                                                                     </div>
-                                                                    <div class="d-flex align-items-center">
-                                                                        <form action="investment-complete.php" method="POST" class="d-inline mr-2">
-                                                                            <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
-                                                                            <button type="submit" name="complete" class="btn btn-sm btn-success"
-                                                                                    <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
-                                                                                Complete
-                                                                            </button>
-                                                                        </form>
-                                                                        <div class="report-main-icon bg-light-alt">
-                                                                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
-                                                                        </div>
+                                                                </div>
+                                                                <div class="d-flex align-items-center">
+                                                                    <form action="investment-complete.php" method="POST" class="d-inline mr-2">
+                                                                        <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
+                                                                        <button type="submit" name="complete" class="btn btn-sm btn-success"
+                                                                                <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                                            Complete
+                                                                        </button>
+                                                                    </form>
+                                                                    <div class="report-main-icon bg-light-alt">
+                                                                        <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <?php
-                                                            $index++;
-                                                        endforeach;
-                                                        ?>
-                                                    </div>
+                                                        </div>
+                                                        <?php
+                                                        $index++;
+                                                    endforeach;
+                                                    ?>
                                                 </div>
                                             <?php else : ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <div class="button-container">
-                                                        <a href="active_investments.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">All</a>
+                                                <div class="col-auto">
+                                                    <div class="title-number-wrapper">
+                                                        <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
                                                     </div>
+                                                </div>
+                                                <div class="button-container">
+                                                    <a href="active_investments.php" class="btn btn-sm btn-outline-primary btn-custom ms-1">View All</a>
+                                                </div>
+                                                <div class="col-12 mt-2">
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
