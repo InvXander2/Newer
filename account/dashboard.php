@@ -163,8 +163,8 @@
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>
-                                        <span class="" id="Select_date">Jan 01</span>
+                                        <span class="day-name" id="Day_Name">Today:</span> 
+                                        <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
@@ -242,7 +242,8 @@
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0) : ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
                                                         <?php
@@ -301,7 +302,8 @@
                                                 </div>
                                             <?php else : ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
+                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                                    <a href="active_investments.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
@@ -429,7 +431,7 @@
                                                 $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
                                                 $tag2 = $index == 1 ? "Apps" : "Tech";
                                                 ?>
-                                                <QListItem class="list-group-item align-items-center d-flex justify-content-between pt-0">
+                                                <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
                                                     <div class="media">
                                                         <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
                                                         <div class="media-body align-self-center">
@@ -440,7 +442,7 @@
                                                     <div class="align-self-center">
                                                         <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
                                                     </div>
-                                                </QListItem>
+                                                </li>
                                                 <?php
                                                 $index++;
                                             endforeach;
