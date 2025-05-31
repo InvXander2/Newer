@@ -3,19 +3,20 @@ include('../inc/config.php');
 include('../admin/includes/format.php');
 include('../admin/session.php');
 
+// Ensure user is logged in
 if (!isset($_SESSION['user'])) {
     header('location: ../login.php');
     exit();
 }
 
 $id = $_SESSION['user'];
-$conn = $pdo->open();
 
+// Assuming $pdo is a PDO instance from config.php
 try {
     $sql = "SELECT * FROM users WHERE id = :id";
-    $stmt = $conn->prepare($sql);
+    $stmt = $pdo->prepare($sql);
     $stmt->execute(['id' => $id]);
-    $row0 = $stmt->fetch();
+    $row0 = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$row0) {
         $_SESSION['error'] = "User not found.";
@@ -28,7 +29,6 @@ try {
     exit();
 }
 
-$pdo->close();
 $page_title = 'Edit Profile';
 include('inc/head.php');
 ?>
@@ -43,11 +43,11 @@ include('inc/head.php');
 
             <?php
             if (isset($_SESSION['error'])) {
-                echo "<div class='alert alert-danger'>" . $_SESSION['error'] . "</div>";
+                echo "<div class='alert alert-danger'>" . htmlspecialchars($_SESSION['error']) . "</div>";
                 unset($_SESSION['error']);
             }
             if (isset($_SESSION['success'])) {
-                echo "<div class='alert alert-success'>" . $_SESSION['success'] . "</div>";
+                echo "<div class='alert alert-success'>" . htmlspecialchars($_SESSION['success']) . "</div>";
                 unset($_SESSION['success']);
             }
             ?>
@@ -59,13 +59,13 @@ include('inc/head.php');
                         <!-- Full Name -->
                         <div class="form-group">
                             <label>Full Name</label>
-                            <input type="text" name="full_name" class="form-control" value="<?= htmlspecialchars($row0['full_name']) ?>">
+                            <input type="text" name="full_name" class="form-control" value="<?= htmlspecialchars($row0['full_name'] ?? '') ?>">
                         </div>
 
                         <!-- Username -->
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" name="uname" class="form-control" value="<?= htmlspecialchars($row0['uname']) ?>">
+                            <input type="text" name="uname" class="form-control" value="<?= htmlspecialchars($row0['uname'] ?? '') ?>">
                         </div>
 
                         <!-- Gender -->
@@ -81,13 +81,13 @@ include('inc/head.php');
                         <!-- DOB -->
                         <div class="form-group">
                             <label>Date of Birth</label>
-                            <input type="date" name="dob" class="form-control" value="<?= $row0['dob'] ?>">
+                            <input type="date" name="dob" class="form-control" value="<?= htmlspecialchars($row0['dob'] ?? '') ?>">
                         </div>
 
                         <!-- Phone -->
                         <div class="form-group">
                             <label>Phone Number</label>
-                            <input type="text" name="phone_no" class="form-control" value="<?= htmlspecialchars($row0['phone_no']) ?>">
+                            <input type="text" name="phone_no" class="form-control" value="<?= htmlspecialchars($row0['phone_no'] ?? '') ?>">
                         </div>
 
                         <!-- Nationality -->
@@ -96,7 +96,7 @@ include('inc/head.php');
                             <select name="nationality" class="form-control">
                                 <?php include('../inc/countries.php'); ?>
                                 <script>
-                                    document.querySelector('[name="nationality"]').value = <?= json_encode($row0['nationality']) ?>;
+                                    document.querySelector('[name="nationality"]').value = <?= json_encode($row0['nationality'] ?? '') ?>;
                                 </script>
                             </select>
                         </div>
@@ -104,7 +104,7 @@ include('inc/head.php');
                         <!-- Address -->
                         <div class="form-group">
                             <label>Address</label>
-                            <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($row0['address']) ?>">
+                            <input type="text" name="address" class="form-control" value="<?= htmlspecialchars($row0['address'] ?? '') ?>">
                         </div>
 
                         <!-- Profile Picture -->
