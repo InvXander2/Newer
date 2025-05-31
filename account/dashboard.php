@@ -209,7 +209,7 @@
                         width: 100%;
                     }
                     .btn-custom {
-                        width: 200px; /* Adjust width as needed */
+                        width: 100px; /* Adjust width as needed */
                         text-align: center;
                     }
                 </style>
@@ -257,7 +257,7 @@
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
                                                     <div class="button-container">
-                                                        <a href="investments_details.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">All</a>
+                                                        <a href="investments_details.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">View All</a>
                                                     </div>
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
