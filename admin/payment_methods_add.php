@@ -11,7 +11,7 @@
 		if(isset($_FILES['photo']) && $_FILES['photo']['name'] != ''){
 			$ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
 			$filename = uniqid() . '.' . $ext;
-			move_uploaded_file($_FILES['photo']['tmp_name'], '../images/'.$filename);
+			move_uploaded_file($_FILES['photo']['tmp_name'], 'images/'.$filename);
 			$photo = 'images/'.$filename;
 		}
 
