@@ -1,63 +1,41 @@
 <?php
-// Start session and check authentication first
-session_start();
-if (!isset($_SESSION['user'])) {
-    header('Location: ../login.php');
-    exit();
-}
-
-// Include configuration and database connection
-include '../inc/config.php';
+include('../inc/config.php');
 include '../admin/session.php';
 
-// Page metadata
-$page_name = 'Investments Details';
-$page_title = 'Welcome to the Official Website of ' . ($settings->siteTitle ?? 'Manage Investment');
-$page_description = 'Manage Investment provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
+$page_name = 'Active Investments';
+$page_parent = 'Investments';
+$page_title = 'Welcome to the Official Website of ' . $settings->siteTitle;
+$page_description = 'View and manage your active and completed investments.';
 
-// Database connection
-$conn = $pdo->open();
+include('inc/head.php');
 
-try {
-    // Fetch investment plans
-    $investment_planQuery = $conn->query("SELECT * FROM investment_plans ORDER BY id ASC");
-    $investment_plans = $investment_planQuery->rowCount() ? $investment_planQuery->fetchAll(PDO::FETCH_OBJ) : [];
+$id = $_SESSION['user'];
 
-    // Fetch user investments (using prepared statement for security)
-    $id = $_SESSION['user'];
-    $stmt = $conn->prepare("
-        SELECT i.*, ip.name AS plan_name, i.status AS invest_status 
-        FROM investment i 
-        LEFT JOIN investment_plans ip ON ip.id = i.invest_plan_id 
-        LEFT JOIN users u ON u.id = i.user_id 
-        WHERE i.user_id = :user_id 
-        ORDER BY i.id DESC
-    ");
-    $stmt->execute(['user_id' => $id]);
-    $new_investment_plans = $stmt->rowCount() ? $stmt->fetchAll(PDO::FETCH_OBJ) : [];
-} catch (PDOException $e) {
-    $_SESSION['error'] = 'Database error: ' . $e->getMessage();
-} finally {
-    $pdo->close();
+if (!isset($_SESSION['user'])) {
+    header('location: ../login.php');
 }
 
-// Current date for display
+$conn = $pdo->open();
+
+$new_investment_planQuery = $conn->query("SELECT *, investment.status AS invest_status FROM investment LEFT JOIN investment_plans ON investment_plans.id=investment.invest_plan_id LEFT JOIN users ON users.id=investment.user_id WHERE user_id=$id ORDER BY 1 DESC");
+if ($new_investment_planQuery->rowCount()) {
+    $new_investment_plans = $new_investment_planQuery->fetchAll(PDO::FETCH_OBJ);
+}
+
 $now = date('Y-m-d H:i:s');
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<?php include 'inc/head.php'; ?>
 <body class="dark-topbar">
     <!-- Left Sidenav -->
-    <?php include 'inc/sidebar.php'; ?>
+    <?php include('inc/sidebar.php'); ?>
+    <!-- end left-sidenav-->
 
     <div class="page-wrapper">
         <!-- Top Bar Start -->
-        <?php include 'inc/header.php'; ?>
+        <?php include('inc/header.php'); ?>
         <!-- Top Bar End -->
 
-        <!-- Page Content -->
+        <!-- Page Content-->
         <div class="page-content">
             <div class="container-fluid">
                 <!-- Page-Title -->
@@ -66,131 +44,192 @@ $now = date('Y-m-d H:i:s');
                         <div class="page-title-box">
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="page-title">Investments</h4>
-                                </div>
+                                    <h4 class="page-title">Active Investments</h4>
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="investments.php">Investments</a></li>
+                                        <li class="breadcrumb-item active">Active Investments</li>
+                                    </ol>
+                                </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>
-                                        <span id="Select_date"><?php echo date('F d, Y'); ?></span>
+                                        <span class="day-name" id="Day_Name">Today:</span> 
+                                        <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
-                                </div>
-                            </div>
+                                </div><!--end col-->
+                            </div><!--end row-->
+                        </div><!--end page-title-box-->
+                    </div><!--end col-->
+                </div><!--end row-->
+                <!-- end page title end breadcrumb -->
+
+                <?php
+                if (isset($_SESSION['error'])) {
+                    echo "
+                        <div class='alert alert-danger border-0' role='alert'>
+                            <i class='la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3'></i>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                                <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
+                            </button>
+                            <strong>Oh snap!</strong> " . $_SESSION['error'] . "
                         </div>
-                    </div>
-                </div>
-                <!-- End Page Title -->
+                    ";
+                    unset($_SESSION['error']);
+                }
+                if (isset($_SESSION['success'])) {
+                    echo "
+                        <div class='alert alert-success border-0' role='alert'>
+                            <i class='mdi mdi-check-all alert-icon'></i>
+                            <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
+                                <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
+                            </button>
+                            <strong>Well done!</strong> " . $_SESSION['success'] . "
+                        </div>
+                    ";
+                    unset($_SESSION['success']);
+                }
+                ?>
 
-                <!-- Display Session Messages -->
-                <?php if (isset($_SESSION['error'])): ?>
-                    <div class="alert alert-danger border-0" role="alert">
-                        <i class="la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3"></i>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="mdi mdi-close align-middle font-16"></i></span>
-                        </button>
-                        <strong>Error!</strong> <?php echo $_SESSION['error']; ?>
-                    </div>
-                    <?php unset($_SESSION['error']); ?>
-                <?php endif; ?>
-                <?php if (isset($_SESSION['success'])): ?>
-                    <div class="alert alert-success border-0" role="alert">
-                        <i class="mdi mdi-check-all alert-icon"></i>
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true"><i class="mdi mdi-close align-middle font-16"></i></span>
-                        </button>
-                        <strong>Success!</strong> <?php echo $_SESSION['success']; ?>
-                    </div>
-                    <?php unset($_SESSION['success']); ?>
-                <?php endif; ?>
-
-                <!-- Investments Section -->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
                             <div class="card-header">
-                                <h4 class="card-title">Plans and Investments</h4>
-                                <p class="text-muted mb-0">All your investments in one place.</p>
-                            </div>
+                                <h4 class="card-title">Your Investments</h4>
+                                <p class="text-muted mb-0">All your active and completed investments in one place.</p>
+                            </div><!--end card-header-->
                             <div class="card-body">
-                                <!-- Investment Plans Table -->
-                                <h5 class="mt-0">Available Plans</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Plan Name</th>
-                                                <th>Description</th>
-                                                <th>Minimum Investment</th>
-                                                <th>Maximum Investment</th>
-                                                <th>ROI (%)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php if (!empty($investment_plans)): ?>
-                                                <?php foreach ($investment_plans as $plan): ?>
-                                                    <tr>
-                                                        <td><?php echo htmlspecialchars($plan->name ?? 'N/A'); ?></td>
-                                                        <td><?php echo htmlspecialchars($plan->description ?? 'N/A'); ?></td>
-                                                        <td><?php echo htmlspecialchars($plan->min_investment ?? '0'); ?></td>
-                                                        <td><?php echo htmlspecialchars($plan->max_investment ?? '0'); ?></td>
-                                                        <td><?php echo htmlspecialchars($plan->roi ?? '0'); ?>%</td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <tr>
-                                                    <td colspan="5" class="text-center">No plans available.</td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                <?php
+                                if (!empty($new_investment_plans)) {
+                                    foreach ($new_investment_plans as $investment_plan) :
+                                        $date_ivstart = strtotime($investment_plan->start_date);
+                                        $date_ivend = strtotime($investment_plan->end_date);
+                                        $date_now = strtotime($now);
 
-                                <!-- User Investments Table -->
-                                <h5 class="mt-4">Your Investments</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Plan</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php if (!empty($new_investment_plans)): ?>
-                                                <?php foreach ($new_investment_plans as $investment): ?>
-                                                    <tr>
-                                                        <td><?php echo htmlspecialchars($investment->plan_name ?? 'N/A'); ?></td>
-                                                        <td><?php echo htmlspecialchars($investment->amount ?? '0'); ?></td>
-                                                        <td><?php echo htmlspecialchars($investment->invest_status ?? 'N/A'); ?></td>
-                                                        <td><?php echo htmlspecialchars($investment->created_at ?? 'N/A'); ?></td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php else: ?>
-                                                <tr>
-                                                    <td colspan="4" class="text-center">No investments found.</td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Investments Section -->
-            </div>
-            <!-- End Container -->
+                                        $invest_id = $investment_plan->invest_id;
+
+                                        $secs = $date_ivend - $date_now;
+                                        if ($secs < 0) {
+                                            $time_left = "Elapsed";
+                                        } elseif ($secs < 3600) {
+                                            $time_left = "Some Minutes Left";
+                                        } elseif ($secs <= 216000) {
+                                            $time_left = round($secs / 3600, 0) . " Hours Left";
+                                        } else {
+                                            $time_left = round($secs / 86400, 0) . " Days Left";
+                                        }
+
+                                        if ($investment_plan->invest_status == 'completed') {
+                                            $percent = 100;
+                                        } else {
+                                            $percent = round(($date_now - $date_ivstart) * 100 / ($date_ivend - $date_ivstart), 0);
+
+                                            if ($date_now >= $date_ivend) {
+                                                $stmt = $conn->prepare("UPDATE investment SET status=:c_status WHERE invest_id=:c_id");
+                                                $stmt->execute(['c_status' => 'completed', 'c_id' => $invest_id]);
+                                            }
+                                        }
+
+                                        if ($percent > 100) {
+                                            $percent = 100;
+                                        }
+                                ?>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="task-box">
+                                                    <div class="task-priority-icon"><i class="fas fa-circle text-<?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                                                echo 'info';
+                                                                                                            } elseif ($investment_plan->invest_status == 'cancelled') {
+                                                                                                                echo 'danger';
+                                                                                                            } elseif ($investment_plan->invest_status == 'completed') {
+                                                                                                                echo 'success';
+                                                                                                            } ?>"></i></div>
+                                                    <p class="text-muted float-right">
+                                                        <span class="badge badge-<?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                        echo 'info';
+                                                                                    } elseif ($investment_plan->invest_status == 'cancelled') {
+                                                                                        echo 'danger';
+                                                                                    } elseif ($investment_plan->invest_status == 'completed') {
+                                                                                        echo 'success';
+                                                                                    } ?> mr-2"><?php echo $investment_plan->invest_status; ?></span>
+                                                        <span class="mx-1">·</span>
+                                                        <span><i class="far fa-fw fa-clock"></i> <?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                                        echo $time_left;
+                                                                                                    } else {
+                                                                                                        echo "Elapsed";
+                                                                                                    } ?></span>
+                                                    </p>
+                                                    <h5 class="mt-0"><?= $investment_plan->name; ?></h5>
+                                                    <table class="table mb-0">
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th>Plan</th>
+                                                                <th>Capital</th>
+                                                                <th>ROI</th>
+                                                                <th>Start Date</th>
+                                                                <th>End Date</th>
+                                                                <th>Status</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td><?= $investment_plan->name; ?></td>
+                                                                <td>$ <?= number_format($investment_plan->capital, 2); ?></td>
+                                                                <td>$ <?= number_format($investment_plan->returns, 2); ?></td>
+                                                                <td><?= $investment_plan->start_date; ?></td>
+                                                                <td><?= $investment_plan->end_date; ?></td>
+                                                                <td><span class="badge badge-boxed badge-outline-<?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                                                        echo 'info';
+                                                                                                                    } elseif ($investment_plan->invest_status == 'cancelled') {
+                                                                                                                        echo 'danger';
+                                                                                                                    } elseif ($investment_plan->invest_status == 'completed') {
+                                                                                                                        echo 'success';
+                                                                                                                    } ?>"><?php echo $investment_plan->invest_status; ?></span></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table><!--end /table-->
+                                                    <p class="text-muted text-right mb-1"><?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                                echo $percent . "% Complete";
+                                                                                            } elseif ($investment_plan->invest_status == 'completed') {
+                                                                                                echo "Completed";
+                                                                                            } else {
+                                                                                                echo "On Hold";
+                                                                                            } ?></p>
+                                                    <div class="progress mb-4">
+                                                        <div class="progress-bar bg-<?php if ($investment_plan->invest_status == 'in progress') {
+                                                                                        echo 'info progress-bar-animated';
+                                                                                    } elseif ($investment_plan->invest_status == 'cancelled') {
+                                                                                        echo 'danger';
+                                                                                    } elseif ($investment_plan->invest_status == 'completed') {
+                                                                                        echo 'success';
+                                                                                    } ?> progress-bar-striped" role="progressbar" style="width: <?= $percent; ?>%;" aria-valuenow="<?= $percent; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                    </div>
+                                                </div><!--end task-box-->
+                                            </div>
+                                        </div>
+                                <?php
+                                    endforeach;
+                                } else {
+                                    echo "<p>No Transaction Made</p>";
+                                }
+                                ?>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+
+            </div><!-- container -->
+
+            <?php include('inc/footer.php'); ?><!--end footer-->
         </div>
-        <!-- End Page Content -->
-
-        <!-- Footer -->
-        <?php include 'inc/footer.php'; ?>
+        <!-- end page content -->
     </div>
-    <!-- End Page Wrapper -->
+    <!-- end page-wrapper -->
 
-    <!-- Scripts -->
-    <?php include 'inc/scripts.php'; ?>
+    <?php include('inc/scripts.php'); ?>
 </body>
+
 </html>
+
+<?php
+$pdo->close();
+?>
