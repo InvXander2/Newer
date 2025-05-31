@@ -11,22 +11,32 @@ if (!isset($_SESSION['user'])) {
 
 $id = $_SESSION['user'];
 
-// Assuming $pdo is a PDO instance from config.php
+// Open database connection
+$conn = $pdo->open();
+
 try {
-    $sql = "SELECT * FROM users WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute(['id' => $id]);
-    $row0 = $stmt->fetch(PDO::FETCH_ASSOC);
+    // Sanitize user ID to prevent SQL injection (basic sanitization; replace with parameterized query if possible)
+    $id = intval($id); // Ensure $id is an integer
+    $sql = "SELECT * FROM users WHERE id = $id"; // Use with caution; see notes below
+
+    // Execute query using the Database class's query method
+    $result = $conn->query($sql);
+
+    // Fetch the user data
+    $row0 = $result->fetch_assoc(); // Assuming query() returns a MySQLi-like result
 
     if (!$row0) {
         $_SESSION['error'] = "User not found.";
         header("location: dashboard.php");
         exit();
     }
-} catch (PDOException $e) {
+} catch (Exception $e) {
     $_SESSION['error'] = "Database error: " . $e->getMessage();
     header("location: dashboard.php");
     exit();
+} finally {
+    // Close the database connection
+    $pdo->close();
 }
 
 $page_title = 'Edit Profile';
