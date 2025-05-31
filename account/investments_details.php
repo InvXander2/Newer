@@ -98,3 +98,17 @@ $now = date('Y-m-d H:i:s');
                                 <h4 class="card-title">Plans and Investments</h4>
                                 <p class="text-muted mb-0">All your investments in one place.</p>
                             </div><!--end card-header-->
+            <?php include('inc/footer.php'); ?><!--end footer-->
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
+
+    <?php include('inc/scripts.php'); ?>
+</body>
+
+</html>
+
+<?php
+$pdo->close();
+?>
