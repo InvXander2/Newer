@@ -2,7 +2,7 @@
 include('../inc/config.php');
 include '../admin/session.php';
 
-$page_name = 'Active Investments';
+$page_name = 'Investments History';
 $page_parent = 'Investments';
 $page_title = 'Welcome to the Official Website of ' . $settings->siteTitle;
 $page_description = 'View and manage your active and completed investments.';
