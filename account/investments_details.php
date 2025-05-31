@@ -2,7 +2,7 @@
 include('../inc/config.php');
 include '../admin/session.php';
 
-$page_name = 'Investments';
+$page_name = 'Investments Details';
 $page_parent = '';
 $page_title = 'Welcome to the Official Website of ' . $settings->siteTitle;
 $page_description = 'Manage Investment provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
