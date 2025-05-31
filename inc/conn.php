@@ -2,9 +2,9 @@
 
 class Database {
  
-	private $server = "mysql:host=sql308.iceiy.com;dbname=icei_39126092_Nexusinsights";
-	private $username = "icei_39126092";
-	private $password = "Lng7m3lotdZA";
+	private $server = "mysql:host=sql201.infinityfree.com;dbname=if0_39045086_hyip_db";
+	private $username = "if0_39045086";
+	private $password = "Xgyuc8McZpz8Rr";
 	private $options  = array(
 		PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
