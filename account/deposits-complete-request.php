@@ -1,47 +1,70 @@
 <?php
-    include('../inc/config.php');
-    include '../admin/session.php';
+include('../inc/config.php');
+include('../admin/session.php');
 
-    $page_name = 'Deposits';
-    $page_parent = '';
-    $page_title = 'Welcome to the Official Website of '.$settings->siteTitle;
-    $page_description = 'Manage Investment provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
+// Ensure user is logged in
+if (!isset($_SESSION['user'])) {
+    header('location: ../login.php');
+    exit();
+}
 
-    include('inc/head.php');
+$page_name = 'Deposits';
+$page_parent = '';
+$page_title = 'Welcome to the Official Website of ' . htmlspecialchars($settings->siteTitle);
+$page_description = htmlspecialchars($settings->siteTitle) . ' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
 
-    $id = $_SESSION['user'];
+include('inc/head.php');
 
-    if(!isset($_SESSION['user'])){
-        header('location: ../login.php');
+$id = $_SESSION['user'];
+
+// Validate POST data
+$deposit_amount = 0;
+$payment_mode = '';
+if (isset($_POST['payNow'])) {
+    $deposit_amount = filter_var($_POST['deposit_amount'], FILTER_VALIDATE_FLOAT, ['options' => ['min_range' => 0]]);
+    $payment_mode = filter_var($_POST['payment_mode'], FILTER_SANITIZE_STRING);
+    if ($deposit_amount === false || $deposit_amount <= 0 || empty($payment_mode)) {
+        $_SESSION['error'] = 'Invalid deposit amount or payment method.';
+        header('location: deposits.php');
+        exit();
     }
+} else {
+    $_SESSION['error'] = 'Please submit the deposit form.';
+    header('location: deposits.php');
+    exit();
+}
 
-    if (isset($_POST['payNow'])) {
-        $deposit_amount = $_POST['deposit_amount'];
-        $payment_mode = $_POST['payment_mode'];
-    } else {
-        header("location: deposits.php");
-    }
+// Open database connection
+$conn = $pdo->open();
 
-    $conn = $pdo->open();
+try {
+    // Fetch deposit requests
+    $deposit_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 1 ORDER BY id DESC");
+    $deposit_madeQuery->execute(['user_id' => $id]);
+    $deposit_made = $deposit_madeQuery->rowCount() ? $deposit_madeQuery->fetchAll(PDO::FETCH_OBJ) : [];
 
-    $deposit_madeQuery = $conn->query("SELECT * FROM request WHERE user_id=$id && type=1 ORDER BY 1 DESC");
-    if ($deposit_madeQuery->rowCount()) {
-        $deposit_made = $deposit_madeQuery->fetchAll(PDO::FETCH_OBJ);
-    }
+    // Fetch payment methods
+    $payment_methodQuery = $conn->prepare("SELECT * FROM payment_methods");
+    $payment_methodQuery->execute();
+    $payment_method = $payment_methodQuery->rowCount() ? $payment_methodQuery->fetchAll(PDO::FETCH_OBJ) : [];
 
-    $payment_methodQuery = $conn->query("SELECT * FROM payment_methods");
-    if ($payment_methodQuery->rowCount()) {
-        $payment_method = $payment_methodQuery->fetchAll(PDO::FETCH_OBJ);
-    }
-
-    // Updated to fetch the selected payment method
+    // Fetch selected payment method
     $payment_completeQuery = $conn->prepare("SELECT * FROM payment_methods WHERE name = :payment_mode LIMIT 1");
     $payment_completeQuery->execute(['payment_mode' => $payment_mode]);
-    if ($payment_completeQuery->rowCount()) {
-        $payment_complete = $payment_completeQuery->fetchAll(PDO::FETCH_OBJ);
-    }
+    $payment_complete = $payment_completeQuery->rowCount() ? $payment_completeQuery->fetchAll(PDO::FETCH_OBJ) : [];
 
-    $depositHistory = "SELECT * FROM transaction WHERE user_id = $id && type = 1";
+    // Fetch deposit history (if needed; currently unused in output)
+    $depositHistoryQuery = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id AND type = 1");
+    $depositHistoryQuery->execute(['user_id' => $id]);
+    $depositHistory = $depositHistoryQuery->rowCount() ? $depositHistoryQuery->fetchAll(PDO::FETCH_OBJ) : [];
+} catch (PDOException $e) {
+    error_log("Database error in deposits.php: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+    $_SESSION['error'] = 'Database error occurred.';
+    header('location: deposits.php');
+    exit();
+} finally {
+    $pdo->close();
+}
 ?>
 
 <body>
@@ -61,8 +84,8 @@
                                 </div>
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
-                                        <span class="" id="Select_date">Jan 11</span>
+                                        <span class="day-name" id="Day_Name">Today:</span> 
+                                        <span class="" id="Select_date"><?= date('M d') ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div>
@@ -72,30 +95,30 @@
                 </div>
 
                 <?php
-                    if(isset($_SESSION['error'])){
-                      echo "
+                if (isset($_SESSION['error'])) {
+                    echo "
                         <div class='alert alert-danger border-0' role='alert'>
                             <i class='la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3'></i>
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Oh snap!</strong> ".$_SESSION['error']."
+                            <strong>Oh snap!</strong> " . htmlspecialchars($_SESSION['error']) . "
                         </div>
-                      ";
-                      unset($_SESSION['error']);
-                    }
-                    if(isset($_SESSION['success'])){
-                      echo "
+                    ";
+                    unset($_SESSION['error']);
+                }
+                if (isset($_SESSION['success'])) {
+                    echo "
                         <div class='alert alert-success border-0' role='alert'>
                             <i class='mdi mdi-check-all alert-icon'></i>
                             <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
                                 <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
                             </button>
-                            <strong>Well done!</strong> ".$_SESSION['success']."
+                            <strong>Well done!</strong> " . htmlspecialchars($_SESSION['success']) . "
                         </div>
-                      ";
-                      unset($_SESSION['success']);
-                    }
+                    ";
+                    unset($_SESSION['success']);
+                }
                 ?>
 
                 <div class="row">
@@ -105,25 +128,35 @@
                             <div class="card-header">
                                 <h4 class="card-title">Complete Your Request</h4>
                                 <p class="text-muted mt-2">
-                                    Log Request and send <strong>$<?php echo number_format($deposit_amount); ?></strong> worth of <strong><?php echo htmlspecialchars($payment_mode); ?></strong> to the displayed Wallet Address. Your account will be credited once payment is confirmed.
+                                    Log Request and send <strong>$<?= number_format($deposit_amount, 2) ?></strong> worth of <strong><?= htmlspecialchars($payment_mode) ?></strong> to the displayed Wallet Address. Your account will be credited once payment is confirmed.
                                 </p>
                             </div>
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body"> 
-                                        <form class="form-horizontal auth-form" method="post" action="deposit-action">
-                                            <input type="number" name="deposit_amount" value="<?php echo $deposit_amount; ?>" hidden>
-                                            <input type="text" name="payment_mode" value="<?php echo $payment_mode; ?>" hidden>
+                                        <form class="form-horizontal auth-form" method="post" action="deposit-action.php">
+                                            <input type="hidden" name="deposit_amount" value="<?= htmlspecialchars($deposit_amount) ?>">
+                                            <input type="hidden" name="payment_mode" value="<?= htmlspecialchars($payment_mode) ?>">
                         
                                             <div class="form-group mb-2">
-                                                <?php foreach ($payment_complete as $complete) : ?>
+                                                <?php if (!empty($payment_complete)): ?>
+                                                    <?php foreach ($payment_complete as $complete): ?>
+                                                        <div class="form-group text-center">
+                                                            <?php if (!empty($complete->photo)): ?>
+                                                                <img src="../admin/images/<?= htmlspecialchars($complete->photo) ?>" alt="<?= htmlspecialchars($complete->name) ?>" style="max-width: 100px; margin-bottom: 10px;">
+                                                            <?php else: ?>
+                                                                <p class="text-muted">No image available for this payment method.</p>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label><strong>Wallet Address:</strong> <?= htmlspecialchars($complete->wallet_address) ?></label>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                <?php else: ?>
                                                     <div class="form-group">
-                                                        <img src="../admin/images/<?= $complete->photo; ?>" alt="<?= $complete->name; ?>" style="max-width: 100px;">
+                                                        <p class="text-danger">Selected payment method not found.</p>
                                                     </div>
-                                                    <div class="form-group">
-                                                        <label><?= $complete->wallet_address; ?></label>
-                                                    </div>
-                                                <?php endforeach; ?>
+                                                <?php endif; ?>
                                             </div>
                                                                 
                                             <div class="form-group mb-0 row">
