@@ -60,7 +60,8 @@ if (isset($_POST['edit'])) {
                 // Credit returns
                 $amount = $returns;
                 $new_balance = $current_balance + $amount;
-                $message = "$plan_name investment completed"; // Fixed message
+                $transaction_remark = "$plan_name Investment Completed"; // Updated remark
+                $activity_message = "Investment Completed"; // Updated message
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
@@ -70,7 +71,7 @@ if (isset($_POST['edit'])) {
                     'amount' => $amount,
                     'type' => 1, // Credit
                     'balance' => $new_balance,
-                    'remark' => $message
+                    'remark' => $transaction_remark
                 ]);
 
                 // Log activity
@@ -78,7 +79,7 @@ if (isset($_POST['edit'])) {
                                         VALUES (:user_id, :message, :category, :date_sent)");
                 $stmt->execute([
                     'user_id' => $user_id,
-                    'message' => $message, // Use same message for consistency
+                    'message' => $activity_message,
                     'category' => $plan_name,
                     'date_sent' => $act_time
                 ]);
@@ -86,7 +87,8 @@ if (isset($_POST['edit'])) {
                 // Credit only capital
                 $amount = $capital;
                 $new_balance = $current_balance + $amount;
-                $message = "Investment cancelled"; // Include plan_name for consistency
+                $transaction_remark = "$plan_name Investment Cancelled"; // Updated remark
+                $activity_message = "Investment Cancelled"; // Updated message
 
                 // Insert transaction with remark
                 $stmt = $conn->prepare("INSERT INTO transaction (user_id, amount, type, balance, trans_date, remark) 
@@ -96,7 +98,7 @@ if (isset($_POST['edit'])) {
                     'amount' => $amount,
                     'type' => 1, // Credit
                     'balance' => $new_balance,
-                    'remark' => $message
+                    'remark' => $transaction_remark
                 ]);
 
                 // Log activity
@@ -104,14 +106,14 @@ if (isset($_POST['edit'])) {
                                         VALUES (:user_id, :message, :category, :date_sent)");
                 $stmt->execute([
                     'user_id' => $user_id,
-                    'message' => $message, // Use same message for consistency
-                    'category' => $plan_name, // Use plan_name for consistency
+                    'message' => $activity_message,
+                    'category' => $plan_name,
                     'date_sent' => $act_time
                 ]);
             }
 
             // Debugging: Log transaction and activity details
-            error_log("investments_edit.php: status=$status, amount=$amount, new_balance=$new_balance, message=$message", 3, 'debug.log');
+            error_log("investments_edit.php: status=$status, amount=$amount, new_balance=$new_balance, transaction_remark=$transaction_remark, activity_message=$activity_message", 3, 'debug.log');
         }
 
         // Commit transaction
