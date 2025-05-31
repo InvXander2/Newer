@@ -147,7 +147,6 @@ $span = ($investment_plan->min_invest >= 1000 && $investment_plan->min_invest < 
                                                         <div class="input-group mb-3">
                                                             <div class="input-group-prepend"><span class="input-group-text">$</span></div>
                                                             <input type="number" name="invest_amount" class="form-control" placeholder="Amount to Invest" aria-label="Amount (to the nearest dollar)" required min="<?php echo $investment_plan->min_invest; ?>" max="<?php echo ($investment_plan->max_invest >= 100000000) ? '' : $investment_plan->max_invest; ?>">
-                                                            <div class="input-group-append"><span class="input-group-text">.00</span></div>
                                                         </div>
                                                     </div>
                                                     <div class="text-right">
