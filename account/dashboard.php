@@ -201,6 +201,19 @@
                 }
                 ?>
 
+                <!-- Add Custom CSS for Button Styling -->
+                <style>
+                    .button-container {
+                        display: flex;
+                        justify-content: flex-end;
+                        width: 100%;
+                    }
+                    .btn-custom {
+                        width: 200px; /* Adjust width as needed */
+                        text-align: center;
+                    }
+                </style>
+
                 <div class="row">
                     <div class="col-lg-9">
                         <div class="row justify-content-center">
@@ -243,7 +256,9 @@
                                             <?php if ($no_of_inv > 0) : ?>
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
+                                                    <div class="button-container">
+                                                        <a href="investments_details.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">All</a>
+                                                    </div>
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
                                                         <?php
@@ -303,7 +318,9 @@
                                             <?php else : ?>
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="active_investments.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
+                                                    <div class="button-container">
+                                                        <a href="active_investments.php" class="btn btn-sm btn-outline-primary btn-custom ms-2">All</a>
+                                                    </div>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
