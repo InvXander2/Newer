@@ -342,7 +342,7 @@
                                             <?php else: ?>
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="active_investments.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
+                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
