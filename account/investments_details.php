@@ -44,7 +44,7 @@ $now = date('Y-m-d H:i:s');
                         <div class="page-title-box">
                             <div class="row">
                                 <div class="col">
-                                    <h4 class="page-title">Active Investments</h4>
+                                    <h4 class="page-title">Investments History</h4>
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="investments.php">Investments</a></li>
                                         <li class="breadcrumb-item active">Active Investments</li>
