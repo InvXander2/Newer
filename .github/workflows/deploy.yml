@@ -3,20 +3,34 @@ name: FTP Deploy
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
 
 jobs:
   ftp-deploy:
     name: Upload via FTP
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Update to latest version for better reliability
+
+      # Add build step if needed (uncomment if applicable)
+      # - name: Build Project
+      #   run: |
+      #     npm install
+      #     npm run build
+
+      - name: List files to upload
+        run: ls -la dist/  # Adjust to your local-dir, e.g., dist/
 
       - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5  # Update to latest patch
         with:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}/
+          local-dir: dist/  # Specify your folder, e.g., dist/
+          protocol: ftps    # Use ftps for stability
+          log-level: verbose  # Enable detailed logging
+          dry-run: false    # Set to true for testing
