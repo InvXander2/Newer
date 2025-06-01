@@ -53,8 +53,8 @@ try {
 
 // Fetch wallet balance
 try {
-    $stmt = $conn->prepare("SELECT balance FROM wallet WHERE user_id = :user_id");
-    $stmt->execute(['user_id' => $user_id]);
+    $stmt = $conn->prepare("SELECT balance FROM wallet WHERE id = :aid");
+    $stmt->execute(['id' => $aid]);
     $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row1) {
         $row1 = ['balance' => 0];
@@ -67,7 +67,7 @@ try {
 // Calculate latest transaction for loss/gain
 try {
     $stmt = $conn->prepare("SELECT amount, balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
-    $stmt->execute(['user_id' => $aid]);
+    $stmt->execute(['id' => $aid]);
     $latest_transaction = $stmt->fetch(PDO::FETCH_ASSOC);
     $latest_balance = $latest_transaction ? $latest_transaction['balance'] : 0;
 
@@ -87,7 +87,7 @@ try {
 // Fetch active investments
 try {
     $stmt5 = $conn->prepare("SELECT i.*, p.name FROM investment i LEFT JOIN investment_plans p ON i.invest_plan_id = p.id WHERE i.user_id = :user_id AND i.status = 'in progress' ORDER BY i.start_date DESC");
-    $stmt5->execute(['user_id' => $aid]);
+    $stmt5->execute(['id' => $aid]);
     $row5 = $stmt5->fetchAll(PDO::FETCH_ASSOC);
     $no_of_inv = count($row5);
     error_log("Active investments count: $no_of_inv");
@@ -100,8 +100,8 @@ try {
 
 // Fetch completed investments
 try {
-    $stmt = $conn->prepare("SELECT COUNT(*) AS numrows, SUM(returns) as total FROM investment WHERE user_id = :user_id AND status = 'completed'");
-    $stmt->execute(['user_id' => $aid]);
+    $stmt = $conn->prepare("SELECT COUNT(*) AS numrows, SUM(returns) as total FROM investment WHERE user_id = :id AND status = 'completed'");
+    $stmt->execute(['id' => $aid]);
     $drow = $stmt->fetch(PDO::FETCH_ASSOC);
     $no_of_inv_comp = $drow['numrows'];
     $total = $drow['total'] ?? 0;
