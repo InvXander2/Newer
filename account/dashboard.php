@@ -163,8 +163,8 @@
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span> 
-                                        <span class="" id="Select_date"><?php echo date('M d'); ?></span>
+                                        <span class="day-name" id="Day_Name">Today:</span>
+                                        <span class="" id="Select_date">Jan 01</span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
@@ -239,11 +239,28 @@
                             <div class="col-md-6 col-lg-3">
                                 <div class="card report-card">
                                     <div class="card-body">
+                                        <div class="row d-flex justify-content-center">
+                                            <div class="col">
+                                                <p class="text-dark mb-0 font-weight-semibold">Last Session</p>
+                                                <h3 class="m-0"><?= date('h:i:s A', strtotime($row0['date_view'])) ?></h3>
+                                                <p class="mb-0 text-truncate text-muted"><?= date('D M j Y', strtotime($row0['date_view'])) ?></p>
+                                            </div>
+                                            <div class="col-auto align-self-center">
+                                                <div class="report-main-icon bg-light-alt">
+                                                    <i data-feather="clock" class="align-self-center text-blue icon-sm"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!--end card-body-->
+                                </div><!--end card-->
+                            </div><!--end col-->
+                            <div class="col-md-6 col-lg-3">
+                                <div class="card report-card">
+                                    <div class="card-body">
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0) : ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
+                                                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
                                                         <?php
@@ -302,8 +319,7 @@
                                                 </div>
                                             <?php else : ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="active_investments.php" class="btn btn-sm btn-outline-primary ml-2">All</a>
+                                                    <p class="text-dark mb-0 font-weight-semibold">Active Plans</p>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
@@ -352,6 +368,9 @@
                                     </div><!--end col-->
                                     <div class="col-auto">
                                         <div class="dropdown">
+                                            <a href="#" class="btn btn-sm btn-outline-light dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Investment/ Yield
+                                            </a>
                                         </div>
                                     </div><!--end col-->
                                 </div><!--end row-->
@@ -365,6 +384,9 @@
                                             </div><!--end col-->
                                             <div class="col-auto">
                                                 <div class="dropdown">
+                                                    <a href="#" style="cursor: context-menu; width: 120%;" class="btn btn-sm btn-outline-light">
+                                                        All
+                                                    </a>
                                                 </div>
                                             </div><!--end col-->
                                         </div><!--end row-->
@@ -431,7 +453,7 @@
                                                 $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
                                                 $tag2 = $index == 1 ? "Apps" : "Tech";
                                                 ?>
-                                                <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
+                                                <QListItem class="list-group-item align-items-center d-flex justify-content-between pt-0">
                                                     <div class="media">
                                                         <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
                                                         <div class="media-body align-self-center">
@@ -442,7 +464,7 @@
                                                     <div class="align-self-center">
                                                         <a target="_blank" href="../news-detail.php?id=<?= $new->id; ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
                                                     </div>
-                                                </li>
+                                                </QListItem>
                                                 <?php
                                                 $index++;
                                             endforeach;
