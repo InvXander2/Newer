@@ -20,22 +20,6 @@ if (!function_exists('number_format_short')) {
     }
 }
 
-if (!function_exists('substrwords')) {
-    function substrwords($text, $maxchar, $end='...') {
-        if (strlen($text) > $maxchar) {
-            $words = preg_split('/\s+/', $text);
-            $output = '';
-            $i = 0;
-            while (strlen($output) < $maxchar && isset($words[$i])) {
-                $output .= $words[$i] . ' ';
-                $i++;
-            }
-            return trim($output) . $end;
-        }
-        return $text;
-    }
-}
-
 // Initialize database connection
 try {
     $conn = $pdo->open();
