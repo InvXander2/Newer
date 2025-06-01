@@ -28,11 +28,11 @@
 		){ 		
 			$baseurl = 'http://localhost/nexusinsights';
 		}  else {			
-			$baseurl = 'https://nexusinsights.eu/';
+			$baseurl = 'https://nexusinsights.it.com/';
 		}
 	//main url for SEO configurations
-	$main_url = 'https://nexusinsights.eu/';
-	$sweet_url = 'nexusinsights.eu';
+	$main_url = 'https://nexusinsights.it.com/';
+	$sweet_url = 'nexusinsights.it.com';
 	$noreply_password = 'Pass@001-.com';
 	//main website configuration settings
 		$settings = (object) array(
@@ -42,8 +42,8 @@
 			'siteTagline' => 'A Cryptocurrency Investment Company',
 			'phoneNumber' => '+1 (516) 2001 615',
 			'address' => '17 Willow Lane, Bristol, BS1 4XY, United Kingdom',
-			'email' => 'info@nexusinsights.eu',
-			'email2' => 'support@nexusinsights.eu',
+			'email' => 'info@nexusinsights.it.com',
+			'email2' => 'support@nexusinsights.it.com',
 			'email3' => '',
 			'instagram' => '',
 			'facebook' => '',

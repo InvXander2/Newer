@@ -103,11 +103,11 @@
 					                                        <tbody>
 					                                            <tr>
 					                                                <td style='padding: 10px 0 13px 0;' align='left'>
-					                                                    <a href='https://www.nexusinsights.eu'>
+					                                                    <a href='https://www.nexusinsights.it.com'>
 					                                                        <img
 					                                                            class='m_4873022159957722792jecl-Icon-img CToWUd'
 					                                                            style='display: block;'
-					                                                            src='https://www.nexusinsights.eu/assets/images/logo-dark.png'
+					                                                            src='https://www.nexusinsights.it.com/assets/images/logo-dark.png'
 					                                                            alt='prime-logo'
 					                                                            width='300'
 					                                                            height='60'
@@ -146,7 +146,7 @@
 					                                                                                        <br />
 					                                                                                        <span style='color: #000000;'>
 					                                                                                            To report fraudulent activities, contact
-					                                                                                            <strong><a style='color: #000000;' href='mailto:fraud@nexusinsights.eu'>fraud@nexusinsights.eu.</a> </strong>
+					                                                                                            <strong><a style='color: #000000;' href='mailto:fraud@nexusinsights.it.com'>fraud@nexusinsights.it.com.</a> </strong>
 					                                                                                        </span>
 					                                                                                    </p>
 					                                                                                </td>
@@ -172,8 +172,8 @@
 					                                                        <tbody>
 					                                                            <tr>
 					                                                                <td style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;' align='center'>
-					                                                                    *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a> if you have any query.
-					                                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'> View Our Available Plans </a>
+					                                                                    *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.it.com'>info@nexusinsights.it.com</a> if you have any query.
+					                                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/investment'> View Our Available Plans </a>
 					                                                                </td>
 					                                                            </tr>
 					                                                        </tbody>
@@ -185,13 +185,13 @@
 					                                                            </tr>
 					                                                            <tr style='height: 10px;'>
 					                                                                <td class='m_4873022159957722792j-6' style='padding: 15px 0px 25px; height: 10px;' align='center'>
-					                                                                    <span class='m_4873022159957722792j-5'><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu'>Home</a>|</span>
-					                                                                    <a class='m_4873022159957722792j-1' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/about'>About</a>
+					                                                                    <span class='m_4873022159957722792j-5'><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com'>Home</a>|</span>
+					                                                                    <a class='m_4873022159957722792j-1' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/about'>About</a>
 					                                                                    <span class='m_4873022159957722792j-5'>|</span>
-					                                                                    <a class='m_4873022159957722792j-2' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'>Plans</a> <br />
-					                                                                    <a class='m_4873022159957722792j-3' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/news'> News </a>
+					                                                                    <a class='m_4873022159957722792j-2' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/investment'>Plans</a> <br />
+					                                                                    <a class='m_4873022159957722792j-3' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/news'> News </a>
 					                                                                    <span class='m_4873022159957722792j-5'>|</span>
-					                                                                    <a class='m_4873022159957722792j-4' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/contact'>Contact</a>
+					                                                                    <a class='m_4873022159957722792j-4' style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/contact'>Contact</a>
 					                                                                </td>
 					                                                            </tr>
 					                                                        </tbody>

@@ -125,8 +125,8 @@ if (isset($_POST['complete'])) {
                                     <tbody>
                                         <tr>
                                             <td align='left' style='padding: 10px 0 13px 0;'>
-                                                <a href='https://www.nexusinsights.eu'>
-                                                    <img style='display: block;' src='https://www.nexusinsights.eu/assets/images/logo-dark.png' alt='prime-logo' width='300' height='60' border='0' />
+                                                <a href='https://www.nexusinsights.it.com'>
+                                                    <img style='display: block;' src='https://www.nexusinsights.it.com/assets/images/logo-dark.png' alt='prime-logo' width='300' height='60' border='0' />
                                                 </a>
                                             </td>
                                         </tr>
@@ -156,7 +156,7 @@ if (isset($_POST['complete'])) {
                                                                                 <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'> </p>
                                                                                 <p align='center' style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;'>
                                                                                     <span style='color: #000000;'>
-                                                                                        For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a></strong>.
+                                                                                        For any inquiries, please contact <strong><a style='color: #000000;' href='mailto:info@nexusinsights.it.com'>info@nexusinsights.it.com</a></strong>.
                                                                                     </span>
                                                                                 </p>
                                                                             </td>
@@ -179,8 +179,8 @@ if (isset($_POST['complete'])) {
                                                     <tbody>
                                                         <tr>
                                                             <td align='center' style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;'>
-                                                                *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.eu'>info@nexusinsights.eu</a> if you have any query.
-                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'> View Our Available Plans </a>
+                                                                *This email account is not monitored. Reply to <a href='mailto:info@nexusinsights.it.com'>info@nexusinsights.it.com</a> if you have any query.
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/investment'> View Our Available Plans </a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -192,13 +192,13 @@ if (isset($_POST['complete'])) {
                                                         </tr>
                                                         <tr style='height: 10px;'>
                                                             <td align='center' style='padding: 15px 0px 25px; height: 10px;'>
-                                                                <span><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu'>Home</a>|</span>
-                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/about'>About</a>
+                                                                <span><a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com'>Home</a>|</span>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/about'>About</a>
                                                                 <span>|</span>
-                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/investment'>Plans</a> <br />
-                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/news'> News </a>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/investment'>Plans</a> <br />
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/news'> News </a>
                                                                 <span>|</span>
-                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.eu/contact'>Contact</a>
+                                                                <a style='text-decoration: underline; color: #085ff7;' href='https://www.nexusinsights.it.com/contact'>Contact</a>
                                                             </td>
                                                         </tr>
                                                     </tbody>
