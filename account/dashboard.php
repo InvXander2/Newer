@@ -616,8 +616,6 @@
                     { id: 'tether', name: 'USDT' },
                     { id: 'tron', name: 'Tron' },
                     { id: 'solana', name: 'Solana' }
-                    { id: 'binancecoin', name: 'Binance Coin' }
-                	{ id: 'ripple', name: 'XRP' }
                 ];
 
                 let tableBody = '';
