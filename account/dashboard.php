@@ -219,7 +219,7 @@
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                                         <span class="day-name" id="Day_Name">Today:</span> 
-                                        <span class="" id="Select_date"><?php echo date('M d, Y, g:i A T', strtotime('2025-06-01 13:29:00 +02:00')); ?></span>
+                                        <span class="" id="Select_date"><?php echo date('M d, Y, g:i A T', strtotime('2025-06-01 13:54:00 +02:00')); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
@@ -547,14 +547,20 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Cryptocurrency Prices (USD)</h4>
-                                <script src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"></script>
-                                <coingecko-coin-price-chart-widget  
-                                    coin-ids="bitcoin,ethereum,tether,tron,solana"  
-                                    currency="usd"  
-                                    locale="en"  
-                                    width="100%"  
-                                    height="400px">
-                                </coingecko-coin-price-chart-widget>
+                                <div id="crypto-prices">
+                                    <table class="table border-dashed mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Cryptocurrency</th>
+                                                <th class="text-right">Price (USD)</th>
+                                                <th class="text-right">24h Change</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="price-table-body">
+                                            <!-- Prices will be populated here via JavaScript -->
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div><!--end card-->
                     </div><!--end col-->
@@ -593,5 +599,50 @@
     $capital = implode(',', $capital);
     ?>
     <?php include('inc/scripts.php'); ?>
+
+    <!-- JavaScript to Fetch Cryptocurrency Prices -->
+    <script>
+    $(document).ready(function() {
+        // CoinGecko API endpoint for simple price data
+        const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,tron,solana&vs_currencies=usd&include_24hr_change=true';
+
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            success: function(data) {
+                const coins = [
+                    { id: 'bitcoin', name: 'Bitcoin' },
+                    { id: 'ethereum', name: 'Ethereum' },
+                    { id: 'tether', name: 'Tether' },
+                    { id: 'tron', name: 'Tron' },
+                    { id: 'solana', name: 'Solana' }
+                ];
+
+                let tableBody = '';
+                coins.forEach(coin => {
+                    const price = data[coin.id]?.usd || 'N/A';
+                    const change = data[coin.id]?.usd_24h_change || 0;
+                    const changeFormatted = change >= 0 
+                        ? `<span class="text-success">+${change.toFixed(2)}%</span>` 
+                        : `<span class="text-danger">${change.toFixed(2)}%</span>`;
+
+                    tableBody += `
+                        <tr>
+                            <td>${coin.name}</td>
+                            <td class="text-right">$${parseFloat(price).toFixed(2)}</td>
+                            <td class="text-right">${changeFormatted}</td>
+                        </tr>
+                    `;
+                });
+
+                $('#price-table-body').html(tableBody);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching CoinGecko data:', error);
+                $('#price-table-body').html('<tr><td colspan="3" class="text-center text-danger">Failed to load prices. Please try again later.</td></tr>');
+            }
+        });
+    });
+    </script>
 </body>
 </html>
