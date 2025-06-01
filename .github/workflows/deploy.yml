@@ -1,4 +1,4 @@
-name: Deploy to Namecheap
+name: Deploy to Namecheap via FTP
 on:
   push:
     branches: [ "main" ]
@@ -10,17 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to Namecheap via SSH
-        uses: appleboy/ssh-action@v0.1.4
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.3
         with:
-          host: ${{ secrets.W1_HOST }}
-          port: ${{ secrets.W1_PORT }}
-          username: ${{ secrets.W1_USERNAME }}
-          password: ${{ secrets.W1_PASSWORD }} # Or use key: ${{ secrets.W1_SSH_KEY }}
-          script: |
-            cd ~/public_html
-            git pull origin main
-            # Additional commands (e.g., for PHP apps)
-            # composer install
-            # bin/console cache:clear
-            echo "Deployment successful!"
+          server: ${{ secrets.FTP_HOST }} # e.g., server123.web-hosting.com
+          username: ${{ secrets.FTP_USERNAME }} # e.g., user123 or ftpuser@yourdomain.com
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21 # Specify the port here (21 for FTP, 22 for SFTP, or 21098 if using Namecheap’s SSH-based SFTP)
+          server-dir: /public_html/
+          local-dir: ./
