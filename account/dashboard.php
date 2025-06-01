@@ -4,7 +4,7 @@ include('inc/conn.php'); // Loads Database class and $pdo
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
-$page_name = 'Dashboard'; // Define page_name for scripts.php
+$page_name = 'Dashboard'; // Define page_name to fix scripts.php issue
 
 // Helper functions
 if (!function_exists('number_format_short')) {
@@ -66,14 +66,16 @@ try {
 
 // Calculate latest transaction for loss/gain
 try {
-    $stmt = $conn->prepare("SELECT amount, balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1");
+    $stmt = $conn->prepare("SELECT amount, balance FROM transaction WHERE user_id = :user_id AND type = 2 ORDER BY trans_id DESC LIMIT 1");
     $stmt->execute(['user_id' => $aid]);
     $latest_transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+    $latest_transaction_amount = $latest_transaction ? $latest_transaction['amount'] : 0;
     $latest_balance = $latest_transaction ? $latest_transaction['balance'] : 0;
 
-    $stmt = $conn->prepare("SELECT balance FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1 OFFSET 1");
+    $stmt = $conn->prepare("SELECT amount, balance FROM transaction WHERE user_id = :user_id AND type = 2 ORDER BY trans_id DESC LIMIT 1 OFFSET 1");
     $stmt->execute(['user_id' => $aid]);
     $previous_transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+    $previous_transaction_amount = $previous_transaction ? $previous_transaction['amount'] : 0;
     $previous_balance = $previous_transaction ? $previous_transaction['balance'] : 0;
 
     $loss_gain = ($latest_balance > $previous_balance) ? "Increase" : (($latest_balance < $previous_balance) ? "Decrease" : "No Change");
@@ -171,7 +173,8 @@ for ($m = 1; $m <= 12; $m++) {
         array_push($capital, 0);
     }
 }
-$invests = implode(',', $invests); // Use comma-separated strings to match chartscript.php
+// Use comma-separated strings to match older version
+$invests = implode(',', $invests);
 $capital = implode(',', $capital);
 
 // Close database connection
