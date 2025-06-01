@@ -613,9 +613,11 @@
                 const coins = [
                     { id: 'bitcoin', name: 'Bitcoin' },
                     { id: 'ethereum', name: 'Ethereum' },
-                    { id: 'tether', name: 'Tether' },
+                    { id: 'tether', name: 'USDT' },
                     { id: 'tron', name: 'Tron' },
                     { id: 'solana', name: 'Solana' }
+                    { id: 'binancecoin', name: 'Binance Coin' }
+                	{ id: 'ripple', name: 'XRP' }
                 ];
 
                 let tableBody = '';
