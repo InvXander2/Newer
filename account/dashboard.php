@@ -1,5 +1,8 @@
 <?php
 session_start();
+include('../inc/config.php');
+include('../admin/includes/format.php');
+include('../admin/session.php');
 include('inc/conn.php'); // Loads Database class and $pdo
 include('inc/checklogin.php');
 check_login();
