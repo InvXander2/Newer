@@ -54,7 +54,7 @@ try {
 // Fetch wallet balance
 try {
     $stmt = $conn->prepare("SELECT balance FROM wallet WHERE user_id = :user_id");
-    $stmt->execute(['user_id' => $aid]);
+    $stmt->execute(['user_id' => $user_id]);
     $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row1) {
         $row1 = ['balance' => 0];
