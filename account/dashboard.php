@@ -1,14 +1,10 @@
 <?php
 session_start();
-include('../inc/config.php');
-include('../admin/includes/format.php');
 include('inc/conn.php'); // Loads Database class and $pdo
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
 $page_name = 'Dashboard'; // Define page_name for scripts.php
-
-include('inc/head.php');
 
 // Helper functions
 if (!function_exists('number_format_short')) {
