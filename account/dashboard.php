@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('inc/conn.php');
+include('inc/conn.php'); // Changed from config.php to conn.php
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
@@ -151,9 +151,6 @@ $capital = json_encode($capital);
     <!-- end left-sidenav-->
 
     <div class="page-wrapper">
-        <!-- Top Bar Start -->
-        <!-- Top Bar End -->
-
         <!-- Page Content-->
         <div class="page-content">
             <div class="container-fluid">
