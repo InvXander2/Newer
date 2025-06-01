@@ -1,6 +1,8 @@
 <?php
+$page_name = 'Dashboard'; // Add this line
 session_start();
 include('inc/conn.php'); // Loads Database class and $pdo
+// ... rest of your code ...
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
