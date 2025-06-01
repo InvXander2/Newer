@@ -33,7 +33,6 @@ $now = date('Y-m-d H:i:s');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include('inc/head.php'); ?>
     <!-- Add custom CSS for card spacing and transparent parent card -->
     <style>
         .col-lg-4 {
