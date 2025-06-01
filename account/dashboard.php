@@ -383,18 +383,6 @@
                                 </div><!--end card-->
                             </div><!--end col-->
                         </div><!--end row-->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h4 class="card-title">Investment Overview</h4>
-                                    </div><!--end col-->
-                                    <div class="col-auto">
-                                        <div class="dropdown">
-                                        </div>
-                                    </div><!--end col-->
-                                </div><!--end row-->
-                            </div><!--end card-header-->
                             <div class="col-lg-3">
                                 <div class="card">
                                     <div class="card-header">
