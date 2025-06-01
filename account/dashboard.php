@@ -252,9 +252,9 @@
 
                 <div class="row">
                     <div class="col-lg-9">
-                        <div class="row justify-content-center">
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card report-card" style="height: 100%;">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card report-card">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-center">
                                             <div class="col">
@@ -277,8 +277,8 @@
                                     </div><!--end card-body-->
                                 </div><!--end card-->
                             </div><!--end col-->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card report-card" style="height: 100%;">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card report-card">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0): ?>
@@ -352,8 +352,8 @@
                                     </div><!--end card-body-->
                                 </div><!--end card-->
                             </div><!--end col-->
-                            <div class="col-md-6 col-lg-3">
-                                <div class="card report-card" style="height: 100%;">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card report-card">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-center">
                                             <?php if ($no_of_inv_comp > 0): ?>
@@ -386,7 +386,7 @@
                         <!-- Earnings Summary Cards -->
                         <div class="row">
                             <div class="col-lg-12">
-                                <div class="card" style="height: 100%;">
+                                <div class="card">
                                     <div class="card-header">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -442,7 +442,7 @@
                         </div><!--end row-->
                     </div><!--end col-lg-9-->
                     <div class="col-lg-3">
-                        <div class="card" style="height: 100%;">
+                        <div class="card">
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -484,7 +484,7 @@
                                 </ul>
                             </div><!--end card-body-->
                         </div><!--end card-->
-                        <div class="card" style="height: 100%;">
+                        <div class="card">
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
