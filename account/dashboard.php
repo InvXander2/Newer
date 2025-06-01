@@ -396,9 +396,7 @@
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="row align-items-center">
-                                            <div class="col">
                                                 <h4 class="card-title">Earnings Summary</h4>
-                                            </div><!--end col-->
                                             <div class="col-auto">
                                                 <div class="dropdown">
                                                 </div>
