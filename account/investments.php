@@ -17,12 +17,16 @@ if (!isset($_SESSION['user'])) {
 
 $conn = $pdo->open();
 
-$investment_planQuery = $conn->query("SELECT * FROM investment_plans ORDER BY 1 ASC");
+// Fetch investment plans using prepared statement
+$investment_planQuery = $conn->prepare("SELECT * FROM investment_plans ORDER BY 1 ASC");
+$investment_planQuery->execute();
 if ($investment_planQuery->rowCount()) {
     $investment_plans = $investment_planQuery->fetchAll(PDO::FETCH_OBJ);
 }
 
-$new_investment_planQuery = $conn->query("SELECT *, investment.status AS invest_status FROM investment LEFT JOIN investment_plans ON investment_plans.id=investment.invest_plan_id LEFT JOIN users ON users.id=investment.user_id WHERE user_id=$id ORDER BY 1 DESC");
+// Fetch user's investments using prepared statement
+$new_investment_planQuery = $conn->prepare("SELECT *, investment.status AS invest_status FROM investment LEFT JOIN investment_plans ON investment_plans.id=investment.invest_plan_id LEFT JOIN users ON users.id=investment.user_id WHERE user_id=? ORDER BY 1 DESC");
+$new_investment_planQuery->execute([$id]);
 if ($new_investment_planQuery->rowCount()) {
     $new_investment_plans = $new_investment_planQuery->fetchAll(PDO::FETCH_OBJ);
 }
@@ -33,6 +37,7 @@ $now = date('Y-m-d H:i:s');
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <?php include('inc/head.php'); ?>
     <!-- Add custom CSS for card spacing and transparent parent card -->
     <style>
         .col-lg-4 {
@@ -45,7 +50,7 @@ $now = date('Y-m-d H:i:s');
         }
         .transparent-card {
             background-color: transparent;
-            border: none; /* Remove border for cleaner look */
+            border: none;
         }
     </style>
 </head>
@@ -112,7 +117,7 @@ $now = date('Y-m-d H:i:s');
                 ?>                                                              
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card transparent-card"> <!-- Added transparent-card class -->
+                        <div class="card transparent-card">
                             <div class="card-header">
                                 <h4 class="card-title">Plans</h4>
                                 <p class="text-muted mb-0">Select from the plans below to invest now.</p>
@@ -132,8 +137,8 @@ $now = date('Y-m-d H:i:s');
                                         $span = '';
                                     }
                                 ?>
-                                    <div class="col-lg-4 mb-4"> <!-- Added mb-4 for vertical spacing -->
-                                        <div class="card h-100"> <!-- Added h-100 for equal card height -->
+                                    <div class="col-lg-4 mb-4">
+                                        <div class="card h-100">
                                             <div class="card-body">
                                                 <?= $span; ?>
                                                 <div class="pricingTable1 text-center">
