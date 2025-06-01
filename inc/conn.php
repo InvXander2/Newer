@@ -1,13 +1,12 @@
 <?php
-
 class Database {
     private $server = "mysql:host=localhost;dbname=nexuvmvy_nexusinsights;charset=utf8mb4";
-    private $username = "nexuvmvy_nexusinsights"; // Update with correct username
-    private $password = "Xander24427279"; // Update with correct password
+    private $username = "nexuvmvy_nexusinsights"; // Updated username
+    private $password = "Xander24427279"; // Updated password
     private $options = array(
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false, // Disable emulated prepares for security
+        PDO::ATTR_EMULATE_PREPARES => false,
     );
     protected $conn;
 
@@ -17,7 +16,7 @@ class Database {
             return $this->conn;
         } catch (PDOException $e) {
             error_log("Database connection error: " . $e->getMessage() . "\n", 3, __DIR__ . "/error_log.txt");
-            die("Database connection failed: " . $e->getMessage()); // Show detailed error for debugging (remove in production)
+            die("Database connection failed: " . $e->getMessage());
         }
     }
 
@@ -25,8 +24,4 @@ class Database {
         $this->conn = null;
     }
 }
-
-// Example usage
-//$pdo = new Database();
-//$connection = $pdo->open(); // Call open() to establish connection
 ?>
