@@ -33,7 +33,8 @@ $now = date('Y-m-d H:i:s');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Add custom CSS for card spacing -->
+    <?php include('inc/head.php'); ?>
+    <!-- Add custom CSS for card spacing and transparent parent card -->
     <style>
         .col-lg-4 {
             padding-left: 15px;
@@ -42,6 +43,10 @@ $now = date('Y-m-d H:i:s');
         .card {
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .transparent-card {
+            background-color: transparent;
+            border: none; /* Remove border for cleaner look */
         }
     </style>
 </head>
@@ -108,7 +113,7 @@ $now = date('Y-m-d H:i:s');
                 ?>                                                              
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card">
+                        <div class="card transparent-card"> <!-- Added transparent-card class -->
                             <div class="card-header">
                                 <h4 class="card-title">Plans</h4>
                                 <p class="text-muted mb-0">Select from the plans below to invest now.</p>
