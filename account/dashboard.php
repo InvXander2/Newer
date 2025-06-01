@@ -1,6 +1,6 @@
 <?php
 session_start();
-include('inc/config.php');
+include('inc/conn.php');
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
