@@ -27,7 +27,6 @@
         $stmt0->execute(['user_id' => $id]);
         $row0 = $stmt0->fetch(PDO::FETCH_ASSOC);
         if (!$row0) {
-            // Handle case where user doesn't exist
             header('location: ../login.php');
             exit();
         }
@@ -219,7 +218,7 @@
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
+                                        <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
@@ -255,7 +254,7 @@
                     <div class="col-lg-9">
                         <div class="row justify-content-center">
                             <div class="col-md-6 col-lg-3">
-                                <div class="card report-card">
+                                <div class="card report-card" style="height: 100%;">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-center">
                                             <div class="col">
@@ -279,7 +278,7 @@
                                 </div><!--end card-->
                             </div><!--end col-->
                             <div class="col-md-6 col-lg-3">
-                                <div class="card report-card">
+                                <div class="card report-card" style="height: 100%;">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0): ?>
@@ -354,7 +353,7 @@
                                 </div><!--end card-->
                             </div><!--end col-->
                             <div class="col-md-6 col-lg-3">
-                                <div class="card report-card">
+                                <div class="card report-card" style="height: 100%;">
                                     <div class="card-body">
                                         <div class="row d-flex justify-content-center">
                                             <?php if ($no_of_inv_comp > 0): ?>
@@ -385,8 +384,9 @@
                         </div><!--end row-->
 
                         <!-- Earnings Summary Cards -->
-                            <div class="col-lg-6">
-                                <div class="card">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card" style="height: 100%;">
                                     <div class="card-header">
                                         <div class="row align-items-center">
                                             <div class="col">
@@ -438,11 +438,11 @@
                                         </div><!--end /div-->
                                     </div><!--end card-body-->
                                 </div><!--end card-->
-                            </div><!--end col-lg-6-->
+                            </div><!--end col-lg-12-->
                         </div><!--end row-->
                     </div><!--end col-lg-9-->
                     <div class="col-lg-3">
-                        <div class="card">
+                        <div class="card" style="height: 100%;">
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
@@ -484,7 +484,7 @@
                                 </ul>
                             </div><!--end card-body-->
                         </div><!--end card-->
-                        <div class="card">
+                        <div class="card" style="height: 100%;">
                             <div class="card-header">
                                 <div class="row align-items-center">
                                     <div class="col">
