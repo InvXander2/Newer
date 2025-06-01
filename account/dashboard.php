@@ -148,34 +148,6 @@
         error_log("Error fetching investment plans: " . $e->getMessage());
         $stmt1 = [];
     }
-
-    // Calculate earnings per plan
-    $total_plan1 = $total_plan2 = $total_plan3 = $percent_plan1 = $percent_plan2 = $percent_plan3 = 0;
-
-    try {
-        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 1");
-        $stmt3->execute(['user_id' => $id]);
-        foreach ($stmt3 as $prow) {
-            $total_plan1 += $prow['returns'];
-            $percent_plan1 = $total > 0 ? number_format($total_plan1 * 100 / $total, 0) : 0;
-        }
-
-        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 2");
-        $stmt3->execute(['user_id' => $id]);
-        foreach ($stmt3 as $prow) {
-            $total_plan2 += $prow['returns'];
-            $percent_plan2 = $total > 0 ? number_format($total_plan2 * 100 / $total, 0) : 0;
-        }
-
-        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 3");
-        $stmt3->execute(['user_id' => $id]);
-        foreach ($stmt3 as $prow) {
-            $total_plan3 += $prow['returns'];
-            $percent_plan3 = $total > 0 ? number_format($total_plan3 * 100 / $total, 0) : 0;
-        }
-    } catch (PDOException $e) {
-        error_log("Error calculating earnings per plan: " . $e->getMessage());
-    }
 ?>
 
 <body class="dark-topbar">
