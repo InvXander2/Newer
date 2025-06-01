@@ -148,6 +148,34 @@
         error_log("Error fetching investment plans: " . $e->getMessage());
         $stmt1 = [];
     }
+
+    // Calculate earnings per plan
+    $total_plan1 = $total_plan2 = $total_plan3 = $percent_plan1 = $percent_plan2 = $percent_plan3 = 0;
+
+    try {
+        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 1");
+        $stmt3->execute(['user_id' => $id]);
+        foreach ($stmt3 as $prow) {
+            $total_plan1 += $prow['returns'];
+            $percent_plan1 = $total > 0 ? number_format($total_plan1 * 100 / $total, 0) : 0;
+        }
+
+        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 2");
+        $stmt3->execute(['user_id' => $id]);
+        foreach ($stmt3 as $prow) {
+            $total_plan2 += $prow['returns'];
+            $percent_plan2 = $total > 0 ? number_format($total_plan2 * 100 / $total, 0) : 0;
+        }
+
+        $stmt3 = $conn->prepare("SELECT returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = 3");
+        $stmt3->execute(['user_id' => $id]);
+        foreach ($stmt3 as $prow) {
+            $total_plan3 += $prow['returns'];
+            $percent_plan3 = $total > 0 ? number_format($total_plan3 * 100 / $total, 0) : 0;
+        }
+    } catch (PDOException $e) {
+        error_log("Error calculating earnings per plan: " . $e->getMessage());
+    }
 ?>
 
 <body class="dark-topbar">
@@ -358,6 +386,9 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Investment Overview</h4>
+                                    </div><!--end col-->
                                     <div class="col-auto">
                                         <div class="dropdown">
                                         </div>
@@ -379,8 +410,44 @@
                                     </div><!--end card-header-->
                                     <div class="card-body">
                                         <div class="text-center">
-                                            <div id="ana_device" class="apex-charts" style="min-height: 300px;"></div>
+                                            <div id="ana_device" class="apex-charts"></div>
                                         </div>
+                                        <div class="table-responsive mt-2">
+                                            <table class="table border-dashed mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Plan</th>
+                                                        <th class="text-right">Invested</th>
+                                                        <th class="text-right">Earned</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($stmt1 as $plan1): ?>
+                                                        <tr>
+                                                            <td><?= htmlspecialchars($plan1->name) ?></td>
+                                                            <?php
+                                                            try {
+                                                                $stmt2 = $conn->prepare("SELECT capital, returns FROM investment WHERE user_id = :user_id AND invest_plan_id = :plan_id AND status = 'completed'");
+                                                                $stmt2->execute(['user_id' => $id, 'plan_id' => $plan1->id]);
+                                                                $total_invested = 0;
+                                                                $total_earned = 0;
+                                                                foreach ($stmt2 as $sinv) {
+                                                                    $total_invested += $sinv['capital'];
+                                                                    $total_earned += $sinv['returns'];
+                                                                }
+                                                            } catch (PDOException $e) {
+                                                                error_log("Error fetching investment data for plan {$plan1->id}: " . $e->getMessage());
+                                                                $total_invested = 0;
+                                                                $total_earned = 0;
+                                                            }
+                                                            ?>
+                                                            <td class="text-right"><?= number_format($total_invested, 2) ?></td>
+                                                            <td class="text-right"><?= number_format($total_earned, 2) ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table><!--end /table-->
+                                        </div><!--end /div-->
                                     </div><!--end card-body-->
                                 </div><!--end card-->
                             </div><!--end col-->
