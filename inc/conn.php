@@ -2,7 +2,7 @@
 
 class Database {
  
-	private $server = "mysql:host=server198.web-hosting.com;dbname=nexuvmvy_nexusinsights";
+	private $server = "mysql:host=localhost;dbname=nexuvmvy_nexusinsights";
 	private $username = "nexuvmvy";
 	private $password = "Xander24427279";
 	private $options  = array(
