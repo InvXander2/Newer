@@ -30,6 +30,23 @@ if ($new_investment_planQuery->rowCount()) {
 $now = date('Y-m-d H:i:s');
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include('inc/head.php'); ?>
+    <!-- Add custom CSS for card spacing -->
+    <style>
+        .col-lg-4 {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+        .card {
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
 <body class="dark-topbar">
     <!-- Left Sidenav -->
     <?php include('inc/sidebar.php'); ?>
@@ -112,8 +129,8 @@ $now = date('Y-m-d H:i:s');
                                         $span = '';
                                     }
                                 ?>
-                                    <div class="col-lg-4">
-                                        <div class="card">
+                                    <div class="col-lg-4 mb-4"> <!-- Added mb-4 for vertical spacing -->
+                                        <div class="card h-100"> <!-- Added h-100 for equal card height -->
                                             <div class="card-body">
                                                 <?= $span; ?>
                                                 <div class="pricingTable1 text-center">
