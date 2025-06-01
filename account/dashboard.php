@@ -219,7 +219,7 @@
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                                         <span class="day-name" id="Day_Name">Today:</span> 
-                                        <span class="" id="Select_date"><?php echo date('M d'); ?></span>
+                                        <span class="" id="Select_date"><?php echo date('M d, Y, g:i A T', strtotime('2025-06-01 13:29:00 +02:00')); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
@@ -545,8 +545,17 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-                            <script src="https://widgets.coingecko.com/coingecko-coin-market-ticker-list-widget.js"></script>
-                            <coingecko-coin-market-ticker-list-widget coin-id="bitcoin" currency="usd" locale="en"></coingecko-coin-market-ticker-list-widget>
+                            <div class="card-body">
+                                <h4 class="card-title">Cryptocurrency Prices (USD)</h4>
+                                <script src="https://widgets.coingecko.com/coingecko-coin-price-chart-widget.js"></script>
+                                <coingecko-coin-price-chart-widget  
+                                    coin-ids="bitcoin,ethereum,tether,tron,solana"  
+                                    currency="usd"  
+                                    locale="en"  
+                                    width="100%"  
+                                    height="400px">
+                                </coingecko-coin-price-chart-widget>
+                            </div>
                         </div><!--end card-->
                     </div><!--end col-->
                 </div><!--end row-->
