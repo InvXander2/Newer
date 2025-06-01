@@ -8,6 +8,8 @@ check_login();
 $aid = $_SESSION['user'];
 $page_name = 'Dashboard'; // Define page_name for scripts.php
 
+include('inc/head.php');
+
 // Helper functions
 if (!function_exists('number_format_short')) {
     function number_format_short($n, $precision = 1) {
