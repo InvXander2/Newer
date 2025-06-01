@@ -7,7 +7,7 @@ $page_parent = '';
 $page_title = 'Welcome to the Official Website of ' . $settings->siteTitle;
 $page_description = 'Manage Investment provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
 
-require_once('inc/head.php');
+include('inc/head.php');
 
 $id = $_SESSION['user'];
 
@@ -33,7 +33,6 @@ $now = date('Y-m-d H:i:s');
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include('inc/head.php'); ?>
     <!-- Add custom CSS for card spacing -->
     <style>
         .col-lg-4 {
