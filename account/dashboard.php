@@ -219,7 +219,7 @@
                                 </div><!--end col-->
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span> 
+                                        <span class="day-name" id="Day_Name">Today:</span>&nbsp;
                                         <span class="" id="Select_date"><?php echo date('M d'); ?></span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
@@ -383,19 +383,9 @@
                                 </div><!--end card-->
                             </div><!--end col-->
                         </div><!--end row-->
-                        <div class="card">
-                            <div class="card-header">
-                                <div class="row align-items-center">
-                                    <div class="col">
-                                        <h4 class="card-title">Investment Overview</h4>
-                                    </div><!--end col-->
-                                    <div class="col-auto">
-                                        <div class="dropdown">
-                                        </div>
-                                    </div><!--end col-->
-                                </div><!--end row-->
-                            </div><!--end card-header-->
-                            <div class="col-lg-3">
+
+                        <!-- Earnings Summary Cards -->
+                            <div class="col-lg-6">
                                 <div class="card">
                                     <div class="card-header">
                                         <div class="row align-items-center">
@@ -404,14 +394,12 @@
                                             </div><!--end col-->
                                             <div class="col-auto">
                                                 <div class="dropdown">
+                                                    <!-- Dropdown content, if any, remains unchanged -->
                                                 </div>
                                             </div><!--end col-->
                                         </div><!--end row-->
                                     </div><!--end card-header-->
                                     <div class="card-body">
-                                        <div class="text-center">
-                                            <div id="ana_device" class="apex-charts"></div>
-                                        </div>
                                         <div class="table-responsive mt-2">
                                             <table class="table border-dashed mb-0">
                                                 <thead>
@@ -450,153 +438,151 @@
                                         </div><!--end /div-->
                                     </div><!--end card-body-->
                                 </div><!--end card-->
-                            </div><!--end col-->
+                            </div><!--end col-lg-6-->
                         </div><!--end row-->
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <div class="row align-items-center">
-                                            <div class="col">
-                                                <h4 class="card-title">What's New</h4>
-                                            </div><!--end col-->
-                                        </div><!--end row-->
-                                    </div><!--end card-header-->
-                                    <div class="card-body">
-                                        <ul class="list-group custom-list-group mb-n3">
-                                            <?php
-                                            try {
-                                                $newQuery = $conn->prepare("SELECT * FROM news ORDER BY id DESC LIMIT 7");
-                                                $newQuery->execute();
-                                                $news = $newQuery->rowCount() ? $newQuery->fetchAll(PDO::FETCH_OBJ) : [];
-                                                $index = 1;
-                                                foreach ($news as $new):
-                                                    $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
-                                                    $tag2 = $index == 1 ? "Apps" : "Tech";
-                                            ?>
-                                                <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
-                                                    <div class="media">
-                                                        <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
-                                                        <div class="media-body align-self-center">
-                                                            <h6 class="m-0"><?= htmlspecialchars(substrwords($new->short_title, 30)); ?></h6>
-                                                            <p class="mb-0 text-muted"><?= htmlspecialchars($tag1); ?>, <?= htmlspecialchars($tag2); ?></p>
-                                                        </div><!--end media body-->
-                                                    </div>
-                                                    <div class="align-self-center">
-                                                        <a target="_blank" href="../news-detail.php?id=<?= htmlspecialchars($new->id); ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
-                                                    </div>
-                                                </li>
-                                                <?php
-                                                    $index++;
-                                                endforeach;
-                                            } catch (PDOException $e) {
-                                                error_log("Error fetching news: " . $e->getMessage());
-                                            }
-                                            ?>
-                                        </ul>
-                                    </div><!--end card-body-->
-                                </div><!--end card-->
-                            </div><!--end col-->
-                            <div class="col-lg-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <div class="row align-items-center">
-                                            <div class="col">
-                                                <h4 class="card-title">Activity</h4>
-                                            </div><!--end col-->
-                                        </div><!--end row-->
-                                    </div><!--end card-header-->
-                                    <div class="card-body">
-                                        <div class="analytic-dash-activity" data-simplebar>
-                                            <div class="activity">
-                                                <?php
-                                                try {
-                                                    $stmtact = $conn->prepare("SELECT COUNT(*) AS numrows FROM activity WHERE user_id = :user_id");
-                                                    $stmtact->execute(['user_id' => $id]);
-                                                    $drowact = $stmtact->fetch(PDO::FETCH_ASSOC);
-                                                    $no_of_act = $drowact['numrows'];
+                    </div><!--end col-lg-9-->
+                    <div class="col-lg-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">What's New</h4>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body">
+                                <ul class="list-group custom-list-group mb-n3">
+                                    <?php
+                                    try {
+                                        $newQuery = $conn->prepare("SELECT * FROM news ORDER BY id DESC LIMIT 7");
+                                        $newQuery->execute();
+                                        $news = $newQuery->rowCount() ? $newQuery->fetchAll(PDO::FETCH_OBJ) : [];
+                                        $index = 1;
+                                        foreach ($news as $new):
+                                            $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
+                                            $tag2 = $index == 1 ? "Apps" : "Tech";
+                                    ?>
+                                        <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
+                                            <div class="media">
+                                                <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
+                                                <div class="media-body align-self-center">
+                                                    <h6 class="m-0"><?= htmlspecialchars(substrwords($new->short_title, 30)); ?></h6>
+                                                    <p class="mb-0 text-muted"><?= htmlspecialchars($tag1); ?>, <?= htmlspecialchars($tag2); ?></p>
+                                                </div><!--end media body-->
+                                            </div>
+                                            <div class="align-self-center">
+                                                <a target="_blank" href="../news-detail.php?id=<?= htmlspecialchars($new->id); ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
+                                            </div>
+                                        </li>
+                                        <?php
+                                            $index++;
+                                        endforeach;
+                                    } catch (PDOException $e) {
+                                        error_log("Error fetching news: " . $e->getMessage());
+                                    }
+                                    ?>
+                                </ul>
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h4 class="card-title">Activity</h4>
+                                    </div><!--end col-->
+                                </div><!--end row-->
+                            </div><!--end card-header-->
+                            <div class="card-body">
+                                <div class="analytic-dash-activity" data-simplebar>
+                                    <div class="activity">
+                                        <?php
+                                        try {
+                                            $stmtact = $conn->prepare("SELECT COUNT(*) AS numrows FROM activity WHERE user_id = :user_id");
+                                            $stmtact->execute(['user_id' => $id]);
+                                            $drowact = $stmtact->fetch(PDO::FETCH_ASSOC);
+                                            $no_of_act = $drowact['numrows'];
 
-                                                    $actQuery = $conn->prepare("SELECT * FROM activity WHERE user_id = :user_id ORDER BY act_id DESC LIMIT 6");
-                                                    $actQuery->execute(['user_id' => $id]);
-                                                    $actrow = $actQuery->rowCount() ? $actQuery->fetchAll(PDO::FETCH_OBJ) : [];
+                                            $actQuery = $conn->prepare("SELECT * FROM activity WHERE user_id = :user_id ORDER BY act_id DESC LIMIT 6");
+                                            $actQuery->execute(['user_id' => $id]);
+                                            $actrow = $actQuery->rowCount() ? $actQuery->fetchAll(PDO::FETCH_OBJ) : [];
 
-                                                    if ($no_of_act > 0) {
-                                                        foreach ($actrow as $act): ?>
-                                                            <div class="activity-info">
-                                                                <div class="icon-info-activity">
-                                                                    <i class="mdi mdi-clock-outline bg-soft-primary"></i>
-                                                                </div>
-                                                                <div class="activity-info-text">
-                                                                    <div class="d-flex justify-content-between align-items-center">
-                                                                        <p class="text-muted mb-0 font-13 w-75"><span><?= htmlspecialchars($act->category); ?></span>
-                                                                            <?= htmlspecialchars($act->message); ?>
-                                                                        </p>
-                                                                        <small class="text-muted"><?= htmlspecialchars($act->date_sent); ?></small>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        <?php endforeach;
-                                                    } else { ?>
-                                                        <div class="activity-info">
-                                                            <h5>No Activity Yet</h5>
-                                                        </div>
-                                                    <?php }
-                                                } catch (PDOException $e) {
-                                                    error_log("Error fetching activity: " . $e->getMessage());
-                                                    ?>
+                                            if ($no_of_act > 0) {
+                                                foreach ($actrow as $act): ?>
                                                     <div class="activity-info">
-                                                        <h5>Error Loading Activity</h5>
+                                                        <div class="icon-info-activity">
+                                                            <i class="mdi mdi-clock-outline bg-soft-primary"></i>
+                                                        </div>
+                                                        <div class="activity-info-text">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <p class="text-muted mb-0 font-13 w-75"><span><?= htmlspecialchars($act->category); ?></span>
+                                                                    <?= htmlspecialchars($act->message); ?>
+                                                                </p>
+                                                                <small class="text-muted"><?= htmlspecialchars($act->date_sent); ?></small>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </div><!--end activity-->
-                                        </div><!--end analytics-dash-activity-->
-                                    </div><!--end card-body-->
-                                </div><!--end card-->
-                            </div><!--end col-->
-                        </div><!--end row-->
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="card">
-                                    <script src="https://widgets.coingecko.com/coingecko-coin-market-ticker-list-widget.js"></script>
-                                    <coingecko-coin-market-ticker-list-widget coin-id="bitcoin" currency="usd" locale="en"></coingecko-coin-market-ticker-list-widget>
-                                </div><!--end card-->
-                            </div><!--end col-->
-                        </div><!--end row-->
-                    </div><!-- container -->
-                    <?php include('inc/footer.php'); ?><!--end footer-->
-                </div>
-                <!-- end page content -->
-            </div>
-            <!-- end page-wrapper -->
+                                                <?php endforeach;
+                                            } else { ?>
+                                                <div class="activity-info">
+                                                    <h5>No Activity Yet</h5>
+                                                </div>
+                                            <?php }
+                                        } catch (PDOException $e) {
+                                            error_log("Error fetching activity: " . $e->getMessage());
+                                            ?>
+                                            <div class="activity-info">
+                                                <h5>Error Loading Activity</h5>
+                                            </div>
+                                            <?php
+                                        }
+                                        ?>
+                                    </div><!--end activity-->
+                                </div><!--end analytics-dash-activity-->
+                            </div><!--end card-body-->
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <script src="https://widgets.coingecko.com/coingecko-coin-market-ticker-list-widget.js"></script>
+                            <coingecko-coin-market-ticker-list-widget coin-id="bitcoin" currency="usd" locale="en"></coingecko-coin-market-ticker-list-widget>
+                        </div><!--end card-->
+                    </div><!--end col-->
+                </div><!--end row-->
+            </div><!-- container -->
+            <?php include('inc/footer.php'); ?><!--end footer-->
+        </div>
+        <!-- end page content -->
+    </div>
+    <!-- end page-wrapper -->
 
-            <!-- Chart Data -->
-            <?php
-            $invests = array();
-            $capital = array();
-            for ($m = 1; $m <= 12; $m++) {
-                try {
-                    $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = :user_id AND status = 'completed' AND MONTH(end_date) = :month AND YEAR(end_date) = :year");
-                    $stmt->execute(['user_id' => $id, 'month' => $m, 'year' => $year]);
-                    $total = $total2 = 0;
-                    foreach ($stmt as $srow) {
-                        $amount = $srow['returns'] - $srow['capital'];
-                        $total += $amount;
-                        $amount2 = $srow['capital'];
-                        $total2 += $amount2;
-                    }
-                    array_push($invests, round($total, 2));
-                    array_push($capital, round($total2));
-                } catch (PDOException $e) {
-                    error_log("Error calculating chart data for month $m: " . $e->getMessage());
-                    array_push($invests, 0);
-                    array_push($capital, 0);
-                }
+    <!-- Chart Data -->
+    <?php
+    $invests = array();
+    $capital = array();
+    for ($m = 1; $m <= 12; $m++) {
+        try {
+            $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = :user_id AND status = 'completed' AND MONTH(end_date) = :month AND YEAR(end_date) = :year");
+            $stmt->execute(['user_id' => $id, 'month' => $m, 'year' => $year]);
+            $total = $total2 = 0;
+            foreach ($stmt as $srow) {
+                $amount = $srow['returns'] - $srow['capital'];
+                $total += $amount;
+                $amount2 = $srow['capital'];
+                $total2 += $amount2;
             }
-            $invests = implode(',', $invests);
-            $capital = implode(',', $capital);
-            ?>
-            <?php include('inc/scripts.php'); ?>
-        </body>
-    </html>
+            array_push($invests, round($total, 2));
+            array_push($capital, round($total2));
+        } catch (PDOException $e) {
+            error_log("Error calculating chart data for month $m: " . $e->getMessage());
+            array_push($invests, 0);
+            array_push($capital, 0);
+        }
+    }
+    $invests = implode(',', $invests);
+    $capital = implode(',', $capital);
+    ?>
+    <?php include('inc/scripts.php'); ?>
+</body>
+</html>
