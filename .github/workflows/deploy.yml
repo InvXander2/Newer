@@ -1,22 +1,26 @@
-name: FTP Deploy
-
+name: Deploy to Namecheap
 on:
   push:
-    branches:
-      - main  # or your default branch
-
+    branches: [ "main" ]
+  workflow_dispatch:
 jobs:
-  ftp-deploy:
-    name: Upload via FTP
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: FTP Deploy
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Deploy to Namecheap via SSH
+        uses: appleboy/ssh-action@v0.1.4
         with:
-          server: ${{ secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}/
+          host: ${{ secrets.W1_HOST }}
+          port: ${{ secrets.W1_PORT }}
+          username: ${{ secrets.W1_USERNAME }}
+          password: ${{ secrets.W1_PASSWORD }} # Or use key: ${{ secrets.W1_SSH_KEY }}
+          script: |
+            cd ~/public_html
+            git pull origin main
+            # Additional commands (e.g., for PHP apps)
+            # composer install
+            # bin/console cache:clear
+            echo "Deployment successful!"
