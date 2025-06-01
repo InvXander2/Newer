@@ -1,23 +1,65 @@
 <?php
 session_start();
-include('inc/conn.php'); // Changed from config.php to conn.php
+include('inc/conn.php'); // Loads Database class and $pdo
 include('inc/checklogin.php');
 check_login();
 $aid = $_SESSION['user'];
+
+// Helper functions (add here if not defined elsewhere)
+if (!function_exists('number_format_short')) {
+    function number_format_short($n, $precision = 1) {
+        if ($n < 900) {
+            return number_format($n, $precision);
+        } elseif ($n < 900000) {
+            return number_format($n / 1000, $precision) . 'K';
+        } elseif ($n < 900000000) {
+            return number_format($n / 1000000, $precision) . 'M';
+        } else {
+            return number_format($n / 1000000000, $precision) . 'B';
+        }
+    }
+}
+
+if (!function_exists('substrwords')) {
+    function substrwords($text, $maxchar, $end='...') {
+        if (strlen($text) > $maxchar) {
+            $words = preg_split('/\s+/', $text);
+            $output = '';
+            $i = 0;
+            while (strlen($output) < $maxchar && isset($words[$i])) {
+                $output .= $words[$i] . ' ';
+                $i++;
+            }
+            return trim($output) . $end;
+        }
+        return $text;
+    }
+}
+
+// Initialize database connection
+try {
+    $conn = $pdo->open();
+} catch (Exception $e) {
+    $_SESSION['error'] = "Database connection failed";
+    header('location: ../login.php');
+    exit();
+}
 
 // Fetch user profile data for $row0
 try {
     $stmt0 = $conn->prepare("SELECT full_name, nationality, date_view FROM users WHERE id = :user_id");
     $stmt0->execute(['user_id' => $aid]);
-    $row0 = $stmt0->fetch(PDO::FETCH_ASSOC);
+    $row0 = $stmt0->fetch();
     if (!$row0) {
         $_SESSION['error'] = "User not found";
+        $pdo->close();
         header('location: ../login.php');
         exit();
     }
 } catch (PDOException $e) {
     error_log("Error fetching user data: " . $e->getMessage());
     $_SESSION['error'] = "Database error";
+    $pdo->close();
     header('location: ../login.php');
     exit();
 }
@@ -26,7 +68,7 @@ try {
 try {
     $stmt = $conn->prepare("SELECT balance FROM wallet WHERE user_id = :user_id");
     $stmt->execute(['user_id' => $aid]);
-    $row1 = $stmt->fetch(PDO::FETCH_ASSOC);
+    $row1 = $stmt->fetch();
     if (!$row1) {
         $row1 = ['balance' => 0];
     }
@@ -39,12 +81,12 @@ try {
 try {
     $stmt = $conn->prepare("SELECT amount FROM transaction WHERE user_id = :user_id AND type = 2 ORDER BY trans_id DESC LIMIT 1");
     $stmt->execute(['user_id' => $aid]);
-    $latest_transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+    $latest_transaction = $stmt->fetch();
     $latest_transaction_amount = $latest_transaction ? $latest_transaction['amount'] : 0;
 
     $stmt = $conn->prepare("SELECT amount FROM transaction WHERE user_id = :user_id AND type = 2 ORDER BY trans_id DESC LIMIT 1 OFFSET 1");
     $stmt->execute(['user_id' => $aid]);
-    $previous_transaction = $stmt->fetch(PDO::FETCH_ASSOC);
+    $previous_transaction = $stmt->fetch();
     $previous_transaction_amount = $previous_transaction ? $previous_transaction['amount'] : 0;
 
     $loss_gain = ($latest_transaction_amount > $previous_transaction_amount) ? "Increase" : (($latest_transaction_amount < $previous_transaction_amount) ? "Decrease" : "No Change");
@@ -59,7 +101,7 @@ try {
 try {
     $stmt5 = $conn->prepare("SELECT i.*, p.name FROM investment i LEFT JOIN investment_plans p ON i.invest_plan_id = p.id WHERE i.user_id = :user_id AND i.status = 'running' ORDER BY i.start_date DESC");
     $stmt5->execute(['user_id' => $aid]);
-    $row5 = $stmt5->fetchAll(PDO::FETCH_OBJ);
+    $row5 = $stmt5->fetchAll();
     $no_of_inv = count($row5);
 } catch (PDOException $e) {
     error_log("Error fetching active investments: " . $e->getMessage());
@@ -71,7 +113,7 @@ try {
 try {
     $stmt = $conn->prepare("SELECT COUNT(*) AS numrows, SUM(returns) as total FROM investment WHERE user_id = :user_id AND status = 'completed'");
     $stmt->execute(['user_id' => $aid]);
-    $drow = $stmt->fetch(PDO::FETCH_ASSOC);
+    $drow = $stmt->fetch();
     $no_of_inv_comp = $drow['numrows'];
     $total = $drow['total'] ?? 0;
 } catch (PDOException $e) {
@@ -84,7 +126,7 @@ try {
 try {
     $stmt3 = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 5");
     $stmt3->execute(['user_id' => $aid]);
-    $recent_transactions = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+    $recent_transactions = $stmt3->fetchAll();
 } catch (PDOException $e) {
     error_log("Error fetching recent transactions: " . $e->getMessage());
     $recent_transactions = [];
@@ -94,7 +136,7 @@ try {
 try {
     $allplanQuery = $conn->prepare("SELECT * FROM investment_plans ORDER BY id ASC");
     $allplanQuery->execute();
-    $stmt1 = $allplanQuery->fetchAll(PDO::FETCH_OBJ);
+    $stmt1 = $allplanQuery->fetchAll();
 } catch (PDOException $e) {
     error_log("Error fetching investment plans: " . $e->getMessage());
     $stmt1 = [];
@@ -103,11 +145,11 @@ try {
 // Calculate earnings per plan
 $total_plan1 = $total_plan2 = $total_plan3 = $percent_plan1 = $percent_plan2 = $percent_plan3 = 0;
 foreach ($stmt1 as $plan1) {
-    $plan_id = $plan1->id;
+    $plan_id = $plan1['id'];
     try {
         $stmt3 = $conn->prepare("SELECT SUM(returns) as total_returns FROM investment WHERE user_id = :user_id AND status = 'completed' AND invest_plan_id = :plan_id");
         $stmt3->execute(['user_id' => $aid, 'plan_id' => $plan_id]);
-        $row3 = $stmt3->fetch(PDO::FETCH_ASSOC);
+        $row3 = $stmt3->fetch();
         ${"total_plan$plan_id"} = $row3['total_returns'] ?? 0;
         ${"percent_plan$plan_id"} = ($total > 0) ? number_format(${"total_plan$plan_id"} * 100 / $total, 0) : 0;
     } catch (PDOException $e) {
@@ -142,6 +184,9 @@ for ($m = 1; $m <= 12; $m++) {
 }
 $invests = json_encode($invests);
 $capital = json_encode($capital);
+
+// Close database connection
+$pdo->close();
 ?>
 
 <?php include('inc/head.php'); ?>
@@ -276,9 +321,9 @@ $capital = json_encode($capital);
                                                 $current_date = new DateTime();
                                                 $index = 0;
                                                 foreach ($row5 as $inv):
-                                                    $start_date = new DateTime($inv->start_date);
-                                                    $end_date = new DateTime($inv->end_date);
-                                                    $is_completed = $inv->status === 'completed';
+                                                    $start_date = new DateTime($inv['start_date']);
+                                                    $end_date = new DateTime($inv['end_date']);
+                                                    $is_completed = $inv['status'] === 'completed';
                                                     $is_running = $end_date > $current_date && !$is_completed;
                                                     $total_duration = $end_date->getTimestamp() - $start_date->getTimestamp();
                                                     $elapsed = $current_date->getTimestamp() - $start_date->getTimestamp();
@@ -288,9 +333,9 @@ $capital = json_encode($capital);
                                                     <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
                                                         <div class="d-flex justify-content-between align-items-center">
                                                             <div>
-                                                                <strong><?= htmlspecialchars($inv->name); ?></strong>
+                                                                <strong><?= htmlspecialchars($inv['name']); ?></strong>
                                                                 <div class="return-info">
-                                                                    <p class="mb-1">Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
+                                                                    <p class="mb-1">Guaranteed Return: <span class="text-primary">$<?= number_format($inv['returns'], 2); ?></span></p>
                                                                     <div class="progress mt-2" style="height: 8px;">
                                                                         <div class="progress-bar bg-success" role="progressbar" 
                                                                              style="width: <?= $progress_percentage ?>%;" 
@@ -306,7 +351,7 @@ $capital = json_encode($capital);
                                                             </div>
                                                             <div class="d-flex align-items-center">
                                                                 <form action="investment-complete.php" method="POST" class="d-inline mr-2">
-                                                                    <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
+                                                                    <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv['invest_id']); ?>">
                                                                     <button type="submit" name="complete" class="btn btn-sm btn-success"
                                                                             <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
                                                                         Complete
@@ -424,11 +469,11 @@ $capital = json_encode($capital);
                                         <tbody>
                                             <?php foreach ($stmt1 as $plan1): ?>
                                                 <tr>
-                                                    <td><?= htmlspecialchars($plan1->name) ?></td>
+                                                    <td><?= htmlspecialchars($plan1['name']) ?></td>
                                                     <?php
                                                     try {
                                                         $stmt2 = $conn->prepare("SELECT capital, returns FROM investment WHERE user_id = :user_id AND invest_plan_id = :plan_id AND status = 'completed'");
-                                                        $stmt2->execute(['user_id' => $aid, 'plan_id' => $plan1->id]);
+                                                        $stmt2->execute(['user_id' => $aid, 'plan_id' => $plan1['id']]);
                                                         $total_invested = 0;
                                                         $total_earned = 0;
                                                         foreach ($stmt2 as $sinv) {
@@ -436,7 +481,7 @@ $capital = json_encode($capital);
                                                             $total_earned += $sinv['returns'];
                                                         }
                                                     } catch (PDOException $e) {
-                                                        error_log("Error fetching investment data for plan {$plan1->id}: " . $e->getMessage());
+                                                        error_log("Error fetching investment data for plan {$plan1['id']}: " . $e->getMessage());
                                                         $total_invested = 0;
                                                         $total_earned = 0;
                                                     }
@@ -490,9 +535,10 @@ $capital = json_encode($capital);
                                 <ul class="list-group custom-list-group mb-n3">
                                     <?php
                                     try {
+                                        $conn = $pdo->open(); // Reopen connection for news
                                         $newQuery = $conn->prepare("SELECT * FROM news ORDER BY id DESC LIMIT 7");
                                         $newQuery->execute();
-                                        $news = $newQuery->rowCount() ? $newQuery->fetchAll(PDO::FETCH_OBJ) : [];
+                                        $news = $newQuery->rowCount() ? $newQuery->fetchAll() : [];
                                         $index = 1;
                                         foreach ($news as $new):
                                             $tag1 = $index == 1 ? "Crypto News" : ($index == 2 ? "Cryptocurrency" : "Bitcoin");
@@ -500,19 +546,20 @@ $capital = json_encode($capital);
                                     ?>
                                         <li class="list-group-item align-items-center d-flex justify-content-between pt-0">
                                             <div class="media">
-                                                <img src="../admin/images/<?= htmlspecialchars($new->photo); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
+                                                <img src="../admin/images/<?= htmlspecialchars($new['photo']); ?>" height="30" class="mr-3 align-self-center rounded" alt="...">
                                                 <div class="media-body align-self-center">
-                                                    <h6 class="m-0"><?= htmlspecialchars(substrwords($new->short_title, 30)); ?></h6>
+                                                    <h6 class="m-0"><?= htmlspecialchars(substrwords($new['short_title'], 30)); ?></h6>
                                                     <p class="mb-0 text-muted"><?= htmlspecialchars($tag1); ?>, <?= htmlspecialchars($tag2); ?></p>
                                                 </div><!--end media body-->
                                             </div>
                                             <div class="align-self-center">
-                                                <a target="_blank" href="../news-detail.php?id=<?= htmlspecialchars($new->id); ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
+                                                <a target="_blank" href="../news-detail.php?id=<?= htmlspecialchars($new['id']); ?>&title=<?= htmlspecialchars($new['slug']); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
                                             </div>
                                         </li>
                                     <?php
                                         $index++;
                                         endforeach;
+                                        $pdo->close();
                                     } catch (PDOException $e) {
                                         error_log("Error fetching news: " . $e->getMessage());
                                     }
@@ -537,14 +584,15 @@ $capital = json_encode($capital);
                                     <div class="activity">
                                         <?php
                                         try {
+                                            $conn = $pdo->open(); // Reopen connection for activity
                                             $stmtact = $conn->prepare("SELECT COUNT(*) AS numrows FROM activity WHERE user_id = :user_id");
                                             $stmtact->execute(['user_id' => $aid]);
-                                            $drowact = $stmtact->fetch(PDO::FETCH_ASSOC);
+                                            $drowact = $stmtact->fetch();
                                             $no_of_act = $drowact['numrows'];
 
                                             $actQuery = $conn->prepare("SELECT * FROM activity WHERE user_id = :user_id ORDER BY act_id DESC LIMIT 6");
                                             $actQuery->execute(['user_id' => $aid]);
-                                            $actrow = $actQuery->rowCount() ? $actQuery->fetchAll(PDO::FETCH_OBJ) : [];
+                                            $actrow = $actQuery->rowCount() ? $actQuery->fetchAll() : [];
 
                                             if ($no_of_act > 0) {
                                                 foreach ($actrow as $act): ?>
@@ -554,10 +602,10 @@ $capital = json_encode($capital);
                                                         </div>
                                                         <div class="activity-info-text">
                                                             <div class="d-flex justify-content-between align-items-center">
-                                                                <p class="text-muted mb-0 font-13 w-75"><span><?= htmlspecialchars($act->category); ?></span>
-                                                                    <?= htmlspecialchars($act->message); ?>
+                                                                <p class="text-muted mb-0 font-13 w-75"><span><?= htmlspecialchars($act['category']); ?></span>
+                                                                    <?= htmlspecialchars($act['message']); ?>
                                                                 </p>
-                                                                <small class="text-muted"><?= htmlspecialchars($act->date_sent); ?></small>
+                                                                <small class="text-muted"><?= htmlspecialchars($act['date_sent']); ?></small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -567,6 +615,7 @@ $capital = json_encode($capital);
                                                     <h5>No Activity Yet</h5>
                                                 </div>
                                             <?php }
+                                            $pdo->close();
                                         } catch (PDOException $e) {
                                             error_log("Error fetching activity: " . $e->getMessage());
                                             ?>
