@@ -1,20 +1,29 @@
-name: 🚀 Deploy Website on Push
+name: Deploy to Namecheap via FTP
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: 🚚 Get Latest Code
-      uses: actions/checkout@v4
-    - name: 📂 Sync Files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: public_html/
-        protocol: ftp  # Use 'ftps
-        port: 21  # Adjust to 21098 for SFTP if needed
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Upload files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}  # Optional: defaults to 21
+          local-dir: ./  # The local directory to upload (root of your repo)
+          server-dir: /public_html/  # The remote directory (adjust if needed)
+          protocol: ftp  # Use 'sftp' if Namecheap server supports it
+          exclude: |
+            **/.git*
+            **/.github/**
+            node_modules/**
+            .gitignore
