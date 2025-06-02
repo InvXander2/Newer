@@ -3,7 +3,7 @@ name: Deploy to Namecheap via FTP
 on:
   push:
     branches:
-      - main  # Trigger deployment on push to the main branch
+      - main
 
 jobs:
   deploy:
@@ -15,13 +15,14 @@ jobs:
       - name: Upload files via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_HOST }}
+          server: ${{ secrets.FTP_HOST }}  # Ensure this matches your secret
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}  # Optional: defaults to 21
-          local-dir: ./  # The local directory to upload (root of your repo)
-          server-dir: /public_html/  # The remote directory (adjust if needed)
-          protocol: ftp  # Use 'sftp' if Namecheap server supports it
+          port: 21
+          local-dir: ./dist/  # Adjust to your project folder
+          server-dir: /public_html/
+          protocol: ftp
+          log-level: verbose  # For debugging
           exclude: |
             **/.git*
             **/.github/**
