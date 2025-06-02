@@ -9,10 +9,6 @@
     $page_title = 'Welcome to the Official Website of '.$settings->siteTitle;
     $page_description = $settings->siteTitle.' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
     include('inc/head.php');
-
-
-   
-
 ?>
 <body>
   <!--========== Preloader ==========-->
@@ -86,7 +82,7 @@
             <div class="cureency-card text-center">
               <h6 class="cureency-card__title text-white">TOTAL PAYOUTS</h6>
               <span class="cureency-card__amount h-font-family font-weight-600 base--color"><?= $total_payout ?> M</span>
-            </div><!-- cureency-card end -->
+            </div><!-- cureency-item end -->
           </div><!-- cureency-item end -->
           <div class="col-lg-3 col-sm-6 cureency-item mb-30">
             <div class="cureency-card text-center">
@@ -108,7 +104,7 @@
               <h2 class="section-title mb-3"><span class="font-weight-normal">About</span> <b class="base--color">Us</b></h2>
               <p>Nexus Insights is an international financial company engaged in investment activities, which are related to trading on financial markets and cryptocurrency exchanges performed by qualified professional traders.</p>
               <p class="mt-4">Our goal is to provide our investors with a reliable source of high income, while minimizing any possible risks and offering a high-quality service, allowing us to automate and simplify the relations between the investors and the trustees. We work towards increasing your profit margin by profitable investment.</p>
-              <a href="about" class="cmn-btn mt-4">MORE INFO</a>
+              <a href="index.php#about" class="cmn-btn mt-4">MORE INFO</a>
             </div><!-- about-content end -->
           </div>
         </div>
@@ -147,7 +143,7 @@
               if ($investment_plan->max_invest >= 100000000) {
                   $max_invest = "Unlimited";
               }else{
-                  $max_invest = "&#36;". number_format($investment_plan->max_invest, 0);
+                  $max_invest = "$". number_format($investment_plan->max_invest, 0);
 
               }
 
@@ -175,7 +171,7 @@
                     <li>For <?= $duration; ?></li>
                     <li>Total <?= $total_rate; ?>% + <span class="badge base--bg text-dark">Capital</span></li>
                   </ul>
-                  <div class="package-card__range mt-5 base--color">&#36;<?= number_format($investment_plan->min_invest, 0); ?> - <?= $max_invest; ?></div>
+                  <div class="package-card__range mt-5 base--color">$<?= number_format($investment_plan->min_invest, 0); ?> - <?= $max_invest; ?></div>
                   <a href="account/investments" class="cmn-btn btn-md mt-4">Invest Now</a>
                 </div><!-- package-card end -->
               </div>
@@ -349,7 +345,7 @@
                   <div class="col-lg-6 mb-30">
                     <label>Profit Amount</label>
                     <span data-bind="out:price, f:currency" data-name="profit" class="form-control base--bg">
-                        <span class="pr-sign">-&nbsp;</span> $<span class="pr-wrap" style="display: none;"><span class="pr">0</span></span>
+                        <span class="pr-sign">- </span> $<span class="pr-wrap" style="display: none;"><span class="pr">0</span></span>
                     </span>
                   </div>
                 </div>
@@ -531,7 +527,7 @@
                   </div>
                   <div class="testimonial-card__client">
                     <div class="thumb">
-                      <img src="assets/images/testimonial/1.jpg" alt="image">
+                      <img src="assets/images/testimonial/1.jpg" loading="lazy" alt="image">
                     </div>
                     <div class="content">
                       <h6 class="name">Henry Taverner</h6>
@@ -554,7 +550,7 @@
                   </div>
                   <div class="testimonial-card__client">
                     <div class="thumb">
-                      <img src="assets/images/testimonial/2.jpg" alt="image">
+                      <img src="assets/images/testimonial/2.jpg" loading="lazy" alt="image">
                     </div>
                     <div class="content">
                       <h6 class="name">Ashton Cambage</h6>
@@ -577,7 +573,7 @@
                   </div>
                   <div class="testimonial-card__client">
                     <div class="thumb">
-                      <img src="assets/images/testimonial/3.jpg" alt="image">
+                      <img src="assets/images/testimonial/3.jpg" loading="lazy" alt="image">
                     </div>
                     <div class="content">
                       <h6 class="name">Jasper Kossak</h6>
@@ -600,7 +596,7 @@
                   </div>
                   <div class="testimonial-card__client">
                     <div class="thumb">
-                      <img src="assets/images/testimonial/4.jpg" alt="image">
+                      <img src="assets/images/testimonial/4.jpg" loading="lazy" alt="image">
                     </div>
                     <div class="content">
                       <h6 class="name">Zohir Khan</h6>
@@ -678,7 +674,7 @@
                               </div>
                             </td>
                             <td data-label="Date"><?= $deposit->trans_date; ?></td>
-                            <td data-label="Amount">&#36; <?= number_format($deposit->amount, 2); ?></td>
+                            <td data-label="Amount">$ <?= number_format($deposit->amount, 2); ?></td>
                             <td data-label="Gateway"><?= $deposit->payment_mode; ?></td>
                           </tr>
 
@@ -728,7 +724,7 @@
                                 </div>
                               </td>
                               <td data-label="Date"><?= $withdrawal->trans_date; ?></td>
-                              <td data-label="Amount">&#36; <?= number_format($withdrawal->amount, 2); ?></td>
+                              <td data-label="Amount">$ <?= number_format($withdrawal->amount, 2); ?></td>
                               <td data-label="Gateway"><?= $withdrawal->payment_mode; ?></td>
                             </tr>
 
@@ -881,42 +877,42 @@
             <div class="payment-slider">
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/1.png" alt="image">
+                  <div class="img-1"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/2.png" alt="image">
+                  <div class="img-2"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/3.png" alt="image">
+                  <div class="img-3"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/4.png" alt="image">
+                  <div class="img-4"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/5.png" alt="image">
+                  <div class="img-5"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/6.png" alt="image">
+                  <div class="img-6"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/7.png" alt="image">
+                  <div class="img-7"></div>
                 </div><!-- brand-item end -->
               </div>
               <div class="single-slide">
                 <div class="brand-item">
-                  <img src="assets/images/brand/8.png" alt="image">
+                  <div class="img-8"></div>
                 </div><!-- brand-item end -->
               </div>
             </div><!-- payment-slider end -->
@@ -958,7 +954,7 @@
                 <div class="col-lg-4 col-md-6 mb-30">
                   <div class="blog-card">
                     <div class="blog-card__thumb">
-                      <img src="admin/images/<?= $new->photo; ?>" alt="image">
+                      <img src="admin/images/<?= $new->photo; ?>" loading="lazy" alt="image">
                     </div>
                     <div class="blog-card__content">
                       <h4 class="blog-card__title mb-3"><a href="news-detail.php?id=<?= $new->id; ?>&title=<?= $new->slug; ?>"><?= substrwords($new->short_title, 50); ?></a></h4>
@@ -1015,6 +1011,4 @@
   </div> <!-- page-wrapper end -->
   <?php include('inc/scripts.php') ?>
   </body>
-
-<!-- Mirrored from template.viserlab.com/hyiplab/demo/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 16 Oct 2021 16:37:40 GMT -->
 </html>
