@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./dist/  # Adjust to your project folder
-          server-dir: /public_html/host
+          server-dir: /public_html/
           protocol: ftp
           log-level: verbose  # For debugging
           exclude: |
