@@ -756,93 +756,92 @@
 
 
     <!-- top investor section start -->
-    <section class="pt-120 pb-120 border-top-1">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-xl-6 col-lg-8 text-center">
-            <div class="section-header">
-              <h2 class="section-title"><span class="font-weight-normal">Our Top</span> <b class="base--color">Investor</b></h2>
-              
-            </div>
-          </div>
-        </div><!-- row end -->
-        <div class="row justify-content-center mb-none-30">
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/11.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Abd Manaf Abbad</h6>
-                <span class="amount f-size-14">Investment - $3,500,000</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/12.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Francisco João</h6>
-                <span class="amount f-size-14">Investment - $3,300,400</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/13.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Wang Li Zhang</h6>
-                <span class="amount f-size-14">Investment - $3,000,000</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/14.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Jack Noah</h6>
-                <span class="amount f-size-14">Investment - $2,800,600</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/15.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Mary Robert</h6>
-                <span class="amount f-size-14">Investment - $1,500,000</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/16.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Oliver Ethan</h6>
-                <span class="amount f-size-14">Investment - $500,000</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/17.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Zhang Liu Chen</h6>
-                <span class="amount f-size-14">Investment - $1,700,450</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
-          <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
-            <div class="investor-card border-radius--5">
-              <div class="investor-card__thumb bg_img background-position-y-top" data-background="assets/images/investor/18.jpg"></div>
-              <div class="investor-card__content">
-                <h6 class="name">Yang Huang</h6>
-                <span class="amount f-size-14">Investment - $850,350</span>
-              </div>
-            </div><!-- investor-card end -->
-          </div>
+<section class="pt-120 pb-120 border-top-1">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-6 col-lg-8 text-center">
+        <div class="section-header">
+          <h2 class="section-title"><span class="font-weight-normal">Our Top</span> <b class="base--color">Investor</b></h2>
         </div>
       </div>
-    </section>
-    <!-- top investor section end -->
+    </div><!-- row end -->
+    <div class="row justify-content-center mb-none-30">
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-11"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Abd Manaf Abbad</h6>
+            <span class="amount f-size-14">Investment - $3,500,000</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-12"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Francisco João</h6>
+            <span class="amount f-size-14">Investment - $3,300,400</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-13"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Wang Li Zhang</h6>
+            <span class="amount f-size-14">Investment - $3,000,000</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-14"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Jack Noah</h6>
+            <span class="amount f-size-14">Investment - $2,800,600</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-15"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Mary Robert</h6>
+            <span class="amount f-size-14">Investment - $1,500,000</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-16"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Oliver Ethan</h6>
+            <span class="amount f-size-14">Investment - $500,000</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-17"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Zhang Liu Chen</h6>
+            <span class="amount f-size-14">Investment - $1,700,450</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+      <div class="col-xl-3 col-lg-4 col-sm-6 mb-30">
+        <div class="investor-card border-radius--5">
+          <div class="investor-card__thumb img-18"></div>
+          <div class="investor-card__content">
+            <h6 class="name">Yang Huang</h6>
+            <span class="amount f-size-14">Investment - $850,350</span>
+          </div>
+        </div><!-- investor-card end -->
+      </div>
+    </div>
+  </div>
+</section>
+<!-- top investor section end -->
 
 
     <!-- cta section start -->
