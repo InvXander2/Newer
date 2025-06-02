@@ -16,5 +16,5 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: public_html/
-        protocol: ftp  # Use 'ftps' for secure FTP if supported by Namecheap
+        protocol: ftp  # Use 'ftps
         port: 21  # Adjust to 21098 for SFTP if needed
