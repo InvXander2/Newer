@@ -1,5 +1,4 @@
 <header class="header">
-      <?php 
       <div class="header__bottom">
         <div class="container">
           <nav class="navbar navbar-expand-xl p-0 align-items-center">
