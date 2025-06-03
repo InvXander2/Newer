@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../session.php'; // Adjust path if session.php is elsewhere
+include __DIR__ . 'session.php'; // Adjust path if session.php is elsewhere
 
 // Debug: Check if $pdo is defined
 if (!isset($pdo) || !($pdo instanceof Database)) {
