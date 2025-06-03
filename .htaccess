@@ -1,5 +1,6 @@
-<IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json
-  AddOutputFilterByType DEFLATE image/svg+xml application/x-font-ttf application/vnd.ms-fontobject font/opentype font/truetype font/woff font/woff2
-  SetOutputFilter DEFLATE
+<IfModule LiteSpeed>
+  SetEnv mod_gzip_on 1
+  <FilesMatch "\.(html|css|js|json|svg|ttf|otf|woff|woff2)$">
+    SetOutputFilter DEFLATE
+  </FilesMatch>
 </IfModule>
