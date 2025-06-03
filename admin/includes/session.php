@@ -1,5 +1,5 @@
 <?php
-	include "../inc/conn.php";
+	include 'includes/conn.php';
 	session_start();
 
 	if(!isset($_SESSION['admin']) || trim($_SESSION['admin']) == ''){
