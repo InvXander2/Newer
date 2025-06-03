@@ -1,7 +1,13 @@
-<IfModule mod_deflate.c>
-  SetOutputFilter DEFLATE
-  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml font/ttf font/otf font/woff font/woff2
-  BrowserMatch ^Mozilla/4 gzip-only-text/html
-  BrowserMatch ^Mozilla/4\.0[678] no-gzip
-  BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
-</IfModule>
+php_value display_errors On
+php_value mbstring.http_input auto
+php_value date.timezone Europe/Rome
+ErrorDocument 404 /404
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^([^.]+)$ $1.php [NC,L]
+#RewriteCond %{HTTPS} off
+#RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#RewriteCond %{HTTP_HOST} !^www.
+#RewriteRule .* https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+php_flag display_errors on
+php_value error_reporting 32767
