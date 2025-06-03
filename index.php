@@ -15,9 +15,6 @@
 
 ?>
 <body>
-  <!--========== Preloader ==========-->
-  <?php include('inc/pre-loader.php'); ?>
-  <!--========== Preloader ==========-->
 
   <!-- scroll-to-top start -->
   <?php include('inc/scroll-to-top.php'); ?>  
