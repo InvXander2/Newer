@@ -1,24 +1,25 @@
 <?php
-	include 'admin/includes/conn.php';
-	session_start();
+    include_once '../inc/conn.php';
+    $pdo = new Database();
 
-	if(isset($_SESSION['admin'])){
-		header('location: admin/home.php');
-	}
+    session_start();
 
-	if(isset($_SESSION['user'])){
-		$conn = $pdo->open();
+    if (isset($_SESSION['admin'])) {
+        header('location: admin/home.php');
+        exit();
+    }
 
-		try{
-			$stmt = $conn->prepare("SELECT * FROM users WHERE id=:id");
-			$stmt->execute(['id'=>$_SESSION['user']]);
-			$user = $stmt->fetch();
-		}
-		catch(PDOException $e){
-			echo "There is some problem in connection: " . $e->getMessage();
-		}
+    if (isset($_SESSION['user'])) {
+        $conn = $pdo->open();
 
-		$pdo->close();
-	}
+        try {
+            $stmt = $conn->prepare("SELECT * FROM users WHERE id = :id");
+            $stmt->execute(['id' => $_SESSION['user']]);
+            $user = $stmt->fetch();
+        } catch (PDOException $e) {
+            echo "There is some problem in connection: " . $e->getMessage();
+        }
 
+        $pdo->close();
+    }
 ?>
