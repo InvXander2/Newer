@@ -86,7 +86,7 @@
 
 <body>
     <!--========== Preloader ==========-->
-  <?php include('inc/pre-loader.php'); ?>
+  
   <!--========== Preloader ==========-->
 
   <!-- scroll-to-top start -->
