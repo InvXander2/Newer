@@ -1,6 +1,6 @@
 <?php
 // Include database connection (remove @ to allow error reporting)
-require_once '../inc/conn.php'; // Use require_once to ensure file is included and stop if it fails
+require_once 'includes/conn.php'; // Use require_once to ensure file is included and stop if it fails
 session_start();
 
 // Redirect admin users to admin dashboard
