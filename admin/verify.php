@@ -1,9 +1,11 @@
 <?php
-include __DIR__ . '/../session.php'; // Adjust path as needed
+include __DIR__ . '/../session.php'; // Adjust path if session.php is elsewhere
 
 // Debug: Check if $pdo is defined
 if (!isset($pdo) || !($pdo instanceof Database)) {
-    die("Error: Database connection not initialized.");
+    $_SESSION['error'] = 'Database connection not initialized';
+    header('location: ../login.php');
+    exit;
 }
 
 // Get PDO connection
@@ -15,7 +17,7 @@ if ($conn === null) {
 }
 
 if (isset($_POST['login'])) {
-    $email = $_POST['email'];
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $password = $_POST['password'];
 
     try {
@@ -41,7 +43,7 @@ if (isset($_POST['login'])) {
             $_SESSION['error'] = 'Email not found';
         }
     } catch (PDOException $e) {
-        error_log("Query failed: " . $e->getMessage()); // Log error instead of echoing
+        error_log("Query failed in verify.php: " . $e->getMessage());
         $_SESSION['error'] = 'An error occurred during login.';
     }
 } else {
