@@ -4,7 +4,7 @@ include 'session.php';
 
 // Initialize PDO connection
 try {
-    $pdo = new PDO("mysql:host=localhost;dbname=your_database", "username", "password");
+    $pdo = new PDO("mysql:host=localhost;dbname=nexuvmvy_nexusinsights", "nexuvmvy_nexusinsights", "Xander24427279");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e) {
     $_SESSION['error'] = 'Connection failed: ' . $e->getMessage();
