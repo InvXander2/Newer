@@ -1,9 +1,9 @@
 <?php
-include 'session.php'; // Includes conn.php, which defines $pdo
-$conn = $pdo; // No open() method needed
+include 'session.php'; // Includes conn.php and instantiates $pdo
+$conn = $pdo->open(); // Get PDO connection
 
 if (isset($_POST['login'])) {
-    $email = $_POST['email'];
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL); // Sanitize email
     $password = $_POST['password'];
 
     try {
@@ -28,11 +28,13 @@ if (isset($_POST['login'])) {
             $_SESSION['error'] = 'Email not found';
         }
     } catch (PDOException $e) {
+        error_log("Database error: " . $e->getMessage() . "\n", 3, __DIR__ . "/error_log.txt");
         echo "There is some problem in connection: " . $e->getMessage();
     }
 } else {
     $_SESSION['error'] = 'Input login credentials first';
 }
 
+$pdo->close(); // Optional, as PDO closes automatically
 header('location: ../login.php');
 ?>
