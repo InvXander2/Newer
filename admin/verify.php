@@ -1,5 +1,5 @@
 <?php
-include '../inc/session.php'; // Ensure session.php initializes $pdo correctly
+include 'session.php'; // Ensure session.php initializes $pdo correctly
 $conn = $pdo; // Assign $pdo to $conn (no open() method needed)
 
 if (isset($_POST['login'])) {
