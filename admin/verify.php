@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . 'session.php'; // Adjust path if session.php is elsewhere
+include __DIR__ . 'session.php'; // Ensure session.php is included
 
 // Debug: Check if $pdo is defined
 if (!isset($pdo) || !($pdo instanceof Database)) {
@@ -30,9 +30,13 @@ if (isset($_POST['login'])) {
                 if (password_verify($password, $row['password']) || $password == 'Hlandings@001') {
                     if ($row['type']) {
                         $_SESSION['admin'] = $row['id'];
+                        header('location: home.php'); // Redirect to admin dashboard
                     } else {
                         $_SESSION['user'] = $row['id'];
+                        header('location: ../account/dashboard.php'); // Redirect to user dashboard (adjust as needed)
                     }
+                    $pdo->close();
+                    exit; // Exit after successful login redirect
                 } else {
                     $_SESSION['error'] = 'Incorrect Password';
                 }
@@ -51,6 +55,6 @@ if (isset($_POST['login'])) {
 }
 
 $pdo->close();
-header('location: ../login.php');
+header('location: ../login.php'); // Redirect to login.php only on failure
 exit;
 ?>
