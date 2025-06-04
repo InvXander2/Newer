@@ -13,7 +13,7 @@
         <script src="plugins/jvectormap/jquery-jvectormap-us-aea-en.js"></script>
         <?php 
 			if ($page_name == 'Dashboard') {
-				include('inc/chartscript.php');
+				include('chartscript.php');
 			}else{
 				echo "";
 			}
