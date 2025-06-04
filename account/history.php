@@ -1,5 +1,5 @@
 <?php
-// session_start() removed to avoid duplicate call, as session.php starts the session
+date_default_timezone_set('UTC'); // Ensure PHP environment uses UTC
 include('../inc/config.php');
 include('../inc/session.php');
 
@@ -20,6 +20,9 @@ if (!isset($_SESSION['user'])) {
 $conn = $pdo->open();
 
 try {
+    // Set database session timezone to UTC (optional, for consistency)
+    $conn->exec("SET time_zone = '+00:00';");
+
     // Query all transactions for the user, sorted by trans_id DESC
     $stmt = $conn->prepare("SELECT trans_id, trans_date, type, amount, remark, balance 
                             FROM transaction 
@@ -124,8 +127,9 @@ $pdo->close();
                                                             <tr>
                                                                 <td>TXID<?= $transaction->trans_id; ?></td>
                                                                 <td><?php 
-                                                                    // Display date in UTC
-                                                                    $date = new DateTime($transaction->trans_date, new DateTimeZone('UTC'));
+                                                                    // Parse trans_date as UTC+2 and convert to UTC
+                                                                    $date = new DateTime($transaction->trans_date, new DateTimeZone('Etc/GMT-2')); // UTC+2
+                                                                    $date->setTimezone(new DateTimeZone('UTC')); // Convert to UTC
                                                                     echo htmlspecialchars($date->format('Y-m-d h:i:s A'));
                                                                 ?></td>
                                                                 <td><span class="badge badge-boxed badge-outline-<?php echo $transaction->type == '1' ? 'success' : 'danger'; ?>">
