@@ -36,7 +36,7 @@
           <div class="col-xl-5 col-lg-8">
             <div class="hero__content">
               <h2 class="hero__title"><span class="text-white font-weight-normal">Invest for the Future on our Stable Platform</span> <b class="base--color">and Make Consistent Returns</b></h2>
-              <p class="text-white f-size-18 mt-3">Invest with Nexus Insights Limited, a Professional and Reliable Company. We provide you with the most necessary features that will make your experience better. Not only do we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
+              <p class="text-white f-size-18 mt-3">Invest with Nexus Insights, a Professional and Reliable Company. We provide you with the most necessary features that will make your experience better. Not only do we guarantee the fastest and the most exciting returns on your investments, but we also guarantee the security of your investment.</p>
               <a href="register" class="cmn-btn text-uppercase font-weight-600 mt-4">Sign Up</a>
             </div>
           </div>
@@ -120,7 +120,7 @@
           <div class="col-lg-6 text-center">
             <div class="section-header">
               <h2 class="section-title"><span class="font-weight-normal">Investment</span> <b class="base--color">Plans</b></h2>
-              <p>To make a solid investment, you have to know where you are investing. Find a plan which is best for you.</p>
+              <p>Smart investing starts with understanding your options, choose a strategy that aligns with your goals.</p>
             </div>
           </div>
         </div><!-- row end -->
@@ -210,7 +210,7 @@
                 </div>
                 <h4 class="choose-card__title base--color">Legal Company</h4>
               </div>
-              <p>Our company conducts absolutely legal activities in the legal field. We are certified to operate investment business, we are legal and safe.</p>
+              <p>Our company operates within the legal framework, offering legitimate investment services with proper certification. We prioritize transparency, security, and compliance, ensuring a safe experience for our clients.</p>
             </div><!-- choose-card end -->
           </div>
           <div class="col-xl-4 col-md-6 mb-30">
@@ -869,7 +869,7 @@
           <div class="col-lg-6 text-center">
             <div class="section-header">
               <h2 class="section-title"><span class="font-weight-normal">Payment We</span> <b class="base--color">Accept</b></h2>
-              <p>We accept all major cryptocurrencies and fiat payment methods to make your investment process easier with our platform.</p>
+              <p>We support multiple major cryptocurrencies for seamless deposits and withdrawals.</p>
             </div>
           </div>
         </div><!-- row end -->
