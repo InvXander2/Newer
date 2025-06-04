@@ -1,10 +1,10 @@
 <?php
-$servername = "sql201.infinityfree.com";
+$servername = "localhost";
 // Enter your MySQL username below(default=root)
-$username = "if0_39045086";
+$username = "nexuvmvy_nexusinsights";
 // Enter your MySQL password below
-$password = "Xgyuc8McZpz8Rr";
-$dbname = "if0_39045086_hyip_db";
+$password = "Xander24427279";
+$dbname = "nexuvmvy_nexusinsights";
 
 // Create connection
 $conne = new mysqli($servername, $username, $password, $dbname);
