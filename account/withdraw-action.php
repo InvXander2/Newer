@@ -7,6 +7,9 @@ use PHPMailer\PHPMailer\Exception;
 include 'inc/session.php';
 include '../admin/includes/slugify.php';
 
+// Add $page_name to prevent errors if scripts.php is included
+$page_name = 'Withdrawals';
+
 $user_id = $_SESSION['user'];
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE id=:user_id");
@@ -56,20 +59,16 @@ if (
         require '../vendor/autoload.php';
         $mail = new PHPMailer(true);
         try {
-            // SMTP settings
             $mail->isSMTP();
-            $mail->Host = $smtpConfig['nexusinsights.it.com'];
+            $mail->Host = $sweet_url; // Using $sweet_url as requested (nexusinsights.it.com)
             $mail->SMTPAuth = true;
-            $mail->Username = $smtpConfig['info@nexusinsights.it.com'];
-            $mail->Password = $smtpConfig['Xander24427279'];
-            $mail->SMTPSecure = $smtpConfig['ssl'];
-            $mail->Port = $smtpConfig['465'];
+            $mail->Username = $smtpConfig['username']; // info@nexusinsights.it.com
+            $mail->Password = $smtpConfig['password']; // your-email-password
+            $mail->SMTPSecure = $smtpConfig['secure']; // ssl
+            $mail->Port = $smtpConfig['port']; // 465
 
-            // Sender and recipient
             $mail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
             $mail->addAddress($investor_email, $investor_name);
-
-            // Email content
             $mail->isHTML(true);
             $mail->Subject = $settings->siteTitle . ' Withdrawal Request';
             $mail->Body = "
@@ -80,11 +79,9 @@ if (
                     <p>You will be contacted shortly regarding the next steps.</p>
                     <p>Thank you for choosing " . htmlspecialchars($settings->siteTitle) . "!</p>
                 </div>";
-
             $mail->send();
             $_SESSION['success'] = 'Your request has been sent and you will be contacted on how to proceed shortly';
         } catch (Exception $e) {
-            // Log PHPMailer error
             error_log("PHPMailer error in withdrawal request: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
             $_SESSION['success'] = 'Your request has been sent and will be processed shortly';
         }
@@ -92,20 +89,16 @@ if (
         // Email to admin
         $adminMail = new PHPMailer(true);
         try {
-            // SMTP settings (same as above)
             $adminMail->isSMTP();
-            $adminMail->Host = $smtpConfig['nexusinsights.it.com'];
+            $adminMail->Host = $sweet_url; // Using $sweet_url as requested
             $adminMail->SMTPAuth = true;
-            $adminMail->Username = $smtpConfig['info@nexusinsights.it.com'];
-            $adminMail->Password = $smtpConfig['Xander24427279'];
-            $adminMail->SMTPSecure = $smtpConfig['ssl'];
-            $adminMail->Port = $smtpConfig['465'];
+            $adminMail->Username = $smtpConfig['username'];
+            $adminMail->Password = $smtpConfig['password'];
+            $adminMail->SMTPSecure = $smtpConfig['secure'];
+            $adminMail->Port = $smtpConfig['port'];
 
-            // Sender and recipient
             $adminMail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
             $adminMail->addAddress($settings->email, 'Admin');
-
-            // Email content
             $adminMail->isHTML(true);
             $adminMail->Subject = 'New Withdrawal Request - ' . $settings->siteTitle;
             $adminMail->Body = "
@@ -118,7 +111,6 @@ if (
                     <p>Payment Info: " . htmlspecialchars($payment_info) . "</p>
                     <p>Please log in to the admin panel to review this request.</p>
                 </div>";
-
             $adminMail->send();
         } catch (Exception $e) {
             error_log("PHPMailer error in admin notification: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
