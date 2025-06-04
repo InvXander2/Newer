@@ -1,238 +1,130 @@
 <?php
-    include('../inc/config.php');
-    include('../inc/session.php');
+include('../inc/config.php');
 
-    $page_name = 'Withdrawals';
-    $page_parent = '';
-    $page_title = 'Welcome to the Official Website of ' . htmlspecialchars($settings->siteTitle);
-    $page_description = htmlspecialchars($settings->siteTitle) . ' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-    include('inc/head.php');
+include 'inc/session.php';
+include '../admin/includes/slugify.php';
 
-    $id = $_SESSION['user'];
+// Add $page_name to prevent errors if scripts.php is included
+$page_name = 'Withdrawals';
 
-    if (!isset($_SESSION['user'])) {
-        header('location: ../login.php');
-        exit();
-    }
+$user_id = $_SESSION['user'];
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE id=:user_id");
+$stmt->execute(['user_id' => $user_id]);
+$row = $stmt->fetch();
+$investor_email = $row['email'];
+$investor_name = $row['full_name'];
+
+if (
+    isset($_POST['withdrawNow']) &&
+    !empty($_POST['withdrawal_amount']) &&
+    !empty($_POST['payment_mode']) &&
+    !empty($_POST['payment_info'])
+) {
+    $withdrawal_amount = $_POST['withdrawal_amount'];
+    $payment_mode = $_POST['payment_mode'];
+    $payment_info = $_POST['payment_info'];
+    $status = 'pending';
 
     $conn = $pdo->open();
+    $trans_date = date('Y-m-d');
+    $act_time = date('Y-m-d h:i A');
 
-    // Fetch withdrawal requests
     try {
-        $withdrawal_madeQuery = $conn->prepare("SELECT * FROM request WHERE user_id = :user_id AND type = 2 ORDER BY request_id DESC");
-        $withdrawal_madeQuery->execute(['user_id' => $id]);
-        $withdrawal_made = $withdrawal_madeQuery->rowCount() ? $withdrawal_madeQuery->fetchAll(PDO::FETCH_OBJ) : [];
+        // Insert withdrawal request
+        $stmt = $conn->prepare("INSERT INTO request (user_id, trans_date, type, amount, payment_mode, payment_info, status) VALUES (:user_id, :trans_date, :type, :amount, :payment_mode, :payment_info, :status)");
+        $stmt->execute([
+            'user_id' => $user_id,
+            'trans_date' => $trans_date,
+            'type' => 2,
+            'amount' => $withdrawal_amount,
+            'payment_mode' => $payment_mode,
+            'payment_info' => $payment_info,
+            'status' => $status
+        ]);
+
+        // Log activity
+        $activity = $conn->prepare("INSERT INTO activity (user_id, message, category, date_sent) VALUES (:user_id, :message, :category, :start_date)");
+        $activity->execute([
+            'user_id' => $user_id,
+            'message' => 'You made a withdrawal request of $' . $withdrawal_amount,
+            'category' => 'Withdrawal Request',
+            'start_date' => $act_time
+        ]);
+
+        // Email to user
+        require '../vendor/autoload.php';
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = $sweet_url; // Using $sweet_url as requested (nexusinsights.it.com)
+            $mail->SMTPAuth = true;
+            $mail->Username = $smtpConfig['username']; // info@nexusinsights.it.com
+            $mail->Password = $smtpConfig['password']; // your-email-password
+            $mail->SMTPSecure = $smtpConfig['secure']; // ssl
+            $mail->Port = $smtpConfig['port']; // 465
+
+            $mail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
+            $mail->addAddress($investor_email, $investor_name);
+            $mail->isHTML(true);
+            $mail->Subject = $settings->siteTitle . ' Withdrawal Request';
+            $mail->Body = "
+                <div>
+                    <h2>Withdrawal Request Submitted</h2>
+                    <p>Dear " . htmlspecialchars($investor_name) . ",</p>
+                    <p>Your withdrawal request of <strong>$" . htmlspecialchars($withdrawal_amount) . "</strong> has been submitted and is currently being reviewed.</p>
+                    <p>You will be contacted shortly regarding the next steps.</p>
+                    <p>Thank you for choosing " . htmlspecialchars($settings->siteTitle) . "!</p>
+                </div>";
+            $mail->send();
+            $_SESSION['success'] = 'Your request has been sent and you will be contacted on how to proceed shortly';
+        } catch (Exception $e) {
+            error_log("PHPMailer error in withdrawal request: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+            $_SESSION['success'] = 'Your request has been sent and will be processed shortly';
+        }
+
+        // Email to admin
+        $adminMail = new PHPMailer(true);
+        try {
+            $adminMail->isSMTP();
+            $adminMail->Host = $sweet_url; // Using $sweet_url as requested
+            $adminMail->SMTPAuth = true;
+            $adminMail->Username = $smtpConfig['username'];
+            $adminMail->Password = $smtpConfig['password'];
+            $adminMail->SMTPSecure = $smtpConfig['secure'];
+            $adminMail->Port = $smtpConfig['port'];
+
+            $adminMail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
+            $adminMail->addAddress($settings->email, 'Admin');
+            $adminMail->isHTML(true);
+            $adminMail->Subject = 'New Withdrawal Request - ' . $settings->siteTitle;
+            $adminMail->Body = "
+                <div>
+                    <h2>New Withdrawal Request</h2>
+                    <p>User: " . htmlspecialchars($investor_name) . "</p>
+                    <p>Email: " . htmlspecialchars($investor_email) . "</p>
+                    <p>Amount: $" . htmlspecialchars($withdrawal_amount) . "</p>
+                    <p>Payment Mode: " . htmlspecialchars($payment_mode) . "</p>
+                    <p>Payment Info: " . htmlspecialchars($payment_info) . "</p>
+                    <p>Please log in to the admin panel to review this request.</p>
+                </div>";
+            $adminMail->send();
+        } catch (Exception $e) {
+            error_log("PHPMailer error in admin notification: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+        }
+
     } catch (PDOException $e) {
-        error_log("Error fetching withdrawal requests: " . $e->getMessage());
-        $withdrawal_made = [];
+        $_SESSION['error'] = $e->getMessage();
+        error_log("Database error in withdrawal request: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
     }
 
-    // Fetch payment methods
-    try {
-        $payment_methodQuery = $conn->prepare("SELECT * FROM payment_methods");
-        $payment_methodQuery->execute();
-        $payment_method = $payment_methodQuery->rowCount() ? $payment_methodQuery->fetchAll(PDO::FETCH_OBJ) : [];
-    } catch (PDOException $e) {
-        error_log("Error fetching payment methods: " . $e->getMessage());
-        $payment_method = [];
-    }
+    $pdo->close();
+} else {
+    $_SESSION['error'] = 'Make sure all fields are filled';
+}
 
-    // Fetch first payment method
-    try {
-        $payment_completeQuery = $conn->prepare("SELECT * FROM payment_methods ORDER BY id ASC LIMIT 1");
-        $payment_completeQuery->execute();
-        $payment_complete = $payment_completeQuery->rowCount() ? $payment_completeQuery->fetchAll(PDO::FETCH_OBJ) : [];
-    } catch (PDOException $e) {
-        error_log("Error fetching payment complete method: " . $e->getMessage());
-        $payment_complete = [];
-    }
-
-    // Fetch withdrawal history
-    try {
-        $withdrawalHistoryQuery = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id AND type = 2 ORDER BY trans_id DESC");
-        $withdrawalHistoryQuery->execute(['user_id' => $id]);
-        $withdrawalHistory = $withdrawalHistoryQuery->rowCount() ? $withdrawalHistoryQuery->fetchAll(PDO::FETCH_OBJ) : [];
-    } catch (PDOException $e) {
-        error_log("Error fetching withdrawal history: " . $e->getMessage());
-        $withdrawalHistory = [];
-    }
+header('location: withdrawals.php');
 ?>
-
-<body class="dark-topbar">
-    <!-- Left Sidenav -->
-    <?php include('inc/sidebar.php'); ?>
-    <!-- end left-sidenav-->
-    
-    <div class="page-wrapper">
-        <!-- Top Bar Start -->
-        <?php include('inc/header.php'); ?>
-        <!-- Top Bar End -->
-
-        <!-- Page Content-->
-        <div class="page-content">
-            <div class="container-fluid">
-                <!-- Page-Title -->
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="page-title-box">
-                            <div class="row">
-                                <div class="col">
-                                    <h4 class="page-title">Withdrawals</h4>
-                                </div><!--end col-->
-                                <div class="col-auto align-self-center">
-                                    <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
-                                        <span class="day-name" id="Day_Name">Today:</span> 
-                                        <span class="" id="Select_date">
-                                            <?php
-                                                // Display today's date in UTC
-                                                $today = new DateTime('now', new DateTimeZone('UTC'));
-                                                echo $today->format('M d, Y');
-                                            ?>
-                                        </span>
-                                        <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
-                                    </a>
-                                </div><!--end col-->  
-                            </div><!--end row-->                                                              
-                        </div><!--end page-title-box-->
-                    </div><!--end col-->
-                </div><!--end row-->
-                <!-- end page title end breadcrumb -->
-
-                <?php
-                    if (isset($_SESSION['error'])) {
-                        echo "
-                            <div class='alert alert-danger border-0' role='alert'>
-                                <i class='la la-skull-crossbones alert-icon text-danger align-self-center font-30 mr-3'></i>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                                    <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
-                                </button>
-                                <strong>Oh snap!</strong> " . htmlspecialchars($_SESSION['error']) . "
-                            </div>
-                        ";
-                        unset($_SESSION['error']);
-                    }
-                    if (isset($_SESSION['success'])) {
-                        echo "
-                            <div class='alert alert-success border-0' role='alert'>
-                                <i class='mdi mdi-check-all alert-icon'></i>
-                                <button type='button' class='close' data-dismiss='alert' aria-label='Close'>
-                                    <span aria-hidden='true'><i class='mdi mdi-close align-middle font-16'></i></span>
-                                </button>
-                                <strong>Well done!</strong> " . htmlspecialchars($_SESSION['success']) . "
-                            </div>
-                        ";
-                        unset($_SESSION['success']);
-                    }
-                ?>
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Withdrawal Requests</h4>
-                                <p class="text-muted mb-0">All your withdrawal requests in one place. To withdraw funds, click the <b>Make a Withdrawal</b> button below.</p>
-                                <a href="withdrawals-remove-fund" style="width: 20%" type="button" class="btn btn-primary btn-square btn-outline-dashed waves-effect waves-light mt-3 mb-3">Withdraw Funds</a>
-                            </div><!--end card-header--> 
-                            <div class="card-body">
-                                <div class="card">
-                                    <div class="card-body"> 
-                                        <?php if (!empty($withdrawal_made)) { ?>
-                                            <table class="table mb-0">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Request ID</th>
-                                                        <th>Date & Time (UTC)</th>
-                                                        <th>Amount</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($withdrawal_made as $withdraw_now) : ?>
-                                                        <tr>
-                                                            <td>DIDTXCRT<?= htmlspecialchars($withdraw_now->request_id); ?></td>
-                                                            <td>
-                                                                <?php
-                                                                    // Convert trans_date from UTC+2 to UTC
-                                                                    $trans_date = new DateTime($withdraw_now->trans_date, new DateTimeZone('Europe/Paris'));
-                                                                    $trans_date->setTimezone(new DateTimeZone('UTC'));
-                                                                    echo htmlspecialchars($trans_date->format('Y-m-d g:i A'));
-                                                                ?>
-                                                            </td>
-                                                            <td>$<?= number_format($withdraw_now->amount, 2); ?></td>
-                                                            <td><span class="badge badge-boxed badge-outline-<?php echo $withdraw_now->status == 'pending' ? 'info' : ($withdraw_now->status == 'cancelled' ? 'danger' : 'success'); ?>"><?= htmlspecialchars($withdraw_now->status); ?></span></td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table><!--end /table-->
-                                        <?php } else { ?>
-                                            <p>No Request Made</p>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div><!--end card-body-->
-                        </div><!--end card-->
-                    </div><!--end col-->
-                </div><!--end row-->
-
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Withdrawal History</h4>
-                                <p class="text-muted mb-0">All your withdrawals in one place.</p>
-                            </div><!--end card-header--> 
-                            <div class="card-body">
-                                <div class="card">
-                                    <div class="card-body"> 
-                                        <?php if (!empty($withdrawalHistory)) { ?>
-                                            <table class="table mb-0">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Request ID</th>
-                                                        <th>Date & Time (UTC)</th>
-                                                        <th>Amount</th>
-                                                        <th>Remark</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php foreach ($withdrawalHistory as $row) : ?>
-                                                        <tr>
-                                                            <td>DIDTXCRT<?= htmlspecialchars($row->trans_id); ?></td>
-                                                            <td>
-                                                                <?php
-                                                                    // Convert trans_date from UTC+2 to UTC
-                                                                    $trans_date = new DateTime($row->trans_date, new DateTimeZone('Europe/Paris'));
-                                                                    $trans_date->setTimezone(new DateTimeZone('UTC'));
-                                                                    echo htmlspecialchars($trans_date->format('Y-m-d g:i A'));
-                                                                ?>
-                                                            </td>
-                                                            <td>$<?= number_format($row->amount, 2); ?></td>
-                                                            <td><?= htmlspecialchars($row->remark); ?></td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                            </table><!--end /table-->
-                                        <?php } else { ?>
-                                            <p>You have made no withdrawal</p>
-                                        <?php } ?>
-                                    </div>
-                                </div>
-                            </div><!--end card-body-->
-                        </div><!--end card-->
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!-- container -->
-
-            <?php include('inc/footer.php'); ?><!--end footer-->
-        </div>
-        <!-- end page content -->
-    </div>
-    <!-- end page-wrapper -->
-
-    <?php 
-        $pdo->close();
-        include('inc/scripts.php'); 
-    ?>
-</body>
-</html>
