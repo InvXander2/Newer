@@ -37,6 +37,7 @@ try {
 }
 
 $page_title = 'Edit Profile';
+$page_name = 'Edit Profile'; // Define $page_name for scripts.php
 include('inc/head.php');
 ?>
 
