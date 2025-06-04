@@ -11,3 +11,27 @@ RewriteRule ^([^.]+)$ $1.php [NC,L]
 #RewriteRule .* https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 php_flag display_errors on
 php_value error_reporting 32767
+
+<IfModule mod_deflate.c>
+    # Compress HTML, CSS, JavaScript, Text, XML, and fonts
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE font/otf
+    AddOutputFilterByType DEFLATE font/ttf
+    AddOutputFilterByType DEFLATE image/svg+xml
+
+    # Set compression level (1-9, 6 is a good balance)
+    DeflateCompressionLevel 6
+
+    # Handle browsers that don't support compression
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+</IfModule>
