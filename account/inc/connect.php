@@ -1,5 +1,5 @@
 <?php
-$servername = "https://server198.web-hosting.com"; // Correct host
+$servername = "localhost"; // Correct host
 $username = "nexuvmvy_nexusinsights";              // Correct user
 $password = "Xander24427279";            // Correct password
 $dbname = "nexuvmvy_nexusinsights";        // Correct database name
