@@ -20,11 +20,11 @@ if (!isset($_SESSION['user'])) {
 $conn = $pdo->open();
 
 try {
-    // Query all transactions for the user with secondary sort by trans_id
+    // Query all transactions for the user, sorted by trans_id DESC
     $stmt = $conn->prepare("SELECT trans_id, trans_date, type, amount, remark, balance 
                             FROM transaction 
                             WHERE user_id = ? 
-                            ORDER BY trans_date DESC, trans_id DESC");
+                            ORDER BY trans_id DESC");
     $stmt->execute([$id]);
     $transactions = $stmt->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $e) {
@@ -112,7 +112,7 @@ $pdo->close();
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Transaction ID</th>
-                                                            <th>Date & Time (UTC, Sorted Newest First)</th>
+                                                            <th>Date & Time (UTC)</th>
                                                             <th>Type</th>
                                                             <th>Amount</th>
                                                             <th>Remark</th>
