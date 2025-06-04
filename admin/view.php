@@ -1,5 +1,5 @@
 <?php
-  include 'includes/session.php'; 
+  include '../inc/session.php'; 
   include "../account/connect.php";
 
   $id = $_GET['i_id'];

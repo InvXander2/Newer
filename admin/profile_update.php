@@ -1,5 +1,5 @@
 <?php
-	include 'includes/session.php';
+	include '../inc/session.php';
 
 	if(isset($_GET['return'])){
 		$return = $_GET['return'];

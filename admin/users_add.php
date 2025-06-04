@@ -1,5 +1,5 @@
 <?php
-	include 'includes/session.php';
+	include '../inc/session.php';
 
 	if(isset($_POST['add'])){
 		$full_name = $_POST['full_name'];

@@ -1,5 +1,5 @@
 <?php
-	include 'includes/session.php';
+	include '../inc/session.php';
 	include 'includes/slugify.php';
 
 	if(isset($_POST['add'])){

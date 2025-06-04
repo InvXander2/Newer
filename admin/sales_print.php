@@ -1,5 +1,5 @@
 <?php
-	include 'includes/session.php';
+	include '../inc/session.php';
 
 	function generateRow($from, $to, $conn){
 		$contents = '';
