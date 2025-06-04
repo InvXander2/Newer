@@ -90,7 +90,7 @@
 
 				$_SESSION['success'] = 'Your request has been sent and you will be contacted on how to proceed shortly';
 			} catch (Exception $e) {
-				$_SESSION['success'] = 'Your request has been sent. Please proceed to pay and invest';
+				$_SESSION['success'] = 'Your request has been sent and will be processed shortly';
 			}
 		} catch(PDOException $e){
 			$_SESSION['error'] = $e->getMessage();
