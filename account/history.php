@@ -126,7 +126,7 @@ $pdo->close();
                                                                 <td><?php 
                                                                     // Display date in UTC
                                                                     $date = new DateTime($transaction->trans_date, new DateTimeZone('UTC'));
-                                                                    echo htmlspecialchars($date->format('Y-m-d h:i:s A')) . ' UTC';
+                                                                    echo htmlspecialchars($date->format('Y-m-d h:i:s A'));
                                                                 ?></td>
                                                                 <td><span class="badge badge-boxed badge-outline-<?php echo $transaction->type == '1' ? 'success' : 'danger'; ?>">
                                                                     <?php echo $transaction->type == '1' ? 'Deposit' : 'Withdrawal/Investment'; ?>
