@@ -51,18 +51,20 @@
         if ($row1) {
             $transaction = $row1["amount"];
             $type = ($row1["type"] == 1) ? "credit" : "debit";
-            $time = strtotime($row1["trans_date"]);
-            $sanitized_time = date("Y-m-d, g:i A", $time);
+            // Convert trans_date from UTC+2 to UTC
+            $time = new DateTime($row1["trans_date"], new DateTimeZone('Europe/Paris'));
+            $time->setTimezone(new DateTimeZone('UTC'));
+            $sanitized_time = $time->format("Y-m-d, g:i A") . ' (UTC)';
         } else {
             $transaction = 0;
             $type = "";
-            $sanitized_time = "";
+            $sanitized_time = "N/A";
         }
     } catch (PDOException $e) {
         error_log("Error fetching latest transaction: " . $e->getMessage());
         $transaction = 0;
         $type = "";
-        $sanitized_time = "";
+        $sanitized_time = "N/A";
     }
 
     // Fetch second latest transaction for loss/gain calculation
@@ -219,7 +221,14 @@
                                 <div class="col-auto align-self-center">
                                     <a href="#" class="btn btn-sm btn-outline-primary" id="Dash_Date">
                                         <span class="day-name" id="Day_Name">Today:</span> 
-                                        <span class="" id="Select_date"><?php echo date('M d, Y, g:i A T', strtotime('2025-06-01 13:54:00 +02:00')); ?></span>
+                                        <span class="" id="Select_date">
+                                            <?php
+                                                // Convert hardcoded CEST time to UTC
+                                                $dash_date = new DateTime('2025-06-01 13:54:00', new DateTimeZone('Europe/Paris'));
+                                                $dash_date->setTimezone(new DateTimeZone('UTC'));
+                                                echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
+                                            ?>
+                                        </span>
                                         <i data-feather="calendar" class="align-self-center icon-xs ml-1"></i>
                                     </a>
                                 </div><!--end col-->
@@ -259,7 +268,7 @@
                                         <div class="row d-flex justify-content-center">
                                             <div class="col">
                                                 <p class="text-dark mb-0 font-weight-semibold">Wallet Balance</p>
-                                                <h3 class="m-0">$ <?php echo number_format_short($row1["balance"] ?? 0, 2); ?></h3>
+                                                <h3 class="m-0">$<?php echo number_format_short($row1["balance"] ?? 0, 2); ?></h3>
                                                 <?php if ($loss_gain == "Increase"): ?>
                                                     <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i><?= number_format($percent_loss_gain, 1, '.', '') ?>%</span> <?= $loss_gain ?></p>
                                                 <?php elseif ($loss_gain == "Decrease"): ?>
@@ -288,11 +297,13 @@
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
                                                         <?php
-                                                        $current_date = new DateTime();
+                                                        $current_date = new DateTime('now', new DateTimeZone('UTC'));
                                                         $index = 0;
                                                         foreach ($row5 as $inv):
-                                                            $start_date = new DateTime($inv->start_date);
-                                                            $end_date = new DateTime($inv->end_date);
+                                                            $start_date = new DateTime($inv->start_date, new DateTimeZone('Europe/Paris'));
+                                                            $start_date->setTimezone(new DateTimeZone('UTC'));
+                                                            $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
+                                                            $end_date->setTimezone(new DateTimeZone('UTC'));
                                                             $is_completed = $inv->status === 'completed';
                                                             $is_running = $end_date > $current_date && !$is_completed;
 
@@ -360,7 +371,7 @@
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold">Completed Investments</p>
                                                     <h3 class="m-0"><?= $no_of_inv_comp; ?></h3>
-                                                    <h5 class="m-0">$ <?= number_format_short($total, 2); ?></h5>
+                                                    <h5 class="m-0">$<?= number_format_short($total, 2); ?></h5>
                                                     <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i></span> Total Amount Earned</p>
                                                 </div>
                                                 <div class="col-auto align-self-center">
@@ -429,8 +440,8 @@
                                                                 $total_earned = 0;
                                                             }
                                                             ?>
-                                                            <td class="text-right"><?= number_format($total_invested, 2) ?></td>
-                                                            <td class="text-right"><?= number_format($total_earned, 2) ?></td>
+                                                            <td class="text-right">$<?= number_format($total_invested, 2) ?></td>
+                                                            <td class="text-right">$<?= number_format($total_earned, 2) ?></td>
                                                         </tr>
                                                     <?php endforeach; ?>
                                                 </tbody>
@@ -507,7 +518,12 @@
                                             $actrow = $actQuery->rowCount() ? $actQuery->fetchAll(PDO::FETCH_OBJ) : [];
 
                                             if ($no_of_act > 0) {
-                                                foreach ($actrow as $act): ?>
+                                                foreach ($actrow as $act):
+                                                    // Convert date_sent from UTC+2 to UTC
+                                                    $act_time = new DateTime($act->date_sent, new DateTimeZone('Europe/Paris'));
+                                                    $act_time->setTimezone(new DateTimeZone('UTC'));
+                                                    $formatted_act_time = $act_time->format('Y-m-d g:i A') . ' (UTC)';
+                                                ?>
                                                     <div class="activity-info">
                                                         <div class="icon-info-activity">
                                                             <i class="mdi mdi-clock-outline bg-soft-primary"></i>
@@ -517,7 +533,7 @@
                                                                 <p class="text-muted mb-0 font-13 w-75"><span><?= htmlspecialchars($act->category); ?></span>
                                                                     <?= htmlspecialchars($act->message); ?>
                                                                 </p>
-                                                                <small class="text-muted"><?= htmlspecialchars($act->date_sent); ?></small>
+                                                                <small class="text-muted"><?= htmlspecialchars($formatted_act_time); ?></small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -582,10 +598,15 @@
             $stmt->execute(['user_id' => $id, 'month' => $m, 'year' => $year]);
             $total = $total2 = 0;
             foreach ($stmt as $srow) {
-                $amount = $srow['returns'] - $srow['capital'];
-                $total += $amount;
-                $amount2 = $srow['capital'];
-                $total2 += $amount2;
+                // Convert end_date from UTC+2 to UTC for MONTH and YEAR comparison
+                $end_date = new DateTime($srow['end_date'], new DateTimeZone('Europe/Paris'));
+                $end_date->setTimezone(new DateTimeZone('UTC'));
+                if ($end_date->format('m') == $m && $end_date->format('Y') == $year) {
+                    $amount = $srow['returns'] - $srow['capital'];
+                    $total += $amount;
+                    $amount2 = $srow['capital'];
+                    $total2 += $amount2;
+                }
             }
             array_push($invests, round($total, 2));
             array_push($capital, round($total2));
