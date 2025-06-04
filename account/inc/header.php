@@ -68,23 +68,6 @@ try {
         </ul>
 
         <ul class="list-unstyled topbar-nav mb-0" style="display: flex; align-items: center; margin-left: auto;">  
-            <li class="dropdown hide-phone">
-                <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
-                    aria-haspopup="false" aria-expanded="false">
-                    <i data-feather="search" class="topbar-icon"></i>
-                </a>
-                
-                <div class="dropdown-menu dropdown-menu-right dropdown-lg p-0">
-                    <!-- Top Search Bar -->
-                    <div class="app-search-topbar">
-                        <form action="#" method="get">
-                            <input type="search" name="search" class="from-control top-search mb-0" placeholder="Type text...">
-                            <button type="submit"><i class="ti-search"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </li>                      
-
             <li class="dropdown notification-list">
                 <a class="nav-link dropdown-toggle arrow-none waves-light waves-effect" data-toggle="dropdown" href="#" role="button"
                     aria-haspopup="false" aria-expanded="false">
