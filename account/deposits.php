@@ -204,7 +204,7 @@
                                                                     // Convert trans_date from UTC+2 to UTC
                                                                     $trans_date = new DateTime($row->trans_date, new DateTimeZone('Europe/Paris'));
                                                                     $trans_date->setTimezone(new DateTimeZone('UTC'));
-                                                                    echo htmlspecialchars($trans_date->format('Y-m-d g:i A') . ' (UTC)');
+                                                                    echo htmlspecialchars($trans_date->format('Y-m-d g:i A'));
                                                                 ?>
                                                             </td>
                                                             <td>$<?= number_format($row->amount, 2); ?></td>
