@@ -1,7 +1,7 @@
 <?php
 include('../inc/config.php');
 include('../admin/includes/format.php');
-include('../admin/session.php');
+include('../inc/session.php');
 
 // Ensure user is logged in
 if (!isset($_SESSION['user'])) {
