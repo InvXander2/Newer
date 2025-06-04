@@ -1,5 +1,5 @@
 <?php
-	include '../inc/session.php';
+	include 'includes/session.php';
 
 	if(isset($_POST['msg_all'])){
 		$id = $_POST['id'];

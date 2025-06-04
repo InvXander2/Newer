@@ -4,7 +4,7 @@
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 
-	include '../inc/session.php';
+	include 'includes/session.php';
 	include 'includes/slugify.php';
 
 	if(isset($_POST['edit'])){
