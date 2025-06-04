@@ -1,5 +1,5 @@
 <?php
-	include 'session.php';
+	include '../inc/session.php';
 	$conn = $pdo->open();
 
 	if(isset($_POST['login'])){
