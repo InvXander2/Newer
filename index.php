@@ -901,21 +901,6 @@
                   <img src="assets/images/brand/5.png" alt="image">
                 </div><!-- brand-item end -->
               </div>
-              <div class="single-slide">
-                <div class="brand-item">
-                  <img src="assets/images/brand/6.png" alt="image">
-                </div><!-- brand-item end -->
-              </div>
-              <div class="single-slide">
-                <div class="brand-item">
-                  <img src="assets/images/brand/7.png" alt="image">
-                </div><!-- brand-item end -->
-              </div>
-              <div class="single-slide">
-                <div class="brand-item">
-                  <img src="assets/images/brand/8.png" alt="image">
-                </div><!-- brand-item end -->
-              </div>
             </div><!-- payment-slider end -->
           </div>
         </div>
