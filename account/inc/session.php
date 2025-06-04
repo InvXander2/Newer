@@ -1,5 +1,5 @@
 <?php
-	require_once('../inc/conn.php');
+	require_once('conn.php');
 	session_start();
 
 	if(isset($_SESSION['user'])){
