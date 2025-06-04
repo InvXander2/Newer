@@ -3,7 +3,7 @@
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception;
 
-	include 'inc/session.php';
+	include '../inc/session.php';
 
 	if(isset($_POST['reset'])){
 		$email = $_POST['email'];

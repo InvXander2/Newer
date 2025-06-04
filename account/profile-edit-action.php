@@ -1,5 +1,5 @@
 <?php
-include 'inc/session.php';
+include '../inc/session.php';
 include '../admin/includes/slugify.php';
 include '../inc/config.php';
 

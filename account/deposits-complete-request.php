@@ -1,6 +1,6 @@
 <?php
     include('../inc/config.php');
-    include '../inc/session.php';
+    include '../../inc/session.php';
 
     $page_name = 'Deposits';
     $page_parent = '';

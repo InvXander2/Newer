@@ -1,7 +1,7 @@
 <?php
 // session_start() removed to avoid duplicate call, as session.php starts the session
 include('../inc/config.php');
-include('../inc/session.php');
+include('../../inc/session.php');
 
 $page_name = 'Transaction History';
 $page_parent = '';
