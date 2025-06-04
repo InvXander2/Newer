@@ -1,5 +1,5 @@
 <?php
-    include '../inc/session.php';
+    include 'inc/session.php';
 
     if(!isset($_GET['code']) OR !isset($_GET['user'])){
         header('location: index.php');
