@@ -2,7 +2,7 @@
     include('../inc/config.php');
     include('../admin/includes/format.php');
 
-    include '../../inc/session.php';
+    include '../inc/session.php';
 
     $m_id = $_REQUEST['id'];
 

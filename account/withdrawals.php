@@ -2,7 +2,7 @@
 <?php
     include('../inc/config.php');
 
-    include '../../inc/session.php';
+    include '../inc/session.php';
 
     $page_name = 'Withdrawals';
     $page_parent = '';
