@@ -20,11 +20,11 @@ if (!isset($_SESSION['user'])) {
 $conn = $pdo->open();
 
 try {
-    // Query all transactions for the user
+    // Query all transactions for the user with secondary sort by trans_id
     $stmt = $conn->prepare("SELECT trans_id, trans_date, type, amount, remark, balance 
                             FROM transaction 
                             WHERE user_id = ? 
-                            ORDER BY trans_date DESC");
+                            ORDER BY trans_date DESC, trans_id DESC");
     $stmt->execute([$id]);
     $transactions = $stmt->fetchAll(PDO::FETCH_OBJ);
 } catch (PDOException $e) {
@@ -112,7 +112,7 @@ $pdo->close();
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th>Transaction ID</th>
-                                                            <th>Date & Time (IST)</th>
+                                                            <th>Date & Time (UTC, Sorted Newest First)</th>
                                                             <th>Type</th>
                                                             <th>Amount</th>
                                                             <th>Remark</th>
@@ -124,10 +124,9 @@ $pdo->close();
                                                             <tr>
                                                                 <td>TXID<?= $transaction->trans_id; ?></td>
                                                                 <td><?php 
-                                                                    // Convert UTC to IST (UTC+5:30)
+                                                                    // Display date in UTC
                                                                     $date = new DateTime($transaction->trans_date, new DateTimeZone('UTC'));
-                                                                    $date->setTimezone(new DateTimeZone('Asia/Kolkata'));
-                                                                    echo htmlspecialchars($date->format('Y-m-d h:i:s A'));
+                                                                    echo htmlspecialchars($date->format('Y-m-d h:i:s A')) . ' UTC';
                                                                 ?></td>
                                                                 <td><span class="badge badge-boxed badge-outline-<?php echo $transaction->type == '1' ? 'success' : 'danger'; ?>">
                                                                     <?php echo $transaction->type == '1' ? 'Deposit' : 'Withdrawal/Investment'; ?>
