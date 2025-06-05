@@ -30,7 +30,7 @@ if (
     $status = 'pending';
 
     $conn = $pdo->open();
-    $trans_date = date('Y-m-d');
+    $trans_date = date('Y-m-d h:i A');
     $act_time = date('Y-m-d h:i A');
 
     try {
