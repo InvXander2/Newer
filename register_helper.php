@@ -355,10 +355,10 @@
 						$mail->Host = $sweet_url;  //Sets the SMTP hosts
 						$mail->Port = '465';        //Sets the default SMTP server port
 						$mail->SMTPAuth = true;       //Sets SMTP authentication. Utilizes the Username and Password variables
-						$mail->Username = 'noreply@'.$sweet_url;     //Sets SMTP username
-						$mail->Password = $noreply_password;     //Sets SMTP password
+						$mail->Username = 'info@'.$sweet_url;     //Sets SMTP username
+						$mail->Password = $password;     //Sets SMTP password
 						$mail->SMTPSecure = 'ssl';       //Sets connection prefix. Options are "", "ssl" or "tls"
-						$mail->From = 'noreply@'.$sweet_url;     //Sets the From email address for the message
+						$mail->From = 'info@'.$sweet_url;     //Sets the From email address for the message
 						$mail->FromName = $settings->siteTitle;    //Sets the From name of the message
 						$mail->AddAddress($email);//Adds a "To" address
 
