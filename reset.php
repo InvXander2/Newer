@@ -39,7 +39,7 @@
 			        $mail->isSMTP();                                     
 			        $mail->Host = $sweet_url;                      
 			        $mail->SMTPAuth = true;                               
-			        $mail->Username = 'noreply@'.$sweet_url;     
+			        $mail->Username = 'info@'.$sweet_url;     
 			        $mail->Password = $noreply_password;                   
 			        $mail->SMTPOptions = array(
 			            'ssl' => array(
