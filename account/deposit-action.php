@@ -185,7 +185,7 @@ if (isset($_POST['complete'])) {
             $mail->Subject = $settings->siteTitle . ' Deposit Request';
             $mail->Body = $message;
             $mail->send();
-            $_SESSION['success'] = 'Your request has been sent and you will be contacted on how to proceed shortly';
+            $_SESSION['success'] = 'Your request has been sent. Please proceed to pay and invest';
         } catch (Exception $e) {
             error_log("PHPMailer error in deposit request: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
             $_SESSION['success'] = 'Your request has been sent. Please proceed to pay and invest';
