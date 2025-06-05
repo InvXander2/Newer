@@ -46,9 +46,9 @@
                                 '$id',
                                 '$now',
                                 '1',
-                                '5',
+                                '25',
                                 'Welcome Bonus',
-                                '5'
+                                '25'
                             )";
 
                             $conn->query($sql4);
