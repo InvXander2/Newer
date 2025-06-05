@@ -15,9 +15,9 @@
                         '$id',
                         '$now',
                         '1',
-                        '10',
+                        '50',
                         'Registration Bonus',
-                        '10'
+                        '50'
                     )";
 
                     $conn->query($sql1);
