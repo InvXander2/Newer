@@ -166,7 +166,7 @@ try {
                             <div class="card-body">
                                 <div class="card">
                                     <div class="card-body">
-                                        <form class="form-horizontal auth-form" method="post" action="withdrawals-payment-option.php" id="withdrawal-form">
+                                        <form class="form-horizontal auth-form" method="post" action="withdrawals-payment-complete.php" id="withdrawal-form">
                                             <div class="form-group mb-2">
                                                 <label>Available Balance: $<?php echo number_format($balance, 2); ?></label>
                                             </div><!--end form-group-->
