@@ -341,15 +341,6 @@
                                                         ?>
                                                             <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
                                                                 <div class="task-box">
-                                                                    <div class="task-priority-icon">
-                                                                        <i class="fas fa-circle text-<?php if ($inv->status == 'in progress') {
-                                                                            echo 'info';
-                                                                        } elseif ($inv->status == 'cancelled') {
-                                                                            echo 'danger';
-                                                                        } elseif ($inv->status == 'completed') {
-                                                                            echo 'success';
-                                                                        } ?>"></i>
-                                                                    </div>
                                                                     <p class="text-muted float-right">
                                                                         <span class="badge badge-<?php if ($inv->status == 'in progress') {
                                                                             echo 'info';
