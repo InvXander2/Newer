@@ -224,7 +224,7 @@
                                         <span class="" id="Select_date">
                                             <?php
                                                 // Convert hardcoded CEST time to UTC
-                                                $dash_date = new DateTime('2025-06-06 19:46:00', new DateTimeZone('Europe/Paris'));
+                                                $dash_date = new DateTime('2025-06-06 20:03:00', new DateTimeZone('Europe/Paris'));
                                                 $dash_date->setTimezone(new DateTimeZone('UTC'));
                                                 echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
                                             ?>
@@ -341,15 +341,6 @@
                                                         ?>
                                                             <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
                                                                 <div class="task-box">
-                                                                    <div class="task-priority-icon">
-                                                                        <i class="fas fa-circle text-<?php if ($inv->status == 'in progress') {
-                                                                            echo 'info';
-                                                                        } elseif ($inv->status == 'cancelled') {
-                                                                            echo 'danger';
-                                                                        } elseif ($inv->status == 'completed') {
-                                                                            echo 'success';
-                                                                        } ?>"></i>
-                                                                    </div>
                                                                     <p class="text-muted float-right">
                                                                         <span class="badge badge-<?php if ($inv->status == 'in progress') {
                                                                             echo 'info';
@@ -389,9 +380,6 @@
                                                                                 aria-valuemax="100">
                                                                             </div>
                                                                         </div>
-                                                                        <p class="mb-0 mt-1 text-muted">
-                                                                            <?= $is_completed ? 'Completed' : ($time_left) ?>
-                                                                        </p>
                                                                     </div>
                                                                     <div class="d-flex align-items-center mt-2">
                                                                         <form action="investment-complete.php" method="POST" class="d-inline mr-2">
@@ -587,7 +575,7 @@
                                                 ?>
                                                     <div class="activity-info">
                                                         <div class="icon-info-activity">
-                                                            <i class="mdi mdi-clock-outline bg-soft-primary"></i>
+                                                            <i class="mdi mdi-arrow-right-circle bg-soft-primary"></i>
                                                         </div>
                                                         <div class="activity-info-text">
                                                             <div class="d-flex justify-content-between align-items-center">
@@ -640,91 +628,91 @@
                                 </div>
                             </div>
                         </div><!--end card-->
-                    </div><!--end col-->
-                </div><!--end row-->
-            </div><!-- container -->
-            <?php include('inc/footer.php'); ?><!--end footer-->
+                        <!--end col-->
+                    </div><!--end row-->
+                </div><!-- container -->
+                <?php include('inc/footer.php'); ?><!--end footer-->
+            </div>
+            <!-- end page content -->
         </div>
-        <!-- end page content -->
-    </div>
-    <!-- end page-wrapper -->
+        <!-- end page-wrapper -->
 
-    <!-- Chart Data -->
-    <?php
-    $invests = array();
-    $capital = array();
-    for ($m = 1; $m <= 12; $m++) {
-        try {
-            $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = :user_id AND status = 'completed' AND MONTH(end_date) = :month AND YEAR(end_date) = :year");
-            $stmt->execute(['user_id' => $id, 'month' => $m, 'year' => $year]);
-            $total = $total2 = 0;
-            foreach ($stmt as $srow) {
-                // Convert end_date from UTC+2 to UTC for MONTH and YEAR comparison
-                $end_date = new DateTime($srow['end_date'], new DateTimeZone('Europe/Paris'));
-                $end_date->setTimezone(new DateTimeZone('UTC'));
-                if ($end_date->format('m') == $m && $end_date->format('Y') == $year) {
-                    $amount = $srow['returns'] - $srow['capital'];
-                    $total += $amount;
-                    $amount2 = $srow['capital'];
-                    $total2 += $amount2;
+        <!-- Chart Data -->
+        <?php
+        $invests = array();
+        $capital = array();
+        for ($i = 1; $i <= 12; $i++) {
+            try {
+                $stmt = $conn->prepare("SELECT * FROM investment WHERE user_id = :user_id AND status = 'completed' AND MONTH(end_date) = :i AND YEAR(end_date) = :year");
+                $stmt->execute(['user_id' => $i, 'i' => $i, 'total' => $year]);
+                $total = $total2 = 0;
+                foreach ($stmt as $srow) {
+                    // Convert date from UTC+2 to UTC for calculation
+                    $end_date = new DateTime($srow['end_date'], new DateTimeZone('Europe/Paris'));
+                    $end_date->setTimezone(new DateTimeZone('UTC'));
+                    if ($end_date->format('m') == $i && $end_date->format('Y') == $year) {
+                        $amount = $srow['amount'] - $srow['capital'];
+                        $total += $amount;
+                        $amount2 = $srow['amount2'];
+                        $total2 += $amount2;
+                    }
                 }
+                array_push($invests, round($total, 2));
+                array_push($capital, round($total2));
+            } catch (Error $e) {
+                error_log("Error processing chart data for month $i: " . $e->getMessage());
+                array_push($invests, 0);
+                array_push($capital, 0);
             }
-            array_push($invests, round($total, 2));
-            array_push($capital, round($total2));
-        } catch (PDOException $e) {
-            error_log("Error calculating chart data for month $m: " . $e->getMessage());
-            array_push($invests, 0);
-            array_push($capital, 0);
         }
-    }
-    $invests = implode(',', $invests);
-    $capital = implode(',', $capital);
-    ?>
-    <?php include('inc/scripts.php'); ?>
+        $invests = implode(',', $invests);
+        $capital = implode(',', $capital);
+        ?>
+        <?php include('inc/scripts.php'); ?>
 
-    <!-- JavaScript to Fetch Cryptocurrency Prices -->
-    <script>
-    $(document).ready(function() {
-        // CoinGecko API endpoint for simple price data
-        const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,tron,solana&vs_currencies=usd&include_24hr_change=true';
+        <!-- JavaScript to Fetch Cryptocurrency Prices -->
+        <script>
+            $(document).ready(function() {
+                // CoinGecko API endpoint for simple price data
+                const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,coingecko,coingecko,coin,solana&vs_currencies=usd&include_24hr_change=true';
 
-        $.ajax({
-            url: apiUrl,
-            method: 'GET',
-            success: function(data) {
-                const coins = [
-                    { id: 'bitcoin', name: 'Bitcoin' },
-                    { id: 'ethereum', name: 'Ethereum' },
-                    { id: 'tether', name: 'USDT' },
-                    { id: 'tron', name: 'Tron' },
-                    { id: 'solana', name: 'Solana' }
-                ];
+                $.ajax({
+                    url: apiUrl,
+                    method: 'GET',
+                    success: function(data) {
+                        const coins = [
+                            { id: 'bitcoin', name: 'Bitcoin' },
+                            { id: 'ethereum', name: 'Ethereum' },
+                            { id: 'tether', name: 'USDT' },
+                            { id: 'tron', name: 'Tron' },
+                            { id: 'solana', name: 'Solana' }
+                        ];
 
-                let tableBody = '';
-                coins.forEach(coin => {
-                    const price = data[coin.id]?.usd || 'N/A';
-                    const change = data[coin.id]?.usd_24h_change || 0;
-                    const changeFormatted = change >= 0 
-                        ? `<span class="text-success">+${change.toFixed(2)}%</span>` 
-                        : `<span class="text-danger">${change.toFixed(2)}%</span>`;
+                        let tableBody = '';
+                        coins.forEach(coin => {
+                            const price = data[coin.id]?.usd || 'N/A';
+                            const change = data[coin.id]?.usd_24h_change || 0;
+                            const changeFormatted = change >= 0 
+                                ? `<span class="text-success">+${change.toFixed(2)}%</span>` 
+                                : `<span class="text-danger">${change.toFixed(2)}%</span>`;
 
-                    tableBody += `
-                        <tr>
-                            <td>${coin.name}</td>
-                            <td class="text-right">$${parseFloat(price).toFixed(2)}</td>
-                            <td class="text-right">${changeFormatted}</td>
-                        </tr>
-                    `;
+                            tableBody += `
+                                <tr>
+                                    <td>${coin.name}</td>
+                                    <td class="text-right">$${parseFloat(price).toFixed(2)}</td>
+                                    <td class="text-right">${changeFormatted}</td>
+                                </tr>
+                            `;
+                        });
+
+                        $('#price-table-body').html(tableBody);
+                    },
+                    error: function(xhr, error) {
+                        console.error('Error loading CoinGecko data:', error);
+                        $('#price-table-body').html('<tr><td colspan="3" class="text-center text-danger">Failed to load prices. Please try again later.</td></tr>');
+                    }
                 });
-
-                $('#price-table-body').html(tableBody);
-            },
-            error: function(xhr, status, error) {
-                console.error('Error fetching CoinGecko data:', error);
-                $('#price-table-body').html('<tr><td colspan="3" class="text-center text-danger">Failed to load prices. Please try again later.</td></tr>');
-            }
-        });
-    });
-    </script>
-</body>
+            });
+        </script>
+    </body>
 </html>
