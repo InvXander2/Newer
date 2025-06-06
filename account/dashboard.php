@@ -379,10 +379,6 @@
                                                                                 aria-valuemin="0" 
                                                                                 aria-valuemax="100">
                                                                             </div>
-                                                                        </div>
-                                                                        <p class="mb-0 mt-1 text-muted">
-                                                                            <?= $is_completed ? 'Completed' : ($time_left) ?>
-                                                                        </p>
                                                                     </div>
                                                                     <div class="d-flex align-items-center mt-2">
                                                                         <form action="investment-complete.php" method="POST" class="d-inline mr-2">
