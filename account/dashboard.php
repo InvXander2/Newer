@@ -358,7 +358,7 @@
                                                                     </p>
                                                                     <h5 class="mt-0"><?= htmlspecialchars($inv->name); ?></h5>
                                                                     <div class="return-info">
-                                                                        <p class="mb-1">Guaranteed Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
+                                                                        <p class="mb-1">Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
                                                                         <p class="text-muted text-right mb-1"><?php if ($inv->status == 'in progress') {
                                                                             echo $percent . "% Complete";
                                                                         } elseif ($inv->status == 'completed') {
@@ -381,7 +381,7 @@
                                                                             </div>
                                                                     </div>
                                                                     <div class="d-flex align-items-center mt-2">
-                                                                        <form action="investment-complete.php" method="POST" class="d-inline mr-2">
+                                                                        <form action="investment-complete.php" method="POST" class="d-inline ml-auto">
                                                                             <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
                                                                             <button type="submit" name="complete" class="btn btn-sm btn-success"
                                                                                     <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
