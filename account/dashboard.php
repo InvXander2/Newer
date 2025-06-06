@@ -59,7 +59,7 @@
             $transaction = 0;
             $type = "";
             $sanitized_time = "N/A";
-        Customer
+        }
     } catch (PDOException $e) {
         error_log("Error fetching latest transaction: " . $e->getMessage());
         $transaction = 0;
@@ -224,7 +224,7 @@
                                         <span class="" id="Select_date">
                                             <?php
                                                 // Convert hardcoded CEST time to UTC
-                                                $dash_date = new DateTime('2025-06-06 19:35:00', new DateTimeZone('Europe/Paris'));
+                                                $dash_date = new DateTime('2025-06-06 19:46:00', new DateTimeZone('Europe/Paris'));
                                                 $dash_date->setTimezone(new DateTimeZone('UTC'));
                                                 echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
                                             ?>
