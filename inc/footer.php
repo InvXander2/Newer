@@ -25,7 +25,7 @@
             <li><a href="#0" data-toggle="tooltip" data-placement="top" title="facebook"><i class="lab la-facebook-f"></i></a></li>
             <li><a href="#0" data-toggle="tooltip" data-placement="top" title="twitter"><i class="lab la-twitter"></i></a></li>
             <li><a href="#0" data-toggle="tooltip" data-placement="top" title="pinterest"><i class="lab la-pinterest-p"></i></a></li>
-            <li><a href="#0" data-toggle="tooltip" data-placement="top" title="pinterest"><i class="lab la-pinterest-in"></i></a></li>
+            <li><a href="https://t.me/+Gi7t1eMielhjNWFk" data-toggle="tooltip" data-placement="top" title="telegram"><i class="lab la-telegram-in"></i></a></li>
           </ul>
         </div>
       </div>
