@@ -292,9 +292,9 @@
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0): ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>  <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
-                                                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
+                                                    
                                                     <div class="mt-3">
                                                         <?php
                                                         $current_date = new DateTime('now', new DateTimeZone('UTC'));
