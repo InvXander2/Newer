@@ -289,125 +289,135 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card report-card">
                                     <div class="card-body">
-                                        <div class="row d-flex justify-content-between">
+                                        <div class="row d-flex justify-content-between align-items-center">
+                                            <div class="col-auto">
+                                                <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                                <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
+                                            </div>
                                             <?php if ($no_of_inv > 0): ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
-                                                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
-                                                    <div class="mt-3">
-                                                        <?php
-                                                        $current_date = new DateTime('now', new DateTimeZone('UTC'));
-                                                        $index = 0;
-                                                        foreach ($row5 as $inv):
-                                                            // Convert dates from UTC+2 to UTC
-                                                            $start_date = new DateTime($inv->start_date, new DateTimeZone('Europe/Paris'));
-                                                            $start_date->setTimezone(new DateTimeZone('UTC'));
-                                                            $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
-                                                            $end_date->setTimezone(new DateTimeZone('UTC'));
-                                                            $is_completed = $inv->status === 'completed';
-                                                            $is_running = $end_date > $current_date && !$is_completed;
-
-                                                            // Calculate progress
-                                                            $date_ivstart = $start_date->getTimestamp();
-                                                            $date_ivend = $end_date->getTimestamp();
-                                                            $date_now = $current_date->getTimestamp();
-                                                            $secs = $date_ivend - $date_now;
-                                                            if ($secs < 0) {
-                                                                $time_left = "Elapsed";
-                                                            } elseif ($secs < 3600) {
-                                                                $time_left = "Some Minutes Left";
-                                                            } elseif ($secs <= 216000) {
-                                                                $time_left = round($secs / 3600, 0) . " Hours Left";
-                                                            } else {
-                                                                $time_left = round($secs / 86400, 0) . " Days Left";
-                                                            }
-                                                            if ($inv->status == 'completed') {
-                                                                $percent = 100;
-                                                            } else {
-                                                                $percent = round(($date_now - $date_ivstart) * 100 / ($date_ivend - $date_ivstart), 0);
-                                                                if ($date_now >= $date_ivend) {
-                                                                    try {
-                                                                        $stmt = $conn->prepare("UPDATE investment SET status=:c_status WHERE invest_id=:c_id");
-                                                                        $stmt->execute(['c_status' => 'completed', 'c_id' => $inv->invest_id]);
-                                                                    } catch (PDOException $e) {
-                                                                        error_log("Error updating investment status: " . $e->getMessage());
-                                                                    }
-                                                                }
-                                                            }
-                                                            if ($percent > 100) {
-                                                                $percent = 100;
-                                                            }
-                                                        ?>
-                                                            <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
-                                                                <div class="task-box">
-                                                                    <p class="text-muted float-right">
-                                                                        <span class="badge badge-<?php if ($inv->status == 'in progress') {
-                                                                            echo 'info';
-                                                                        } elseif ($inv->status == 'cancelled') {
-                                                                            echo 'danger';
-                                                                        } elseif ($inv->status == 'completed') {
-                                                                            echo 'success';
-                                                                        } ?> mr-2"><?php echo htmlspecialchars($inv->status); ?></span>
-                                                                        <span class="mx-1">·</span>
-                                                                        <span><i class="far fa-fw fa-clock"></i> <?php if ($inv->status == 'in progress') {
-                                                                            echo htmlspecialchars($time_left);
-                                                                        } else {
-                                                                            echo "Elapsed";
-                                                                        } ?></span>
-                                                                    </p>
-                                                                    <h5 class="mt-0"><?= htmlspecialchars($inv->name); ?></h5>
-                                                                    <div class="return-info">
-                                                                        <p class="mb-1">Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
-                                                                        <p class="text-muted text-right mb-1"><?php if ($inv->status == 'in progress') {
-                                                                            echo $percent . "% Complete";
-                                                                        } elseif ($inv->status == 'completed') {
-                                                                            echo "Completed";
-                                                                        } else {
-                                                                            echo "On Hold";
-                                                                        } ?></p>
-                                                                        <div class="progress mt-2" style="height: 8px;">
-                                                                            <div class="progress-bar bg-<?php if ($inv->status == 'in progress') {
-                                                                                echo 'info progress-bar-animated';
-                                                                            } elseif ($inv->status == 'cancelled') {
-                                                                                echo 'danger';
-                                                                            } elseif ($inv->status == 'completed') {
-                                                                                echo 'success';
-                                                                            } ?> progress-bar-striped" role="progressbar" 
-                                                                                style="width: <?= $percent ?>%;" 
-                                                                                aria-valuenow="<?= $percent ?>" 
-                                                                                aria-valuemin="0" 
-                                                                                aria-valuemax="100">
-                                                                            </div>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-center mt-2">
-                                                                        <form action="investment-complete.php" method="POST" class="d-inline ml-auto">
-                                                                            <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
-                                                                            <button type="submit" name="complete" class="btn btn-sm btn-success"
-                                                                                    <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
-                                                                                Complete
-                                                                            </button>
-                                                                        </form>
-                                                                        <div class="report-main-icon bg-light-alt">
-                                                                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        <?php $index++; endforeach; ?>
+                                                <div class="col-auto d-flex align-items-center">
+                                                    <?php
+                                                    $current_date = new DateTime('now', new DateTimeZone('UTC'));
+                                                    // Assuming we want the "Complete" button for the first investment
+                                                    $inv = $row5[0]; // Get the first investment
+                                                    $start_date = new DateTime($inv->start_date, new DateTimeZone('Europe/Paris'));
+                                                    $start_date->setTimezone(new DateTimeZone('UTC'));
+                                                    $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
+                                                    $end_date->setTimezone(new DateTimeZone('UTC'));
+                                                    $is_completed = $inv->status === 'completed';
+                                                    $is_running = $end_date > $current_date && !$is_completed;
+                                                    ?>
+                                                    <form action="investment-complete.php" method="POST" class="d-inline mr-2">
+                                                        <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
+                                                        <button type="submit" name="complete" class="btn btn-sm btn-success"
+                                                                <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                            Complete
+                                                        </button>
+                                                    </form>
+                                                    <div class="report-main-icon bg-light-alt">
+                                                        <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
                                                     </div>
-                                                </div>
-                                            <?php else: ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
-                                                    <h5 class="mb-0 text-danger">
-                                                        <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
-                                                        You have no ongoing investment. Invest now to earn.
-                                                    </h5>
                                                 </div>
                                             <?php endif; ?>
                                         </div>
+                                        <?php if ($no_of_inv > 0): ?>
+                                            <div class="mt-3">
+                                                <?php
+                                                $index = 0;
+                                                foreach ($row5 as $inv):
+                                                    // Convert dates from UTC+2 to UTC
+                                                    $start_date = new DateTime($inv->start_date, new DateTimeZone('Europe/Paris'));
+                                                    $start_date->setTimezone(new DateTimeZone('UTC'));
+                                                    $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
+                                                    $end_date->setTimezone(new DateTimeZone('UTC'));
+                                                    $is_completed = $inv->status === 'completed';
+                                                    $is_running = $end_date > $current_date && !$is_completed;
+
+                                                    // Calculate progress
+                                                    $date_ivstart = $start_date->getTimestamp();
+                                                    $date_ivend = $end_date->getTimestamp();
+                                                    $date_now = $current_date->getTimestamp();
+                                                    $secs = $date_ivend - $date_now;
+                                                    if ($secs < 0) {
+                                                        $time_left = "Elapsed";
+                                                    } elseif ($secs < 3600) {
+                                                        $time_left = "Some Minutes Left";
+                                                    } elseif ($secs <= 216000) {
+                                                        $time_left = round($secs / 3600, 0) . " Hours Left";
+                                                    } else {
+                                                        $time_left = round($secs / 86400, 0) . " Days Left";
+                                                    }
+                                                    if ($inv->status == 'completed') {
+                                                        $percent = 100;
+                                                    } else {
+                                                        $percent = round(($date_now - $date_ivstart) * 100 / ($date_ivend - $date_ivstart), 0);
+                                                        if ($date_now >= $date_ivend) {
+                                                            try {
+                                                                $stmt = $conn->prepare("UPDATE investment SET status=:c_status WHERE invest_id=:c_id");
+                                                                $stmt->execute(['c_status' => 'completed', 'c_id' => $inv->invest_id]);
+                                                            } catch (PDOException $e) {
+                                                                error_log("Error updating investment status: " . $e->getMessage());
+                                                            }
+                                                        }
+                                                    }
+                                                    if ($percent > 100) {
+                                                        $percent = 100;
+                                                    }
+                                                ?>
+                                                    <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
+                                                        <div class="task-box">
+                                                            <p class="text-muted float-right">
+                                                                <span class="badge badge-<?php if ($inv->status == 'in progress') {
+                                                                    echo 'info';
+                                                                } elseif ($inv->status == 'cancelled') {
+                                                                    echo 'danger';
+                                                                } elseif ($inv->status == 'completed') {
+                                                                    echo 'success';
+                                                                } ?> mr-2"><?php echo htmlspecialchars($inv->status); ?></span>
+                                                                <span class="mx-1">·</span>
+                                                                <span><i class="far fa-fw fa-clock"></i> <?php if ($inv->status == 'in progress') {
+                                                                    echo htmlspecialchars($time_left);
+                                                                } else {
+                                                                    echo "Elapsed";
+                                                                } ?></span>
+                                                            </p>
+                                                            <h5 class="mt-0"><?= htmlspecialchars($inv->name); ?></h5>
+                                                            <div class="return-info">
+                                                                <p class="mb-1">Return: <span class="text-primary">$<?= number_format($inv->returns, 2); ?></span></p>
+                                                                <p class="text-muted text-right mb-1"><?php if ($inv->status == 'in progress') {
+                                                                    echo $percent . "% Complete";
+                                                                } elseif ($inv->status == 'completed') {
+                                                                    echo "Completed";
+                                                                } else {
+                                                                    echo "On Hold";
+                                                                } ?></p>
+                                                                <div class="progress mt-2" style="height: 8px;">
+                                                                    <div class="progress-bar bg-<?php if ($inv->status == 'in progress') {
+                                                                        echo 'info progress-bar-animated';
+                                                                    } elseif ($inv->status == 'cancelled') {
+                                                                        echo 'danger';
+                                                                    } elseif ($inv->status == 'completed') {
+                                                                        echo 'success';
+                                                                    } ?> progress-bar-striped" role="progressbar" 
+                                                                        style="width: <?= $percent ?>%;" 
+                                                                        aria-valuenow="<?= $percent ?>" 
+                                                                        aria-valuemin="0" 
+                                                                        aria-valuemax="100">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php $index++; endforeach; ?>
+                                            </div>
+                                        <?php else: ?>
+                                            <div class="col">
+                                                <h5 class="mb-0 text-danger">
+                                                    <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
+                                                    You have no ongoing investment. Invest now to earn.
+                                                </h5>
+                                            </div>
+                                        <?php endif; ?>
                                     </div><!--end card-body-->
                                 </div><!--end card-->
                             </div><!--end col-->
@@ -713,5 +723,22 @@
         });
     });
     </script>
+
+    <!-- CSS for Button Alignment -->
+    <style>
+        /* Ensure buttons and icons align properly in the header */
+        .card-body .row.align-items-center .col-auto {
+            display: flex;
+            align-items: center;
+        }
+
+        .card-body .row.align-items-center .col-auto .btn {
+            margin: 0 5px; /* Adjust spacing between buttons */
+        }
+
+        .card-body .row.align-items-center .col-auto .report-main-icon {
+            margin-left: 5px; /* Space between button and icon */
+        }
+    </style>
 </body>
 </html>
