@@ -224,7 +224,7 @@
                                         <span class="" id="Select_date">
                                             <?php
                                                 // Convert hardcoded CEST time to UTC
-                                                $dash_date = new DateTime('2025-06-06 19:46:00', new DateTimeZone('Europe/Paris'));
+                                                $dash_date = new DateTime('2025-06-06 21:03:00', new DateTimeZone('Europe/Paris'));
                                                 $dash_date->setTimezone(new DateTimeZone('UTC'));
                                                 echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
                                             ?>
@@ -289,11 +289,27 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card report-card">
                                     <div class="card-body">
+                                        <div class="row d-flex justify-content-between align-items-center">
+                                            <div class="col-auto">
+                                                <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                            </div>
+                                            <div class="col-auto">
+                                                <a href="investments_details.php" class="btn btn-sm btn-outline-primary mr-2">View All</a>
+                                                <?php if ($no_of_inv > 0): ?>
+                                                    <!-- Complete button moved here -->
+                                                    <form action="investment-complete.php" method="POST" class="d-inline">
+                                                        <input type="hidden" name="invest_id" value="<?= htmlspecialchars($row5[0]->invest_id); ?>">
+                                                        <button type="submit" name="complete" class="btn btn-sm btn-success"
+                                                                <?= ($row5[0]->status == 'in progress' && (new DateTime($row5[0]->end_date, new DateTimeZone('Europe/Paris')) > new DateTime('now', new DateTimeZone('UTC')))) ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                            Complete
+                                                        </button>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
                                         <div class="row d-flex justify-content-between">
                                             <?php if ($no_of_inv > 0): ?>
                                                 <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
                                                     <h3 class="m-0"><?= $no_of_inv; ?></h3>
                                                     <div class="mt-3">
                                                         <?php
@@ -379,15 +395,9 @@
                                                                                 aria-valuemin="0" 
                                                                                 aria-valuemax="100">
                                                                             </div>
+                                                                        </div>
                                                                     </div>
                                                                     <div class="d-flex align-items-center mt-2">
-                                                                        <form action="investment-complete.php" method="POST" class="d-inline ml-auto">
-                                                                            <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
-                                                                            <button type="submit" name="complete" class="btn btn-sm btn-success"
-                                                                                    <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
-                                                                                Complete
-                                                                            </button>
-                                                                        </form>
                                                                         <div class="report-main-icon bg-light-alt">
                                                                             <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
                                                                         </div>
@@ -400,7 +410,6 @@
                                             <?php else: ?>
                                                 <div class="col">
                                                     <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
