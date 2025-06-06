@@ -23,7 +23,7 @@
         <div class="col-md-6">
           <ul class="social-link-list d-flex flex-wrap justify-content-md-end justify-content-center">
             <li><a href="#0" data-toggle="tooltip" data-placement="top" title="Whatsapp"><i class="lab la-whatsapp"></i></a></li>
-            <li><a href="mailto:support@nexusinsights.it.com" data-toggle="tooltip" data-placement="top" title="Email"><i class="lab la-envelope"></i></a></li>
+            <li><a href="mailto:support@nexusinsights.it.com" data-toggle="tooltip" data-placement="top" title="Email"><i class="fas fa-envelope"></i></a></li>
             <li><a href="https://t.me/+Gi7t1eMielhjNWFk" data-toggle="tooltip" data-placement="top" title="Telegram"><i class="lab la-telegram"></i></a></li>
           </ul>
         </div>
