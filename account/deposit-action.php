@@ -116,7 +116,7 @@ try {
                                                                         <span style='color: #000000;'>
                                                                             Your request to deposit <strong>\${$deposit_amount}</strong> has been received. Please ensure to pay the requested amount to the wallet address provided below. Funds will be deposited to your Nexus Insights account upon confirmation.
                                                                             <br /><br />
-                                                                            <strong>Nexus Insights Limited BTC Wallet Address:</strong><br />
+                                                                            <strong>Bitcoin(BTC) Wallet Address:</strong><br />
                                                                             <span style='color: #000080; font-weight: bold;'>{$wallet_address}</span>
                                                                         </span>
                                                                     </p>
