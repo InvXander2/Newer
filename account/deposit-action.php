@@ -163,7 +163,7 @@ try {
                                     <table style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; width: 100%;' border='0' width='100%' cellspacing='0' cellpadding='0' align='middle'>
                                         <tbody>
                                             <tr>
-                                                <td lang='en' style='padding: 0px;' align='middle'>© {$year} Nexus Insights Limited.</td>
+                                                <td lang='en' style='padding: 0px;' align='middle'>© {$year} Nexus Insights.</td>
                                             </tr>
                                             <tr>
                                                 <td style='padding: 15px 0px 25px;' align='middle'>
