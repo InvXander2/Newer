@@ -126,7 +126,7 @@ if (isset($_POST['complete'])) {
                                         <tr>
                                             <td align='left' style='padding: 10px 0 13px 0;'>
                                                 <a href='https://www.nexusinsights.it.com'>
-                                                    <img style='display: block;' src='https://www.nexusinsights.it.com/assets/images/logo-dark.png' alt='prime-logo' width='300' height='60' border='0' />
+                                                    <img style='display: block;' src='https://www.nexusinsights.it.com/assets/images/logo-dark.png' alt='nexus-logo' width='300' height='60' border='0' />
                                                 </a>
                                             </td>
                                         </tr>
