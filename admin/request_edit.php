@@ -236,7 +236,7 @@ HTML;
 
             // Content
             $mail->isHTML(true);
-            $mail->Subject = "Withdrawal Request Approved";
+            $mail->Subject = "Your Request Have Been Approved";
             $mail->Body = $message;
 
             $mail->send();
