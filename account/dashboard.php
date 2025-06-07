@@ -104,7 +104,7 @@
 
     // Fetch active investments
     try {
-        $stmt4 = $conn->prepare("SELECT COUNT(*) AS numrows FROM investment WHERE user_id = :user_id AND status = 'in progress'");
+        $ disclosure = $conn->prepare("SELECT COUNT(*) AS numrows FROM investment WHERE user_id = :user_id AND status = 'in progress'");
         $stmt4->execute(['user_id' => $id]);
         $row4 = $stmt4->fetch(PDO::FETCH_ASSOC);
         $no_of_inv = $row4['numrows'];
@@ -289,12 +289,20 @@
                             <div class="col-md-6 col-lg-4">
                                 <div class="card report-card">
                                     <div class="card-body">
-                                        <div class="row d-flex justify-content-between">
-                                            <?php if ($no_of_inv > 0): ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
-                                                    <h3 class="m-0"><?= $no_of_inv; ?></h3>
+                                        <div class="row d-flex justify-content-between align-items-center">
+                                            <div class="col">
+                                                <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
+                                                <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
+                                            </div>
+                                            <div class="col-auto align-self-center">
+                                                <div class="report-main-icon bg-light-alt">
+                                                    <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <?php if ($no_of_inv > 0): ?>
                                                     <div class="mt-3">
                                                         <?php
                                                         $current_date = new DateTime('now', new DateTimeZone('UTC'));
@@ -366,47 +374,41 @@
                                                                         } else {
                                                                             echo "On Hold";
                                                                         } ?></p>
-                                                                        <div class="progress mt-2" style="height: 8px;">
-                                                                            <div class="progress-bar bg-<?php if ($inv->status == 'in progress') {
-                                                                                echo 'info progress-bar-animated';
-                                                                            } elseif ($inv->status == 'cancelled') {
-                                                                                echo 'danger';
-                                                                            } elseif ($inv->status == 'completed') {
-                                                                                echo 'success';
-                                                                            } ?> progress-bar-striped" role="progressbar" 
-                                                                                style="width: <?= $percent ?>%;" 
-                                                                                aria-valuenow="<?= $percent ?>" 
-                                                                                aria-valuemin="0" 
-                                                                                aria-valuemax="100">
+                                                                        <div class="d-flex align-items-center">
+                                                                            <div class="progress mt-2" style="height: 8px; width: 60%;">
+                                                                                <div class="progress-bar bg-<?php if ($inv->status == 'in progress') {
+                                                                                    echo 'info progress-bar-animated';
+                                                                                } elseif ($inv->status == 'cancelled') {
+                                                                                    echo 'danger';
+                                                                                } elseif ($inv->status == 'completed') {
+                                                                                    echo 'success';
+                                                                                } ?> progress-bar-striped" role="progressbar" 
+                                                                                    style="width: <?= $percent ?>%;" 
+                                                                                    aria-valuenow="<?= $percent ?>" 
+                                                                                    aria-valuemin="0" 
+                                                                                    aria-valuemax="100">
+                                                                                </div>
                                                                             </div>
-                                                                    </div>
-                                                                    <div class="d-flex align-items-center mt-2">
-                                                                        <form action="investment-complete.php" method="POST" class="d-inline ml-auto">
-                                                                            <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
-                                                                            <button type="submit" name="complete" class="btn btn-sm btn-success"
-                                                                                    <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
-                                                                                Complete
-                                                                            </button>
-                                                                        </form>
-                                                                        <div class="report-main-icon bg-light-alt">
-                                                                            <i data-feather="activity" class="align-self-center text-blue icon-sm"></i>
+                                                                            <form action="investment-complete.php" method="POST" class="ml-2">
+                                                                                <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
+                                                                                <button type="submit" name="complete" class="btn btn-sm btn-success"
+                                                                                        <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                                                    Complete
+                                                                                </button>
+                                                                            </form>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         <?php $index++; endforeach; ?>
                                                     </div>
-                                                </div>
-                                            <?php else: ?>
-                                                <div class="col">
-                                                    <p class="text-dark mb-0 font-weight-semibold d-inline">Active Plans</p>
-                                                    <a href="investments_details.php" class="btn btn-sm btn-outline-primary ml-2">View All</a>
+                                                <?php else: ?>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
                                                         You have no ongoing investment. Invest now to earn.
                                                     </h5>
-                                                </div>
-                                            <?php endif; ?>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </div><!--end card-body-->
                                 </div><!--end card-->
@@ -713,5 +715,24 @@
         });
     });
     </script>
+
+    <!-- Additional CSS for Active Plans Layout -->
+    <style>
+        .task-box .return-info .d-flex {
+            align-items: center;
+        }
+
+        .task-box .return-info .progress {
+            margin-right: 10px; /* Adjust spacing between progress bar and button */
+        }
+
+        .task-box .return-info form {
+            margin-bottom: 0; /* Remove any default margin from the form */
+        }
+
+        .card-body .row.align-items-center {
+            margin-bottom: 10px; /* Add spacing below the header row */
+        }
+    </style>
 </body>
 </html>
