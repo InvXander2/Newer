@@ -298,7 +298,7 @@ HTML;
                                                                         <br /><br />
                                                                         <span style='color: #000000;'>
                                                                             To report fraudulent activities, contact
-                                                                            <strong><a style='color: #000000;' href='mailto:{$settings->email2}'>fraud@nexusinsights.it.com</a></strong>
+                                                                            <strong><a style='color: #000000;' href='mailto:{$settings->email2}'>support@nexusinsights.it.com</a></strong>
                                                                         </span>
                                                                     </p>
                                                                 </td>
@@ -324,7 +324,7 @@ HTML;
                                         <tbody>
                                             <tr>
                                                 <td style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;' align='center'>
-                                                    *This email account is not monitored. Reply to <a href='mailto:{$settings->email}'>{$settings->email}</a> if you have any query.
+                                                    *This email account is not monitored. Reply to <a href='mailto:{$settings->email2}'>{$settings->email2}</a> if you have any query.
                                                     <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/investment'> View Our Available Plans </a>
                                                 </td>
                                             </tr>
@@ -333,7 +333,7 @@ HTML;
                                     <table style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; width: 100%;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
                                         <tbody>
                                             <tr>
-                                                <td lang='en' style='padding: 0px;' align='center'>© {$year} Nexus Insights Limited.</td>
+                                                <td lang='en' style='padding: 0px;' align='center'>© {$year} Nexus Insights.</td>
                                             </tr>
                                             <tr>
                                                 <td style='padding: 15px 0px 25px;' align='center'>
@@ -379,7 +379,7 @@ HTML;
 
                 // Content
                 $mail->isHTML(true);
-                $mail->Subject = "{$settings->siteTitle} Investment Completion Confirmation";
+                $mail->Subject = "Investment Completion Confirmation";
                 $mail->Body = $user_message;
 
                 $mail->send();
