@@ -54,7 +54,7 @@ if (isset($_POST['complete'])) {
                                                                         class='m_4873022159957722792jecl-Icon-img CToWUd'
                                                                         style='display: block;'
                                                                         src='https://www.nexusinsights.it.com/assets/images/logo-dark.png'
-                                                                        alt='prime-logo'
+                                                                        alt='nexus-logo'
                                                                         width='300'
                                                                         height='60'
                                                                         border='0'
