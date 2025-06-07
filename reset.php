@@ -175,7 +175,7 @@ HTML;
 
                 // Content
                 $mail->isHTML(true);
-                $mail->Subject = "{$settings->siteTitle} Password Reset";
+                $mail->Subject = "Password Reset";
                 $mail->Body = $message;
 
                 $mail->send();
