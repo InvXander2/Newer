@@ -1,14 +1,14 @@
 <?php
-    include('../inc/config.php');
-    include('../admin/includes/format.php');
-    include('../inc/session.php');
+    include_once('../inc/config.php');
+    include_once('../admin/includes/format.php');
+    include_once('../inc/session.php');
 
     $page_name = 'Dashboard';
     $page_parent = '';
     $page_title = 'Welcome to the Official Website of ' . htmlspecialchars($settings->siteTitle);
     $page_description = htmlspecialchars($settings->siteTitle) . ' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
 
-    include('inc/head.php');
+    include_once('inc/head.php');
 
     // Ensure user is logged in
     if (!isset($_SESSION['user'])) {
@@ -376,7 +376,7 @@
                                                                             echo "On Hold";
                                                                         } ?></p>
                                                                         <div class="d-flex align-items-center">
-                                                                            <div class="progress mt-2" style="height: 8px; width: 60%;">
+                                                                            <div class="progress mt-2" style="height: 8px; flex-grow: 1; margin-right: 10px;">
                                                                                 <div class="progress-bar bg-<?php if ($inv->status == 'in progress') {
                                                                                     echo 'info progress-bar-animated';
                                                                                 } elseif ($inv->status == 'cancelled') {
@@ -390,7 +390,7 @@
                                                                                     aria-valuemax="100">
                                                                                 </div>
                                                                             </div>
-                                                                            <form action="investment-complete.php" method="POST" class="ml-2">
+                                                                            <form action="investment-complete.php" method="POST">
                                                                                 <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
                                                                                 <button type="submit" name="complete" class="btn btn-sm btn-success"
                                                                                         <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
