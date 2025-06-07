@@ -106,7 +106,7 @@ if (isset($_POST['signup'])) {
                                                                     <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
                                                                     <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
                                                                         <span style='color: #000000;'>
-                                                                            Thank you for signing up with us. Your new account is being provisioned and can be accessed once activated.
+                                                                            Thank you for registering with us. Your new account is being provisioned and can be accessed once activated.
                                                                             <br /><br />
                                                                             <strong>Your account details:</strong><br />
                                                                             Email Address: {$email}<br /><br />
