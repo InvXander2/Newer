@@ -227,7 +227,7 @@
                                         <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date">
                                             <?php
-                                                $dash_date = new DateTime('2025-06-06 19:46:00', new DateTimeZone('Europe/Paris'));
+                                                $dash_date = new DateTime('now', new DateTimeZone('Europe/Paris'));
                                                 $dash_date->setTimezone(new DateTimeZone('UTC'));
                                                 echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
                                             ?>
@@ -316,7 +316,7 @@
                                                             $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
                                                             $end_date->setTimezone(new DateTimeZone('UTC'));
                                                             $is_completed = $inv->status === 'completed';
-                                                            $is_running = $end_date > $current_date && !$is_completed;
+                                                            $is_eligible_for_completion = $current_date >= $end_date && !$is_completed;
 
                                                             $date_ivstart = $start_date->getTimestamp();
                                                             $date_ivend = $end_date->getTimestamp();
@@ -335,17 +335,9 @@
                                                                 $percent = 100;
                                                             } else {
                                                                 $percent = round(($date_now - $date_ivstart) * 100 / ($date_ivend - $date_ivstart), 0);
-                                                                if ($date_now >= $date_ivend) {
-                                                                    try {
-                                                                        $stmt = $conn->prepare("UPDATE investment SET status=:c_status WHERE invest_id=:c_id");
-                                                                        $stmt->execute(['c_status' => 'completed', 'c_id' => $inv->invest_id]);
-                                                                    } catch (PDOException $e) {
-                                                                        error_log("Error updating investment status: " . $e->getMessage());
-                                                                    }
+                                                                if ($percent > 100) {
+                                                                    $percent = 100;
                                                                 }
-                                                            }
-                                                            if ($percent > 100) {
-                                                                $percent = 100;
                                                             }
                                                         ?>
                                                             <div class="mb-3 pb-2 <?= $index < count($row5) - 1 ? 'border-bottom' : '' ?>">
@@ -393,7 +385,7 @@
                                                                             <form action="investment-complete.php" method="POST">
                                                                                 <input type="hidden" name="invest_id" value="<?= htmlspecialchars($inv->invest_id); ?>">
                                                                                 <button type="submit" name="complete" class="btn btn-sm btn-success"
-                                                                                        <?= $is_running || $is_completed ? 'disabled style="opacity: 0.5;"' : '' ?>>
+                                                                                        <?= $is_completed || !$is_eligible_for_completion ? 'disabled style="opacity: 0.5;"' : '' ?>>
                                                                                     Complete
                                                                                 </button>
                                                                             </form>
