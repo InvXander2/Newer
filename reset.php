@@ -163,7 +163,7 @@ if (isset($_POST['reset'])) {
 HTML;
 
         // Send email to user
-        require '../vendor/autoload.php';
+        require 'vendor/autoload.php';
         $mail = new PHPMailer(true);
         try {
             // Server settings
