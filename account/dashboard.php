@@ -21,7 +21,7 @@
     // Set PDO error mode to exception
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Fetch user profile data for $row0
+    // Fetch user profile data
     try {
         $stmt0 = $conn->prepare("SELECT full_name, nationality FROM users WHERE id = :user_id");
         $stmt0->execute(['user_id' => $id]);
@@ -51,7 +51,6 @@
         if ($row1) {
             $transaction = $row1["amount"];
             $type = ($row1["type"] == 1) ? "credit" : "debit";
-            // Convert trans_date from UTC+2 to UTC
             $time = new DateTime($row1["trans_date"], new DateTimeZone('Europe/Paris'));
             $time->setTimezone(new DateTimeZone('UTC'));
             $sanitized_time = $time->format("Y-m-d, g:i A") . ' (UTC)';
@@ -67,7 +66,7 @@
         $sanitized_time = "N/A";
     }
 
-    // Fetch second latest transaction for loss/gain calculation
+    // Fetch second latest transaction for loss/gain
     try {
         $stmt2 = $conn->prepare("SELECT * FROM transaction WHERE user_id = :user_id ORDER BY trans_id DESC LIMIT 1 OFFSET 1");
         $stmt2->execute(['user_id' => $id]);
@@ -104,7 +103,7 @@
 
     // Fetch active investments
     try {
-        $ disclosure = $conn->prepare("SELECT COUNT(*) AS numrows FROM investment WHERE user_id = :user_id AND status = 'in progress'");
+        $stmt4 = $conn->prepare("SELECT COUNT(*) AS numrows FROM investment WHERE user_id = :user_id AND status = 'in progress'");
         $stmt4->execute(['user_id' => $id]);
         $row4 = $stmt4->fetch(PDO::FETCH_ASSOC);
         $no_of_inv = $row4['numrows'];
@@ -179,6 +178,11 @@
     }
 ?>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include('inc/head.php'); ?>
+</head>
 <body class="dark-topbar">
     <!-- Left Sidenav -->
     <?php include('inc/sidebar.php'); ?>
@@ -223,7 +227,6 @@
                                         <span class="day-name" id="Day_Name">Today:</span> 
                                         <span class="" id="Select_date">
                                             <?php
-                                                // Convert hardcoded CEST time to UTC
                                                 $dash_date = new DateTime('2025-06-06 19:46:00', new DateTimeZone('Europe/Paris'));
                                                 $dash_date->setTimezone(new DateTimeZone('UTC'));
                                                 echo $dash_date->format('M d, Y, g:i A') . ' (UTC)';
@@ -308,7 +311,6 @@
                                                         $current_date = new DateTime('now', new DateTimeZone('UTC'));
                                                         $index = 0;
                                                         foreach ($row5 as $inv):
-                                                            // Convert dates from UTC+2 to UTC
                                                             $start_date = new DateTime($inv->start_date, new DateTimeZone('Europe/Paris'));
                                                             $start_date->setTimezone(new DateTimeZone('UTC'));
                                                             $end_date = new DateTime($inv->end_date, new DateTimeZone('Europe/Paris'));
@@ -316,7 +318,6 @@
                                                             $is_completed = $inv->status === 'completed';
                                                             $is_running = $end_date > $current_date && !$is_completed;
 
-                                                            // Calculate progress
                                                             $date_ivstart = $start_date->getTimestamp();
                                                             $date_ivend = $end_date->getTimestamp();
                                                             $date_now = $current_date->getTimestamp();
@@ -453,11 +454,6 @@
                                             <div class="col">
                                                 <h4 class="card-title">Earnings Summary</h4>
                                             </div><!--end col-->
-                                            <div class="col-auto">
-                                                <div class="dropdown">
-                                                    <!-- Dropdown content, if any, remains unchanged -->
-                                                </div>
-                                            </div><!--end col-->
                                         </div><!--end row-->
                                     </div><!--end card-header-->
                                     <div class="card-body">
@@ -529,7 +525,7 @@
                                                 <div class="media-body align-self-center">
                                                     <h6 class="m-0"><?= htmlspecialchars(substrwords($new->short_title, 30)); ?></h6>
                                                     <p class="mb-0 text-muted"><?= htmlspecialchars($tag1); ?>, <?= htmlspecialchars($tag2); ?></p>
-                                                </div><!--end media body-->
+                                                </div><!--end media-body-->
                                             </div>
                                             <div class="align-self-center">
                                                 <a target="_blank" href="../news-detail.php?id=<?= htmlspecialchars($new->id); ?>&title=<?= htmlspecialchars($new->slug); ?>" class="btn btn-sm btn-soft-primary">Read <i class="las la-external-link-alt font-15"></i></a>
@@ -569,7 +565,6 @@
 
                                             if ($no_of_act > 0) {
                                                 foreach ($actrow as $act):
-                                                    // Convert date_sent from UTC+2 to UTC
                                                     $act_time = new DateTime($act->date_sent, new DateTimeZone('Europe/Paris'));
                                                     $act_time->setTimezone(new DateTimeZone('UTC'));
                                                     $formatted_act_time = $act_time->format('Y-m-d g:i A') . ' (UTC)';
@@ -648,7 +643,6 @@
             $stmt->execute(['user_id' => $id, 'month' => $m, 'year' => $year]);
             $total = $total2 = 0;
             foreach ($stmt as $srow) {
-                // Convert end_date from UTC+2 to UTC for MONTH and YEAR comparison
                 $end_date = new DateTime($srow['end_date'], new DateTimeZone('Europe/Paris'));
                 $end_date->setTimezone(new DateTimeZone('UTC'));
                 if ($end_date->format('m') == $m && $end_date->format('Y') == $year) {
@@ -674,7 +668,6 @@
     <!-- JavaScript to Fetch Cryptocurrency Prices -->
     <script>
     $(document).ready(function() {
-        // CoinGecko API endpoint for simple price data
         const apiUrl = 'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,tether,tron,solana&vs_currencies=usd&include_24hr_change=true';
 
         $.ajax({
@@ -723,15 +716,15 @@
         }
 
         .task-box .return-info .progress {
-            margin-right: 10px; /* Adjust spacing between progress bar and button */
+            margin-right: 10px;
         }
 
         .task-box .return-info form {
-            margin-bottom: 0; /* Remove any default margin from the form */
+            margin-bottom: 0;
         }
 
         .card-body .row.align-items-center {
-            margin-bottom: 10px; /* Add spacing below the header row */
+            margin-bottom: 10px;
         }
     </style>
 </body>
