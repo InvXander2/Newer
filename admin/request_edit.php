@@ -236,7 +236,7 @@ HTML;
 
             // Content
             $mail->isHTML(true);
-            $mail->Subject = "Your Request Have Been Approved";
+            $mail->Subject = "Review Complete";
             $mail->Body = $message;
 
             $mail->send();
