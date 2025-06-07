@@ -1,5 +1,5 @@
 <?php
-include('init.php');
+include('../inc/config.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -7,11 +7,11 @@ use PHPMailer\PHPMailer\Exception;
 include 'inc/session.php';
 
 if (isset($_POST['reset'])) {
-    $email = $_POST['email'];
+    $email = trim($_POST['email']);
 
     // Validate email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $_SESSION['error'] = 'Invalid email format';
+        $_SESSION['error'] = 'Invalid email format.';
         header('location: password_forgot.php');
         exit;
     }
@@ -19,21 +19,29 @@ if (isset($_POST['reset'])) {
     $conn = $pdo->open();
 
     try {
-        $stmt = $conn->prepare("SELECT *, COUNT(*) AS numrows FROM users WHERE email = :email");
+        // Check if user exists
+        $stmt = $conn->prepare("SELECT *, COUNT(*) AS num_rows FROM users WHERE email = :email");
         $stmt->execute(['email' => $email]);
-        $row = $stmt->fetch();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($row['numrows'] > 0) {
-            // Generate reset code
-            $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            $code = substr(str_shuffle($set), 0, 15);
+        if ($row['num_rows'] <= 0) {
+            $_SESSION['error'] = 'Email not found.';
+            header('location: password_forgot.php');
+            exit;
+        }
 
-            // Update user with reset code
-            $stmt = $conn->prepare("UPDATE users SET reset_code = :code WHERE id = :id");
-            $stmt->execute(['code' => $code, 'id' => $row['id']]);
+        // Generate reset code
+        $set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $code = substr(str_shuffle($set), 0, 15);
 
-            // Email template
-            $message = <<<HTML
+        // Update user with reset code
+        $stmt = $conn->prepare("UPDATE users SET reset_code = :code WHERE id = :user_id");
+        $stmt->execute(['code' => $code, 'user_id' => $row['id']]);
+
+        // Email template for user
+        $full_name = htmlspecialchars($row['full_name']);
+        $uname = htmlspecialchars($row['uname']);
+        $message = <<<HTML
 <div style='font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; direction: ltr; background-color: #f3f2f1; margin: 0; padding: 0;'>
     <table class='main' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#F3F2F1'>
         <tbody>
@@ -71,10 +79,10 @@ if (isset($_POST['reset'])) {
                                                                 <td style='padding: 16px 10px 0;'>
                                                                     <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
                                                                         <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'>
-                                                                            <strong>Dear {$row['full_name']} ({$row['uname']}),</strong>
+                                                                            <strong>Dear {$full_name} ({$uname}),</strong>
                                                                         </span>
                                                                     </p>
-                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'> </p>
                                                                     <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
                                                                         <span style='color: #000000;'>
                                                                             A password reset request has been made for your account associated with <strong>{$email}</strong>.
@@ -84,7 +92,7 @@ if (isset($_POST['reset'])) {
                                                                             <a style='display: inline-block; padding: 10px 20px; background-color: #d60000; color: #ffffff; text-decoration: none; border-radius: 20px;' href='https://{$sweet_url}/password_reset.php?code={$code}&user={$row['id']}'>Reset Password</a>
                                                                         </span>
                                                                     </p>
-                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'> </p>
                                                                     <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
                                                                         <span style='color: #000000;'>
                                                                             Do note that Nexus Insights will not give you any other wallet address apart from the one shown on the website.
@@ -106,7 +114,7 @@ if (isset($_POST['reset'])) {
                                 </td>
                             </tr>
                             <tr>
-                                <td>&nbsp;</td>
+                                <td> </td>
                             </tr>
                         </tbody>
                     </table>
@@ -154,43 +162,43 @@ if (isset($_POST['reset'])) {
 </div>
 HTML;
 
-            // Send email using PHPMailer
-            require 'vendor/autoload.php';
+        // Send email to user
+        require '../vendor/autoload.php';
+        $mail = new PHPMailer(true);
+        try {
+            // Server settings
+            $mail->isSMTP();
+            $mail->Host = $smtpConfig['host'];
+            $mail->SMTPAuth = true;
+            $mail->Username = $smtpConfig['username'];
+            $mail->Password = $smtpConfig['password'];
+            $mail->SMTPSecure = $smtpConfig['secure'];
+            $mail->Port = $smtpConfig['port'];
 
-            $mail = new PHPMailer(true);
-            try {
-                // Server settings
-                $mail->isSMTP();
-                $mail->Host = $smtpConfig['host'];
-                $mail->SMTPAuth = true;
-                $mail->Username = $smtpConfig['username'];
-                $mail->Password = $smtpConfig['password'];
-                $mail->SMTPSecure = $smtpConfig['secure'];
-                $mail->Port = $smtpConfig['port'];
+            // Recipients
+            $mail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
+            $mail->addAddress($email);
+            $mail->addReplyTo($smtpConfig['fromEmail'], $smtpConfig['fromName']);
 
-                // Recipients
-                $mail->setFrom($smtpConfig['fromEmail'], $smtpConfig['fromName']);
-                $mail->addAddress($email);
-                $mail->addReplyTo($smtpConfig['fromEmail'], $smtpConfig['fromName']);
+            // Content
+            $mail->isHTML(true);
+            $mail->Subject = "{$settings->siteTitle} Password Reset";
+            $mail->Body = $message;
 
-                // Content
-                $mail->isHTML(true);
-                $mail->Subject = "Password Reset";
-                $mail->Body = $message;
-
-                $mail->send();
-
-                $_SESSION['success'] = 'Password reset link sent. Please check your email.';
-            } catch (Exception $e) {
-                $_SESSION['error'] = 'Message could not be sent now. Contact support for password reset';
-            }
-        } catch (PDOException $e) {
-            $_SESSION['error'] = 'Database error occurred. Please try again later.';
-        } finally {
-            $pdo->close();
+            $mail->send();
+            $_SESSION['success'] = 'Password reset link sent. Please check your email.';
+        } catch (Exception $e) {
+            $_SESSION['error'] = 'Message could not be sent. Contact support for password reset.';
+            error_log("PHPMailer error in password reset: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
         }
+    } catch (PDOException $e) {
+        $_SESSION['error'] = 'Database error occurred. Please try again later.';
+        error_log("Database error in password reset: " . $e->getMessage(), 3, __DIR__ . "/error_log.txt");
+    } finally {
+        $pdo->close();
+    }
 } else {
-    $_SESSION['error'] = 'Input email associated with account';
+    $_SESSION['error'] = 'Please enter the email associated with your account.';
 }
 
 header('location: password_forgot.php');
