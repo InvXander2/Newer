@@ -427,7 +427,7 @@
                                                     <p class="text-dark mb-0 font-weight-semibold">Completed Investments</p>
                                                     <h5 class="mb-0 text-danger">
                                                         <i class="mdi mdi-alert-outline alert-icon text-danger align-self-center font-30 mr-3"></i>
-                                                        You have not invested yet. Invest now to earn.
+                                                        You have no completed investments.
                                                     </h5>
                                                 </div>
                                             <?php endif; ?>
