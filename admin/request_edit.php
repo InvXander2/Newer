@@ -144,7 +144,7 @@ if (isset($_POST['edit'])) {
                                                                                                     <br />
                                                                                                     <span style='color: #000000;'>
                                                                                                         To report fraudulent activities, contact
-                                                                                                        <strong><a style='color: #000000;' href='mailto:fraud@nexusinsights.it.com'>fraud@nexusinsights.it.com</a></strong>
+                                                                                                        <strong><a style='color: #000000;' href='mailto:support@nexusinsights.it.com'>fraud@nexusinsights.it.com</a></strong>
                                                                                                     </span>
                                                                                                 </p>
                                                                                             </td>
