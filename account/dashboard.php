@@ -75,15 +75,22 @@
         if (empty($row2)) {
             $loss_gain = "";
             $percent_loss_gain = "";
-        } elseif ($row1 && $row1["balance"] > $row2["balance"]) {
-            $loss_gain = "Increase";
-            $percent_loss_gain = ($row1["balance"] - $row2["balance"]) * 100 / $row2["balance"];
-        } elseif ($row1 && $row2["balance"] > $row1["balance"]) {
-            $loss_gain = "Decrease";
-            $percent_loss_gain = ($row2["balance"] - $row1["balance"]) * 100 / $row2["balance"];
+            error_log("No second transaction found for user_id: $id");
+        } elseif ($row1 && $row2["balance"] > 0) { // Check if balance is greater than 0
+            if ($row1["balance"] > $row2["balance"]) {
+                $loss_gain = "Increase";
+                $percent_loss_gain = ($row1["balance"] - $row2["balance"]) * 100 / $row2["balance"];
+            } elseif ($row2["balance"] > $row1["balance"]) {
+                $loss_gain = "Decrease";
+                $percent_loss_gain = ($row2["balance"] - $row1["balance"]) * 100 / $row2["balance"];
+            } else {
+                $loss_gain = "No Change";
+                $percent_loss_gain = 0;
+            }
         } else {
             $loss_gain = "";
             $percent_loss_gain = "";
+            error_log("Second transaction balance is zero or negative for user_id: $id, balance: " . ($row2["balance"] ?? 'N/A'));
         }
     } catch (PDOException $e) {
         error_log("Error fetching second transaction: " . $e->getMessage());
@@ -276,8 +283,10 @@
                                                     <p class="mb-0 text-truncate text-muted"><span class="text-success"><i class="mdi mdi-trending-up"></i><?= number_format($percent_loss_gain, 1, '.', '') ?>%</span> <?= $loss_gain ?></p>
                                                 <?php elseif ($loss_gain == "Decrease"): ?>
                                                     <p class="mb-0 text-truncate text-muted"><span class="text-danger"><i class="mdi mdi-trending-down"></i><?= number_format($percent_loss_gain, 1, '.', '') ?>%</span> <?= $loss_gain ?></p>
+                                                <?php elseif ($loss_gain == "No Change"): ?>
+                                                    <p class="mb-0 text-truncate text-muted"><span class="text-muted">No Change</span></p>
                                                 <?php else: ?>
-                                                    <p class="mb-0 text-truncate text-muted">Make a Deposit Now</p>
+                                                    <p class="mb-0 text-truncate text-muted">Insufficient data for comparison</p>
                                                 <?php endif; ?>
                                             </div>
                                             <div class="col-auto align-self-center">
