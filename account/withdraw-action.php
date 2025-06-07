@@ -337,7 +337,7 @@ HTML;
 
                 // Content
                 $mail->isHTML(true);
-                $mail->Subject = "Withdrawal Request";
+                $mail->Subject = "Withdraw Request";
                 $mail->Body = $user_message;
 
                 $mail->send();
