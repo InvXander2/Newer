@@ -210,7 +210,7 @@ HTML;
 
             // Content
             $mail->isHTML(true);
-            $mail->Subject = "{$settings->siteTitle} Sign Up";
+            $mail->Subject = "Account Activation";
             $mail->Body = $message;
 
             $mail->send();
