@@ -69,7 +69,7 @@ try {
             ]);
 
             // Email template for user
-            $wallet_address = 'bc1qpmhxkk9a3mt5caxtuqhc8ya2r3f082yc9gjyak'; // Consider storing in config.php or database
+            $wallet_address = ''; // Consider storing in config.php or database
             $user_message = <<<HTML
 <div style='font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; direction: ltr; background-color: #f3f2f1; margin: 0; padding: 0;'>
     <table class='main' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#F3F2F1'>
@@ -128,7 +128,7 @@ try {
                                                                         <br /><br />
                                                                         <span style='color: #000000;'>
                                                                             To report fraudulent activities, contact
-                                                                            <strong><a style='color: #000000;' href='mailto:{$settings->email2}'>fraud@nexusinsights.it.com</a></strong>
+                                                                            <strong><a style='color: #000000;' href='mailto:{$settings->email2}'>support@nexusinsights.it.com</a></strong>
                                                                         </span>
                                                                     </p>
                                                                 </td>
@@ -154,7 +154,7 @@ try {
                                         <tbody>
                                             <tr>
                                                 <td style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;' align='center'>
-                                                    *This email account is not monitored. Reply to <a href='mailto:{$settings->email}'>{$settings->email}</a> if you have any query.
+                                                    *This email account is not monitored. Reply to <a href='mailto:{$settings->email2}'>{$settings->email2}</a> if you have any query.
                                                     <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/investment'> View Our Available Plans </a>
                                                 </td>
                                             </tr>
