@@ -181,7 +181,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <?php include('inc/head.php'); ?>
+    <?php include_once('inc/head.php'); ?>
 </head>
 <body class="dark-topbar">
     <!-- Left Sidenav -->
