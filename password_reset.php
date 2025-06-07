@@ -36,7 +36,7 @@
           <div class="col-xl-5 col-lg-7">
             <div class="account-card">
               <div class="account-card__header bg_img overlay--one" data-background="assets/images/bg/bg-6.jpg">
-                <h2 class="section-title"><span class="base--color">PRIME ASSETS</span> Password Reset</h2>
+                <h2 class="section-title"><span class="base--color">NEXUS INSIGHTS</span> Password Reset</h2>
                 <p>Enter Your New Password</p>
                 <?php
                     if(isset($_SESSION['error'])){
