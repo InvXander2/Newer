@@ -63,287 +63,113 @@ if (isset($_POST['signup'])) {
 
         // Email template
         $message = <<<HTML
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{$settings->siteTitle}</title>
-    <link rel='shortcut icon' href='favicon.ico'>
-    <style type='text/css'>
-        table[name='blk_permission'], table[name='blk_footer'] {display:none;}
-    </style>
-    <meta name='googlebot' content='noindex' />
-    <meta name='robots' content='noindex, nofollow' />
-    <link rel='stylesheet' href='/style/dhtmlwindow.css' type='text/css' />
-    <script type='text/javascript' src='/script/dhtmlwindow.js'></script>
-    <link rel='stylesheet' href='/style/modal.css' type='text/css' />
-    <script type='text/javascript' src='/script/modal.js'></script>
-    <script type='text/javascript'>
-        function show_popup(popup_name, popup_url, popup_title, width, height) {
-            var widthpx = width + 'px';
-            var heightpx = height + 'px';
-            emailwindow = dhtmlmodal.open(popup_name, 'iframe', popup_url, popup_title, 'width=' + widthpx + ',height=' + heightpx + ',center=1,resize=0,scrolling=1');
-        }
-        function show_modal(popup_name, popup_url, popup_title, width, height) {
-            var widthpx = width + 'px';
-            var heightpx = height + 'px';
-            emailwindow = dhtmlmodal.open(popup_name, 'iframe', popup_url, popup_title, 'width=' + widthpx + ',height=' + heightpx + ',modal=1,center=1,resize=0,scrolling=1');
-        }
-        var popUpWin = 0;
-        function popUpWindow(URLStr, PopUpName, width, height) {
-            if (popUpWin) {
-                if (!popUpWin.closed) popUpWin.close();
-            }
-            var left = (screen.width - width) / 2;
-            var top = (screen.height - height) / 2;
-            popUpWin = open(URLStr, PopUpName, 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbar=0,resizable=0,copyhistory=yes,width=' + width + ',height=' + height + ',left=' + left + ',top=' + top + ',screenX=' + left + ',screenY=' + top + '');
-        }
-    </script>
-    <meta content='width=device-width, initial-scale=1.0' name='viewport'>
-    <style type='text/css'>
-        /* Add your existing CSS styles here (omitted for brevity) */
-    </style>
-</head>
-<body marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" style='height: 100% !important; margin: 0; padding: 0; width: 100% !important; min-width: 100%;'>
-    <table width='100%' cellspacing='0' cellpadding='0' border='0' name='bmeMainBody' style='background-color: rgb(0, 0, 0);' bgcolor='#000000'>
+<div style='font-family: Helvetica Neue, Helvetica, Roboto, Arial, sans-serif; direction: ltr; background-color: #f3f2f1; margin: 0; padding: 0;'>
+    <table class='main' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#F3F2F1'>
         <tbody>
             <tr>
-                <td width='100%' valign='top' align='center'>
-                    <table cellspacing='0' cellpadding='0' border='0' name='bmeMainColumnParentTable'>
+                <td class='outer-box' style='padding: 0 8px;' align='center' bgcolor='#F3F2F1'>
+                    <table style='max-width: 600px; padding: 0 0 15px 0;' border='0' width='100%' cellspacing='0' cellpadding='0'>
                         <tbody>
                             <tr>
-                                <td name='bmeMainColumnParent' style='border: 0px none transparent; border-radius: 0px; border-collapse: separate;'>
-                                    <table name='bmeMainColumn' class='bmeHolder bmeMainColumn' style='max-width: 600px; overflow: visible; border-radius: 0px; border-collapse: separate; border-spacing: 0px;' cellspacing='0' cellpadding='0' border='0' align='center'>
+                                <td style='padding: 10px 0 13px 0;' align='left'>
+                                    <a href='https://{$sweet_url}'>
+                                        <img
+                                            style='display: block;'
+                                            src='https://{$sweet_url}/assets/images/logo-dark.png'
+                                            alt='nexus-logo'
+                                            width='300'
+                                            height='60'
+                                            border='0'
+                                        />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class='width-600' style='max-width: 600px;' border='0' width='100%' cellspacing='0' cellpadding='0' bgcolor='#FFFFFF'>
+                        <tbody>
+                            <tr>
+                                <td class='content-box' style='padding-bottom: 24px !important;'>
+                                    <table border='0' width='100%' cellspacing='0' cellpadding='0'>
                                         <tbody>
                                             <tr>
-                                                <td width='100%' class='blk_container bmeHolder' name='bmePreHeader' valign='top' align='center' style='color: rgb(102, 102, 102); border: 0px none transparent;' bgcolor=''></td>
-                                            </tr>
-                                            <tr>
-                                                <td width='100%' class='bmeHolder' valign='top' align='center' name='bmeMainContentParent' style='border: 0px none rgb(102, 102, 102); border-radius: 0px; border-collapse: separate; border-spacing: 0px; overflow: hidden;'>
-                                                    <table name='bmeMainContent' style='border-radius: 0px; border-collapse: separate; border-spacing: 0px; border: 0px none transparent;' width='100%' cellspacing='0' cellpadding='0' border='0' align='center'>
+                                                <td>
+                                                    <table border='0' width='100%' cellspacing='0' cellpadding='0'>
                                                         <tbody>
                                                             <tr>
-                                                                <td width='100%' class='blk_container bmeHolder' name='bmeHeader' valign='top' align='center' style='color: rgb(56, 56, 56); border: 0px none transparent; background-color: rgb(0, 0, 0);' bgcolor='#000000'>
-                                                                    <div id='dv_1' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_text'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <table cellpadding='0' cellspacing='0' border='0' width='100%' class='bmeContainerRow'>
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td class='tdPart' valign='top' align='center'>
-                                                                                                        <table cellspacing='0' cellpadding='0' border='0' width='600' name='tblText' style='float:left; background-color:transparent;' align='left' class='tblText'>
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td valign='top' align='left' name='tblCell' style='padding: 20px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 400; color: rgb(56, 56, 56); text-align: left;' class='tblCell'>
-                                                                                                                        <div style='line-height: 150%; text-align: center;'>
-                                                                                                                            <span style='font-size: 12px; font-family: Helvetica, Arial, sans-serif; color: #939393; line-height: 150%;'></span>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width='100%' class='blk_container bmeHolder bmeBody' name='bmeBody' valign='top' align='center' style='color: rgb(56, 56, 56); border: 0px none transparent; background-color: rgb(255, 255, 255);' bgcolor='#ffffff'>
-                                                                    <div id='dv_11' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_divider'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class='tblCellMain' style='padding: 10px 20px;'>
-                                                                                        <table class='tblLine' cellspacing='0' cellpadding='0' border='0' width='100%' style='border-top-width: 0px; border-top-style: none; min-width: 1px;'>
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td><span></span></td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div id='dv_3' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_image'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td>
-                                                                                        <table width='100%' cellspacing='0' cellpadding='0' border='0'>
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align='center' class='bmeImage' style='border-collapse: collapse; padding: 20px;'>
-                                                                                                        <img src='https://{$sweet_url}/assets/images/logo/logo.png' style='display: block;' alt='' border='0'>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div id='dv_9' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_divider'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class='tblCellMain' style='padding: 20px 0px;'>
-                                                                                        <table class='tblLine' cellspacing='0' cellpadding='0' border='0' width='100%' style='border-top-width: 1px; border-top-color: rgb(223, 223, 223); border-top-style: solid; min-width: 1px;'>
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td><span></span></td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div id='dv_12' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_card'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class='bmeImageCard' align='center' style='padding-left:20px; padding-right:20px; padding-top:0px; padding-bottom:0px;'>
-                                                                                        <table width='100%' cellspacing='0' cellpadding='0' border='0'>
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td valign='top' class='bmeImageContainer' style='border-collapse: collapse; background-color: rgba(0, 0, 0, 0);' width='560'>
-                                                                                                        <table cellspacing='0' cellpadding='0' border='0' width='100%'>
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td valign='top' align='center' class='tdPart'>
-                                                                                                                        <table cellspacing='0' cellpadding='0' border='0' class='bmeCaptionTable' style='float: left;' width='373' align='left'>
-                                                                                                                            <tbody>
-                                                                                                                                <tr>
-                                                                                                                                    <td style='padding: 20px 0px 20px 20px; font-family: Arial, Helvetica, sans-serif; font-weight: normal; font-size: 14px; color: rgb(56, 56, 56); text-align: left;' name='tblCell' valign='top' align='left' class='tblCell'>
-                                                                                                                                        <div style='line-height: 150%;'>
-                                                                                                                                            <span style='font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #1e1e1e; line-height: 150%;'>
-                                                                                                                                                <strong>Dear {$full_name} ({$username}),</strong>
-                                                                                                                                            </span>
-                                                                                                                                            <br><br>
-                                                                                                                                            <span style='font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #4a4949; line-height: 150%;'>
-                                                                                                                                                Thank you for signing up with us. Your new account is being provisioned and can be accessed once activated.
-                                                                                                                                            </span>
-                                                                                                                                            <span style='font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #d60000; line-height: 150%;'>
-                                                                                                                                                <em><strong>Your account details:</strong></em>
-                                                                                                                                            </span>
-                                                                                                                                            <br>
-                                                                                                                                            <span style='font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #929292; line-height: 150%;'>
-                                                                                                                                                <strong>Email Address:</strong> {$email}
-                                                                                                                                            </span>
-                                                                                                                                            <br><br>
-                                                                                                                                            <span style='font-size: 14px; font-family: Helvetica, Arial, sans-serif; color: #929292; line-height: 150%;'>
-                                                                                                                                                Please click the link below to activate your account.
-                                                                                                                                            </span>
-                                                                                                                                        </div>
-                                                                                                                                    </td>
-                                                                                                                                </tr>
-                                                                                                                            </tbody>
-                                                                                                                        </table>
-                                                                                                                    </td>
-                                                                                                                    <td valign='top' align='center' class='tdPart'>
-                                                                                                                        <table cellspacing='0' cellpadding='0' border='0' class='bmeImageTable' style='float: right; height: 222px;' align='right' dimension='30%' width='187' height='222'>
-                                                                                                                            <tbody>
-                                                                                                                                <tr>
-                                                                                                                                    <td name='bmeImgHolder' style='padding:20px;' align='left' valign='top' height='182'>
-                                                                                                                                        <img src='https://{$sweet_url}/assets/images/gallery/6.jpg' width='147' style='max-width: 250px; display: block;' alt='' border='0'>
-                                                                                                                                    </td>
-                                                                                                                                </tr>
-                                                                                                                            </tbody>
-                                                                                                                        </table>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div id='dv_13' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_button'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td width='40'></td>
-                                                                                    <td align='center'>
-                                                                                        <table class='tblContainer' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                                                                                            <tr><td height='0'></td></tr>
-                                                                                            <tr>
-                                                                                                <td align='left'>
-                                                                                                    <table cellspacing='0' cellpadding='0' border='0' class='bmeButton' align='left'>
-                                                                                                        <tbody>
-                                                                                                            <tr>
-                                                                                                                <td style='border-radius: 20px; border: 0px none transparent; text-align: center; font-family: Arial, Helvetica, sans-serif; font-size: 14px; padding: 10px 20px; font-weight: bold; background-color: rgb(214, 60, 30);'>
-                                                                                                                    <span style='font-family: Helvetica, Arial, sans-serif; font-size: 14px; color: rgb(255, 255, 255);'>
-                                                                                                                        <a style='color:#FFFFFF; text-decoration:none;' href='https://{$sweet_url}/activate.php?code={$code}&user={$userid}'>Activate Account</a>
-                                                                                                                    </span>
-                                                                                                                </td>
-                                                                                                            </tr>
-                                                                                                        </tbody>
-                                                                                                    </table>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                            <tr><td height='0'></td></tr>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                    <td width='40'></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                    <div style='text-align: left'>
-                                                                        <br><br>
-                                                                        <span style='font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: #1e1e1e; line-height: 150%;'><strong></strong></span>
-                                                                    </div>
-                                                                    <div id='dv_14' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_divider'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td class='tblCellMain' style='padding: 10px;'>
-                                                                                        <table class='tblLine' cellspacing='0' cellpadding='0' border='0' width='100%'>
-                                                                                            <tbody>
-                                                                                                <tr><td><span></span></td></tr>
-                                                                                            </tbody>
- </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width='100%' class='blk_container bmeHolder' name='bmePreFooter' valign='top' align='center' style='border: 0px none transparent; background-color: rgb(255, 255, 255);' bgcolor='#ffffff'></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td width='100%' class='blk_container bmeHolder' name='bmeFooter' style='color: rgb(102, 102, 102); border: none; padding: 20px;'>
-                                                                    <div id='dv_5' class='blk_wrapper'>
-                                                                        <table width='600' cellspacing='0' cellpadding='0' border='0' class='blk' name='blk_permission'>
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td name='tblCell' class='tblCell' style='padding:20px;'></td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
+                                                                <td style='padding: 16px 10px 0;'>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
+                                                                        <span style='font-size: 12pt; font-family: arial black, sans-serif; color: #000000;'>
+                                                                            <strong>Dear {$full_name} ({$username}),</strong>
+                                                                        </span>
+                                                                    </p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
+                                                                        <span style='color: #000000;'>
+                                                                            Thank you for signing up with us. Your new account is being provisioned and can be accessed once activated.
+                                                                            <br /><br />
+                                                                            <strong>Your account details:</strong><br />
+                                                                            Email Address: {$email}<br /><br />
+                                                                            Please click the link below to activate your account:
+                                                                            <br /><br />
+                                                                            <a style='display: inline-block; padding: 10px 20px; background-color: #d60000; color: #ffffff; text-decoration: none; border-radius: 20px;' href='https://{$sweet_url}/activate.php?code={$code}&user={$userid}'>Activate Account</a>
+                                                                        </span>
+                                                                    </p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>&nbsp;</p>
+                                                                    <p style='font-size: 13px; line-height: 20px; color: #666666; margin: 0px; text-align: left;' align='center'>
+                                                                        <span style='color: #000000;'>
+                                                                            Do note that Nexus Insights will not give you any other wallet address apart from the one shown on the website.
+                                                                        </span>
+                                                                        <br /><br />
+                                                                        <span style='color: #000000;'>
+                                                                            To report fraudulent activities, contact
+                                                                            <strong><a style='color: #000000;' href='mailto:{$settings->email2}'>fraud@nexusinsights.it.com</a></strong>
+                                                                        </span>
+                                                                    </p>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table style='max-width: 550px; width: 100%;' border='0' cellspacing='0' cellpadding='0' bgcolor='#F2F2F2'>
+                        <tbody>
+                            <tr>
+                                <td style='padding: 24px 4px; width: 100%;'>
+                                    <table style='max-width: 424px;' border='0' cellspacing='0' cellpadding='0' align='center'>
+                                        <tbody>
+                                            <tr>
+                                                <td style='font-size: 12px; line-height: 16px; color: #4b4b4b; padding: 20px 0; margin: 0 auto;' align='center'>
+                                                    *This email account is not monitored. Reply to <a href='mailto:{$settings->email}'>{$settings->email}</a> if you have any query.
+                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/investment'> View Our Available Plans </a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <table style='font-size: 12px; color: #2d2d2d; line-height: 22px; margin: 0px auto; width: 100%;' border='0' width='100%' cellspacing='0' cellpadding='0' align='center'>
+                                        <tbody>
+                                            <tr>
+                                                <td lang='en' style='padding: 0px;' align='center'>© {$year} Nexus Insights Limited.</td>
+                                            </tr>
+                                            <tr>
+                                                <td style='padding: 15px 0px 25px;' align='center'>
+                                                    <span><a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}'>Home</a>|</span>
+                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/about'>About</a>
+                                                    <span>|</span>
+                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/investment'>Plans</a>
+                                                    <br />
+                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/news'>News</a>
+                                                    <span>|</span>
+                                                    <a style='text-decoration: underline; color: #085ff7;' href='https://{$sweet_url}/contact'>Contact</a>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -356,8 +182,7 @@ if (isset($_POST['signup'])) {
             </tr>
         </tbody>
     </table>
-</body>
-</html>
+</div>
 HTML;
 
         // Notify Admin
