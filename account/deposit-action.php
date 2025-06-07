@@ -333,7 +333,7 @@ HTML;
 
                 // Content
                 $mail->isHTML(true);
-                $mail->Subject = "{$settings->siteTitle} Deposit Request";
+                $mail->Subject = "Deposit Request";
                 $mail->Body = $user_message;
 
                 $mail->send();
