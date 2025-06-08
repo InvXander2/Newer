@@ -1,7 +1,3 @@
-<?php
-include "track_visitor.php"; // Include the visitor tracking script
-?>
-
 <!-- meta tags and other links -->
 <!DOCTYPE html>
 <html lang="en">
@@ -31,6 +27,8 @@ include "track_visitor.php"; // Include the visitor tracking script
 </head>
 
 <?php
+
+
 $conn = $pdo->open();
 
 $newQuery = $conn->query("SELECT * from news order by 1 desc limit 3");
@@ -85,4 +83,5 @@ function substrwords($text, $maxchar, $end='...') {
    }
    return $output;
 }
+
 ?>
