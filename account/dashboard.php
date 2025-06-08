@@ -1,8 +1,7 @@
 <?php
     include_once('../inc/config.php');
     include_once('../admin/includes/format.php');
-    include('../inc/session.php');
-    include('inc/track_visitor.php');
+    include_once('../inc/session.php');
 
     $page_name = 'Dashboard';
     $page_parent = '';
