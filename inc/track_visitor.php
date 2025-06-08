@@ -1,8 +1,6 @@
 <?php
 // track_visitor.php
 
-session_start();
-
 // Include database connection
 
 // Check if already tracked in this session
