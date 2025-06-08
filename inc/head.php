@@ -1,5 +1,4 @@
 <?php
-session_start(); // Start session for tracking
 include "track_visitor.php"; // Include the visitor tracking script
 ?>
 
