@@ -1,4 +1,8 @@
-<?php include 'includes/session.php'; ?>
+<?php
+include 'includes/session.php';
+include '../account/connect.php'; // MySQLi connection
+?>
+
 <?php include 'includes/header.php'; ?>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -22,7 +26,7 @@
     <!-- Main content -->
     <section class="content">
       <?php
-        if(isset($_SESSION['error'])){
+        if (isset($_SESSION['error'])) {
           echo "
             <div class='alert alert-danger alert-dismissible'>
               <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
@@ -32,7 +36,7 @@
           ";
           unset($_SESSION['error']);
         }
-        if(isset($_SESSION['success'])){
+        if (isset($_SESSION['success'])) {
           echo "
             <div class='alert alert-success alert-dismissible'>
               <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
@@ -50,43 +54,39 @@
               <h3 class="box-title">Visitor Tracking History</h3>
             </div>
             <div class="box-body">
+              <p><i class="fa fa-eye"></i> Click on the visitor's IP Address to view the tracking details</p>
               <div class="table-responsive">
                 <table id="example1" class="table table-bordered">
                   <thead>
-                    <th>ID</th>
-                    <th>Page Name</th>
-                    <th>Visit Time</th>
-                    <th>Location</th>
                     <th>IP Address</th>
-                    <th>User ID</th>
+                    <th>Location</th>
                     <th>Actions</th>
                   </thead>
                   <tbody>
                     <?php
-                      $conn = $pdo->open();
-
-                      try{
-                        $stmt = $conn->prepare("SELECT * FROM visitor_logs ORDER BY visit_time DESC");
+                      try {
+                        // Query logs with id for deletion
+                        $stmt = $conne->prepare("SELECT DISTINCT id, ip_address, location FROM visitor_logs ORDER BY ip_address");
                         $stmt->execute();
+                        $result = $stmt->get_result();
 
-                        foreach($stmt as $row){ ?>
-                          <tr>
-                            <td><?php echo $row['id']; ?></td>
-                            <td><?php echo htmlspecialchars($row['page_name']); ?></td>
-                            <td><?php echo $row['visit_time']; ?></td>
-                            <td><?php echo htmlspecialchars($row['location']); ?></td>
-                            <td><?php echo htmlspecialchars($row['ip_address']); ?></td>
-                            <td><?php echo $row['user_id'] ? $row['user_id'] : 'N/A'; ?></td>
-                            <td>
-                              <button class="btn btn-danger btn-sm delete btn-flat" data-id="<?php echo $row['id']; ?>"><i class="fa fa-trash"></i> Delete</button>
-                            </td>
-                          </tr>
-                        <?php  
+                        if ($result->num_rows > 0) {
+                          while ($row = $result->fetch_assoc()) { ?>
+                            <tr>
+                              <td><a href="ip_logs.php?ip=<?php echo urlencode($row['ip_address']); ?>" title="View details for IP <?php echo htmlspecialchars($row['ip_address']); ?>"><?php echo htmlspecialchars($row['ip_address']); ?></a></td>
+                              <td><?php echo htmlspecialchars($row['location']); ?></td>
+                              <td>
+                                <button class="btn btn-danger btn-sm delete btn-flat" data-id="<?php echo $row['id']; ?>"><i class="fa fa-trash"></i> Delete</button>
+                              </td>
+                            </tr>
+                          <?php }
+                        } else {
+                          echo "<tr><td colspan='3'>No visitor logs found.</td></tr>";
                         }
-                      } catch(PDOException $e){
-                        echo "<tr><td colspan='7'>Error: " . $e->getMessage() . "</td></tr>";
+                        $stmt->close();
+                      } catch (Exception $e) {
+                        echo "<tr><td colspan='3'>Error: " . htmlspecialchars($e->getMessage()) . "</td></tr>";
                       }
-                      $pdo->close();
                     ?>
                   </tbody>
                 </table>
@@ -113,7 +113,7 @@ $(function(){
     if(confirm('Are you sure you want to delete this log?')) {
       $.ajax({
         type: 'POST',
-        url: 'delete_visitor_log.php', // Create this file for deletion
+        url: 'delete_visitor_log.php',
         data: {id: id},
         dataType: 'json',
         success: function(response){
@@ -121,8 +121,11 @@ $(function(){
             alert('Log deleted successfully');
             location.reload(); // Refresh page
           } else {
-            alert('Error: ' . response.message);
+            alert('Error: ' + response.message);
           }
+        },
+        error: function(xhr, status, error) {
+          alert('Error deleting log: ' + error);
         }
       });
     }
@@ -136,7 +139,12 @@ $(function(){
 }
 
 .table-responsive table {
-  min-width: 1000px; /* Adjust based on your table's content width */
+  min-width: 600px; /* Adjusted for columns */
+}
+
+.box-body p {
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 </style>
 </body>
