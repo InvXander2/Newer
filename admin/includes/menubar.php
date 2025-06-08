@@ -18,11 +18,12 @@
       <li><a href="home.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
       <li><a href="deposits.php"><i class="fa fa-bitcoin"></i> <span>Deposit Request</span></a></li>
       <li><a href="withdrawals.php"><i class="fa fa-money"></i> <span>Withdrawal Request</span></a></li>
+      <li><a href="visitor_logs.php"><i class="fa fa-users"></i> <span>Visitor Logs</span></a></li> <!-- New entry -->
 
       <li class="header">MANAGE</li>
       <li><a href="users.php"><i class="fa fa-users"></i> <span>Users</span></a></li>
       <li><a href="investment_plans.php"><i class="fa fa-edit"></i> <span>Investment Plans</span></a></li>
-      <li><a href="investments.php"><i class="fa fa-handshake-o"></i> <span>Investments History</span></a></li>
+      <li><a href="investments.php"><i class="fa fa-handshake-o"></i> <span>Investments</span></a></li>
       <li><a href="payment_methods.php"><i class="fa fa-credit-card"></i> <span>Payment Methods</span></a></li>
 
       <li class="treeview">
