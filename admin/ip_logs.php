@@ -64,7 +64,7 @@ $stmt_logs->close();
           if (isset($_SESSION['success'])) {
             echo "
               <div class='alert alert-success alert-dismissible'>
-                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
+                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
                 <h4><i class='icon fa fa-check'></i> Success!</h4>
                 ".$_SESSION['success']."
               </div>
@@ -111,41 +111,43 @@ $stmt_logs->close();
             <?php
               if ($result_logs->num_rows > 0) {
             ?>
-              <table id="example1" class="table table-bordered">
-                <thead>
-                  <th>ID</th>
-                  <th>Page Name</th>
-                  <th>Visit Time (UTC)</th>
-                  <th>Location</th>
-                  <th>IP Address</th>
-                  <th>User ID</th>
-                </thead>
-                <tbody>
-                  <?php
-                    while ($row = $result_logs->fetch_assoc()) {
-                  ?>
-                    <tr>
-                      <td><?php echo htmlspecialchars($row['id']); ?></td>
-                      <td><?php echo htmlspecialchars($row['page_name']); ?></td>
-                      <td>
-                        <?php
-                          try {
-                            $time = new DateTime($row['visit_time'], new DateTimeZone('Europe/Paris'));
-                            $time->setTimezone(new DateTimeZone('UTC'));
-                            $sanitized_time = $time->format("d/m/Y, g:i A") . ' UTC';
-                            echo htmlspecialchars($sanitized_time);
-                          } catch (Exception $e) {
-                            echo 'Invalid date';
-                          }
-                        ?>
-                      </td>
-                      <td><?php echo htmlspecialchars($row['location']); ?></td>
-                      <td><?php echo htmlspecialchars($row['ip_address']); ?></td>
-                      <td><?php echo $row['user_id'] ? htmlspecialchars($row['user_id']) : 'N/A'; ?></td>
-                    </tr>
-                  <?php } ?>
-                </tbody>
-              </table>
+              <div class="table-responsive">
+                <table id="example1" class="table table-bordered">
+                  <thead>
+                    <th>ID</th>
+                    <th>Page Name</th>
+                    <th>Visit Time (UTC)</th>
+                    <th>Location</th>
+                    <th>IP Address</th>
+                    <th>User ID</th>
+                  </thead>
+                  <tbody>
+                    <?php
+                      while ($row = $result_logs->fetch_assoc()) {
+                    ?>
+                      <tr>
+                        <td><?php echo htmlspecialchars($row['id']); ?></td>
+                        <td><?php echo htmlspecialchars($row['page_name']); ?></td>
+                        <td>
+                          <?php
+                            try {
+                              $time = new DateTime($row['visit_time'], new DateTimeZone('Europe/Paris'));
+                              $time->setTimezone(new DateTimeZone('UTC'));
+                              $sanitized_time = $time->format("d/m/Y, g:i A") . ' UTC';
+                              echo htmlspecialchars($sanitized_time);
+                            } catch (Exception $e) {
+                              echo 'Invalid date';
+                            }
+                          ?>
+                        </td>
+                        <td><?php echo htmlspecialchars($row['location']); ?></td>
+                        <td><?php echo htmlspecialchars($row['ip_address']); ?></td>
+                        <td><?php echo $row['user_id'] ? htmlspecialchars($row['user_id']) : 'N/A'; ?></td>
+                      </tr>
+                    <?php } ?>
+                  </tbody>
+                </table>
+              </div>
             <?php
               } else {
             ?>
@@ -170,5 +172,15 @@ $stmt_logs->close();
 <!-- ./wrapper -->
 
 <?php include 'includes/scripts.php'; ?>
+<style>
+.table-responsive {
+  overflow-x: auto;
+  width: 100%;
+}
+
+.table-responsive table {
+  min-width: 1000px; /* Adjusted for more columns */
+}
+</style>
 </body>
 </html>
