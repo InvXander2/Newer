@@ -2,13 +2,7 @@
 include 'includes/session.php';
 include "../account/connect.php";
 
-$id = $_GET['i_id'] ?? null;
-
-if (!$id) {
-    $_SESSION['error'] = "No user ID provided.";
-    header('Location: users.php'); // Adjust redirect as needed
-    exit();
-}
+$id = $_GET['i_id'];
 
 // Query for user details using prepared statement
 $stmt0 = $conne->prepare("SELECT * FROM users WHERE id = ?");
@@ -50,28 +44,6 @@ $sql0 = "SELECT * FROM transaction WHERE user_id = ? ORDER BY trans_id DESC";
   <div class="content-wrapper">
       <section class="content">
       <div class="row">
-        <?php
-          if (isset($_SESSION['error'])) {
-            echo "
-              <div class='alert alert-danger alert-dismissible'>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                <h4><i class='icon fa fa-warning'></i> Error!</h4>
-                ".$_SESSION['error']."
-              </div>
-            ";
-            unset($_SESSION['error']);
-          }
-          if (isset($_SESSION['success'])) {
-            echo "
-              <div class='alert alert-success alert-dismissible'>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                <h4><i class='icon fa fa-check'></i> Success!</h4>
-                ".$_SESSION['success']."
-              </div>
-            ";
-            unset($_SESSION['success']);
-          }
-        ?>
          <div class="marbtm50 wdt-100">
             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                <span class="portfolio-img-column image_hover">
@@ -131,6 +103,7 @@ $sql0 = "SELECT * FROM transaction WHERE user_id = ? ORDER BY trans_id DESC";
                           </thead>
                           <tbody>
                           <?php
+                              // Output data of each row
                               while ($row = $result->fetch_assoc()) {
                                 if ($row["type"] == 1) {
                                     $type = "credit";
@@ -142,14 +115,11 @@ $sql0 = "SELECT * FROM transaction WHERE user_id = ? ORDER BY trans_id DESC";
                                   <td><?php echo htmlspecialchars($row["trans_id"]); ?></td>
                                   <td>
                                       <?php
-                                          try {
-                                              $time = new DateTime($row["trans_date"], new DateTimeZone('Europe/Paris'));
-                                              $time->setTimezone(new DateTimeZone('UTC'));
-                                              $sanitized_time = $time->format("d/m/Y, g:i A") . ' UTC';
-                                              echo htmlspecialchars($sanitized_time);
-                                          } catch (Exception $e) {
-                                              echo 'Invalid date';
-                                          }
+                                          // Convert trans_date from UTC+2 to UTC
+                                          $time = new DateTime($row["trans_date"], new DateTimeZone('Europe/Paris'));
+                                          $time->setTimezone(new DateTimeZone('UTC'));
+                                          $sanitized_time = $time->format("d/m/Y, g:i A") . ' UTC';
+                                          echo htmlspecialchars($sanitized_time);
                                       ?>
                                   </td>
                                   <td><?php echo htmlspecialchars($type); ?></td>
@@ -161,8 +131,7 @@ $sql0 = "SELECT * FROM transaction WHERE user_id = ? ORDER BY trans_id DESC";
                         </table>
                       </div>
                   <?php
-                  } else {
-                  ?>
+                  } else { ?>
                       <section class="content-header">
                         <h1>
                           No transaction info
@@ -173,25 +142,28 @@ $sql0 = "SELECT * FROM transaction WHERE user_id = ? ORDER BY trans_id DESC";
                   $stmt->close();
                   $conne->close();
               ?>
+              </div>
             </div>
-         </div>
+          </div>
       </div>
-    </section>
+
+      </section>
+      
   </div>
-  <?php include 'includes/footer.php'; ?>
+    <?php include 'includes/footer.php'; ?>
+
 </div>
 <!-- ./wrapper -->
 
 <?php include 'includes/scripts.php'; ?>
 <style>
-.table-responsive {
-  overflow-x: auto;
-  width: 100%;
-}
-
-.table-responsive table {
-  min-width: 800px; /* Adjusted for five columns */
-}
+  .table-responsive {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .table-responsive table {
+    min-width: 800px;
+  }
 </style>
 </body>
 </html>
