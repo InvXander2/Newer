@@ -51,7 +51,7 @@ include '../account/connect.php'; // MySQLi connection
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Visitor Tracking History</h3>
+              <h3 class="box-title">User's Tracking Logs</h3>
             </div>
             <div class="box-body">
               <p><i class="fa fa-eye"></i> Click on the user's IP Address to view the tracking details</p>
