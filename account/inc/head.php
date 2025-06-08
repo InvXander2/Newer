@@ -1,7 +1,6 @@
 <?php
 include "inc/connect.php";
 session_start();
-include 'track_visitor.php';
 
 function substrwords($text, $maxchar, $end='...') {
    if (strlen($text) > $maxchar || $text == '') {
