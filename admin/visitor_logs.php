@@ -15,11 +15,11 @@ include '../account/connect.php'; // MySQLi connection
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Visitor Logs
+        Tracking Logs
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Visitor Logs</li>
+        <li class="active">Tracking Logs</li>
       </ol>
     </section>
 
@@ -54,7 +54,7 @@ include '../account/connect.php'; // MySQLi connection
               <h3 class="box-title">Visitor Tracking History</h3>
             </div>
             <div class="box-body">
-              <p><i class="fa fa-eye"></i> Click on the user's IP Address to view details about the visitor</p>
+              <p><i class="fa fa-eye"></i> Click on the user's IP Address to view the tracking details</p>
               <div class="table-responsive">
                 <table id="example1" class="table table-bordered">
                   <thead>
