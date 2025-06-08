@@ -1,6 +1,6 @@
 <?php
-include 'includes/session.php'; 
-include "../account/connect.php"; // MySQLi connection (as in template)
+include 'includes/session.php';
+include '../account/connect.php'; // MySQLi connection
 
 // Get IP address from query parameter
 $ip = $_GET['ip'] ?? null;
@@ -37,7 +37,6 @@ if ($user_id) {
 }
 
 $stmt_logs->close();
-
 ?>
 
 <?php include 'includes/header.php'; ?>
@@ -65,7 +64,7 @@ $stmt_logs->close();
           if (isset($_SESSION['success'])) {
             echo "
               <div class='alert alert-success alert-dismissible'>
-                <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+                <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>
                 <h4><i class='icon fa fa-check'></i> Success!</h4>
                 ".$_SESSION['success']."
               </div>
@@ -130,7 +129,6 @@ $stmt_logs->close();
                       <td><?php echo htmlspecialchars($row['page_name']); ?></td>
                       <td>
                         <?php
-                          // Convert visit_time from UTC+2 to UTC
                           try {
                             $time = new DateTime($row['visit_time'], new DateTimeZone('Europe/Paris'));
                             $time->setTimezone(new DateTimeZone('UTC'));
