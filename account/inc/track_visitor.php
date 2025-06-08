@@ -2,7 +2,7 @@
 // track_visitor.php
 
 // Include database connection
-include 'inc/conn.php'; // Assumes PDO connection in $pdo
+require_once 'inc/conn.php'; // Assumes PDO connection in $pdo
 
 // Check if already tracked in this session
 if (!isset($_SESSION['tracked'])) {
