@@ -54,7 +54,7 @@ include '../account/connect.php'; // MySQLi connection
               <h3 class="box-title">Visitor Tracking History</h3>
             </div>
             <div class="box-body">
-              <p><i class="fa fa-eye"></i> Click on the visitor's IP Address to view the tracking details</p>
+              <p><i class="fa fa-eye"></i> Click on the user's IP Address to view details about the visitor</p>
               <div class="table-responsive">
                 <table id="example1" class="table table-bordered">
                   <thead>
@@ -65,7 +65,6 @@ include '../account/connect.php'; // MySQLi connection
                   <tbody>
                     <?php
                       try {
-                        // Query logs with id for deletion
                         $stmt = $conne->prepare("SELECT DISTINCT id, ip_address, location FROM visitor_logs ORDER BY ip_address");
                         $stmt->execute();
                         $result = $stmt->get_result();
@@ -76,7 +75,7 @@ include '../account/connect.php'; // MySQLi connection
                               <td><a href="ip_logs.php?ip=<?php echo urlencode($row['ip_address']); ?>" title="View details for IP <?php echo htmlspecialchars($row['ip_address']); ?>"><?php echo htmlspecialchars($row['ip_address']); ?></a></td>
                               <td><?php echo htmlspecialchars($row['location']); ?></td>
                               <td>
-                                <button class="btn btn-danger btn-sm delete btn-flat" data-id="<?php echo $row['id']; ?>"><i class="fa fa-trash"></i> Delete</button>
+                                <button class="btn btn-danger btn-sm delete btn-flat" data-id="<?php echo $row['id']; ?>" data-ip="<?php echo htmlspecialchars($row['ip_address']); ?>"><i class="fa fa-trash"></i> Delete</button>
                               </td>
                             </tr>
                           <?php }
@@ -99,6 +98,7 @@ include '../account/connect.php'; // MySQLi connection
      
   </div>
   <?php include 'includes/footer.php'; ?>
+  <?php include 'includes/visitor_logs_modal.php'; ?>
 
 </div>
 <!-- ./wrapper -->
@@ -106,29 +106,14 @@ include '../account/connect.php'; // MySQLi connection
 <?php include 'includes/scripts.php'; ?>
 <script>
 $(function(){
-  // Delete functionality
+  // Delete button click
   $(document).on('click', '.delete', function(e){
     e.preventDefault();
     var id = $(this).data('id');
-    if(confirm('Are you sure you want to delete this log?')) {
-      $.ajax({
-        type: 'POST',
-        url: 'delete_visitor_log.php',
-        data: {id: id},
-        dataType: 'json',
-        success: function(response){
-          if(response.success) {
-            alert('Log deleted successfully');
-            location.reload(); // Refresh page
-          } else {
-            alert('Error: ' + response.message);
-          }
-        },
-        error: function(xhr, status, error) {
-          alert('Error deleting log: ' + error);
-        }
-      });
-    }
+    var ip = $(this).data('ip');
+    $('#delete').modal('show');
+    $('.did').val(id);
+    $('.name').text(ip); // Display IP in modal
   });
 });
 </script>
@@ -139,7 +124,7 @@ $(function(){
 }
 
 .table-responsive table {
-  min-width: 600px; /* Adjusted for columns */
+  min-width: 600px;
 }
 
 .box-body p {
