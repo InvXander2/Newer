@@ -1,7 +1,6 @@
 <?php
     include_once 'conn.php';
     $pdo = new Database();
-    include_once 'track_visitor.php';
 
     session_start();
 
