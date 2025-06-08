@@ -1,7 +1,4 @@
 <?php
-// track_visitor.php
-
-session_start();
 
 // Check if already tracked in this session
 if (!isset($_SESSION['tracked'])) {
