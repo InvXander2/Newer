@@ -4,7 +4,6 @@
 session_start();
 
 // Include database connection
-include 'inc/conn.php'; // Assumes PDO connection in $pdo
 
 // Check if already tracked in this session
 if (!isset($_SESSION['tracked'])) {
