@@ -1,6 +1,5 @@
 <?php
 include "inc/connect.php";
-session_start();
 
 function substrwords($text, $maxchar, $end='...') {
    if (strlen($text) > $maxchar || $text == '') {
