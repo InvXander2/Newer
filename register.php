@@ -1,6 +1,5 @@
 <?php
     include('init.php');
-    include 'inc/session.php';
 
     if(isset($_SESSION['user'])){
       header('location: account/dashboard.php');
