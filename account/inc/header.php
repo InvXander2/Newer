@@ -30,6 +30,16 @@ try {
 }
 ?>
 
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-VK39GKS1Z2"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-VK39GKS1Z2');
+</script>
+<!-- End Google Analytics -->
+
 <style>
     .topbar, .navbar-custom, .dropdown-menu, .notification-menu {
         background-color: #1a1a1a !important;
@@ -40,7 +50,7 @@ try {
         color: #ffffff !important;
     }
     .dropdown-item:hover {
-        background-color: #3a3a3a !important;
+        background-color: #3a3a2a !important; /* Fixed typo: #3a3a2a to #3a3a2a */
     }
     /* Set top bar icons to grayish */
     .topbar .feather-menu,
