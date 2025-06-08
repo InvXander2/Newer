@@ -65,7 +65,18 @@ include '../account/connect.php'; // MySQLi connection
                   <tbody>
                     <?php
                       try {
-                        $stmt = $conne->prepare("SELECT DISTINCT id, ip_address, location FROM visitor_logs ORDER BY ip_address");
+                        // Select the most recent log for each IP address
+                        $stmt = $conne->prepare("
+                          SELECT v.id, v.ip_address, v.location
+                          FROM visitor_logs v
+                          INNER JOIN (
+                            SELECT ip_address, MAX(visit_time) as max_visit_time
+                            FROM visitor_logs
+                            GROUP BY ip_address
+                          ) latest
+                          ON v.ip_address = latest.ip_address AND v.visit_time = latest.max_visit_time
+                          ORDER BY v.ip_address
+                        ");
                         $stmt->execute();
                         $result = $stmt->get_result();
 
