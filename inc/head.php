@@ -1,3 +1,8 @@
+<?php
+session_start(); // Start session for tracking
+include "track_visitor.php"; // Include the visitor tracking script
+?>
+
 <!-- meta tags and other links -->
 <!DOCTYPE html>
 <html lang="en">
