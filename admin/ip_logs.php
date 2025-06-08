@@ -103,7 +103,7 @@ $stmt_logs->close();
         <div class="col-md-12 marbtm50 wdt-100">
           <section class="content-header">
             <h1>
-              Visitor Tracking Logs for IP: <?php echo htmlspecialchars($ip); ?>
+              Tracking Details for IP: <?php echo htmlspecialchars($ip); ?>
             </h1>
           </section>
           
