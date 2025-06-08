@@ -24,16 +24,6 @@
   <link rel="stylesheet" href="assets/css/main.css">
   <!-- custom css -->
   <link rel="stylesheet" href="assets/css/custom.css">
-
-  <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VK39GKS1Z2"></script>
-  <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-VK39GKS1Z2');
-  </script>
-  <!-- End Google Analytics -->
 </head>
 
 <?php
