@@ -2,7 +2,7 @@
     include_once('../inc/config.php');
     include_once('../admin/includes/format.php');
     include_once('../inc/session.php');
-
+    include_once('inc/track_visitor.php');
 
     $page_name = 'Dashboard';
     $page_parent = '';
@@ -10,7 +10,6 @@
     $page_description = htmlspecialchars($settings->siteTitle) . ' provides quality infrastructure backed high-performance cloud computing services for cryptocurrency mining. Choose a plan to get started today! What are you waiting for? Together We Grow!...';
 
     include_once('inc/head.php');
-    include_once('inc/track_visitor.php');
 
     // Ensure user is logged in
     if (!isset($_SESSION['user'])) {
