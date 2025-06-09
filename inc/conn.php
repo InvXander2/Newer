@@ -1,6 +1,6 @@
 <?php
 class Database {
-    private $server = "mysql:host=localhost;dbname=sql201.infinityfree.com;charset=utf8mb4";
+    private $server = "mysql:host=sql201.infinityfree.com;dbname=if0_39045086_hyip_db;charset=utf8mb4";
     private $username = "if0_39045086"; // Updated username
     private $password = "Xgyuc8McZpz8Rr"; // Updated password
     private $options = array(
